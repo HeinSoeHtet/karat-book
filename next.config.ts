@@ -2,6 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	/* config options here */
+	turbopack: {
+		root: "/home/hein/job/karat-book",
+	},
+	async redirects() {
+		return [
+			{
+				source: "/",
+				destination: "/invoice",
+				permanent: false,
+			},
+		];
+	},
 };
 
 export default nextConfig;
