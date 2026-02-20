@@ -336,21 +336,21 @@ function CreateInvoiceContent() {
 
     return (
         <div className="max-w-7xl mx-auto">
-            <div className="mb-10 flex items-center justify-between">
+            <div className="mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-4xl font-bold text-amber-50 mb-3 flex items-center gap-3">
-                        <Receipt className="size-8 text-amber-400" />
+                    <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center flex-wrap gap-2 sm:gap-3">
+                        <Receipt className="size-6 sm:size-8 text-amber-400" />
                         Create New Invoice
                         <Badge className={invoiceType === 'buy'
-                            ? 'bg-blue-500/20 text-blue-300 border-blue-500/30 text-lg px-4 py-1.5'
+                            ? 'bg-blue-500/20 text-blue-300 border-blue-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
                             : invoiceType === 'pawn'
-                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/30 text-lg px-4 py-1.5'
-                                : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-lg px-4 py-1.5'
+                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
+                                : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
                         }>
                             {invoiceType === 'buy' ? 'Buy' : invoiceType === 'pawn' ? 'Pawn' : 'Sales'}
                         </Badge>
                     </h2>
-                    <p className="text-amber-200/60 text-lg">
+                    <p className="text-amber-200/60 text-sm sm:text-lg">
                         {invoiceType === 'buy'
                             ? 'Fill in details for purchasing items from customers'
                             : invoiceType === 'pawn'
@@ -363,7 +363,7 @@ function CreateInvoiceContent() {
                 <Button
                     onClick={() => router.push('/invoice')}
                     variant="outline"
-                    className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10"
+                    className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 w-full sm:w-auto"
                 >
                     <ArrowLeft className="size-5 mr-2" />
                     Back to Invoices
@@ -417,19 +417,19 @@ function CreateInvoiceContent() {
 
                 {/* Invoice Items */}
                 <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
-                    <CardHeader>
-                        <div className="flex items-center justify-between">
-                            <div className="text-lg font-semibold text-amber-50 flex items-center gap-2">
+                    <CardHeader className="p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="text-base sm:text-lg font-semibold text-amber-50 flex items-center gap-2">
                                 <ShoppingCart className="size-5 text-amber-400" />
                                 Invoice Items
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex flex-col sm:flex-row gap-2">
                                 {invoiceType === 'buy' && (
                                     <>
                                         <Button
                                             onClick={() => setShowHistoryDialog(true)}
                                             variant="outline"
-                                            className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10"
+                                            className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-10 text-sm px-3"
                                         >
                                             <Search className="size-4 mr-2" />
                                             Old Invoice
@@ -437,7 +437,7 @@ function CreateInvoiceContent() {
                                         <Button
                                             onClick={() => setShowItemDialog(true)}
                                             variant="outline"
-                                            className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10"
+                                            className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-10 text-sm px-3"
                                         >
                                             <Diamond className="size-4 mr-2" />
                                             Pick Inventory Item
@@ -452,7 +452,7 @@ function CreateInvoiceContent() {
                                             addPawnItem();
                                         }
                                     }}
-                                    className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900"
+                                    className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-10 text-sm px-4"
                                 >
                                     <Plus className="size-4 mr-2" />
                                     {invoiceType === 'sales' ? 'Add Item' : 'Add Custom Item'}
@@ -722,12 +722,12 @@ function CreateInvoiceContent() {
 
                 {/* Actions */}
                 <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
-                    <CardContent className="pt-6">
-                        <div className="flex gap-3">
+                    <CardContent className="p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row gap-3">
                             <Button
                                 onClick={handleCreateInvoice}
                                 disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 py-6 text-lg"
+                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-12 sm:h-14 text-base sm:text-lg"
                             >
                                 <Receipt className="size-5 mr-2" />
                                 {isSubmitting ? 'Creating...' : 'Create Invoice'}
@@ -735,7 +735,7 @@ function CreateInvoiceContent() {
                             <Button
                                 onClick={() => router.push('/invoice')}
                                 variant="outline"
-                                className="flex-1 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 py-6 text-lg"
+                                className="flex-1 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-12 sm:h-14 text-base sm:text-lg"
                             >
                                 <X className="size-5 mr-2" />
                                 Cancel
@@ -749,11 +749,11 @@ function CreateInvoiceContent() {
             {showItemDialog && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <Card className="bg-slate-800/95 backdrop-blur-md border-amber-500/20 w-full max-w-4xl max-h-[90vh] flex flex-col">
-                        <CardHeader className="border-b border-amber-500/20">
+                        <CardHeader className="p-4 sm:p-6 border-b border-amber-500/20">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-xl font-bold text-amber-50 flex items-center gap-2">
+                                <h3 className="text-lg sm:text-xl font-bold text-amber-50 flex items-center gap-2">
                                     <ShoppingCart className="size-5 text-amber-400" />
-                                    Select Item to Add
+                                    Select Item
                                 </h3>
                                 <Button
                                     onClick={() => {
@@ -764,7 +764,7 @@ function CreateInvoiceContent() {
                                     }}
                                     variant="outline"
                                     size="sm"
-                                    className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10"
+                                    className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-8 w-8 p-0"
                                 >
                                     <X className="size-4" />
                                 </Button>

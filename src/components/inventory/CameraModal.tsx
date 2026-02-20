@@ -4,7 +4,6 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Camera, RefreshCw, Check, ShieldCheck, Lock } from "lucide-react";
-import Image from "next/image";
 
 interface CameraModalProps {
     isOpen: boolean;
@@ -229,7 +228,7 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
                     {/* Live Camera View or Captured Preview */}
                     <div className="absolute inset-0 w-full h-full flex items-center justify-center">
                         {capturedImage ? (
-                            <Image src={capturedImage} alt="Captured" fill unoptimized className="object-cover animate-in fade-in scale-105 duration-500" />
+                            <img src={capturedImage} alt="Captured" className="w-full h-full object-cover animate-in fade-in scale-105 duration-500" />
                         ) : permissionState === 'granted' && !error && (
                             <>
                                 {!isCameraReady && (

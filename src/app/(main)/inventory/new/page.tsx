@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -280,12 +279,10 @@ export default function NewItemPage() {
                                     ) : imagePreview ? (
                                         <div className="relative group">
                                             <div className="relative h-[300px] w-full flex items-center justify-center">
-                                                <Image
+                                                <img
                                                     src={imagePreview}
                                                     alt="Preview"
-                                                    fill
-                                                    className="rounded-lg object-contain shadow-2xl transition-transform group-hover:scale-[1.02]"
-                                                    unoptimized
+                                                    className="rounded-lg object-contain w-full h-full shadow-2xl transition-transform group-hover:scale-[1.02]"
                                                 />
                                             </div>
                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">

@@ -112,9 +112,9 @@ export default function SalesPage() {
             <div className="mb-6 sm:mb-10">
                 <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
                     <TrendingUp className="size-6 sm:size-8 text-amber-400" />
-                    Sales Dashboard
+                    Analytics
                 </h2>
-                <p className="text-amber-200/60 text-sm sm:text-lg">Track your revenue and invoices</p>
+                <p className="text-amber-200/60 text-xs sm:text-lg">Track your revenue and invoices</p>
             </div>
 
             {isLoading ? (
@@ -142,26 +142,26 @@ export default function SalesPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         {/* Total Pawns Card (Primary) */}
                         <Card className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/20 backdrop-blur-sm relative overflow-hidden">
-                            <CardHeader className="flex flex-row items-center justify-between pb-3">
-                                <CardTitle className="text-sm font-medium text-amber-200/70">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
+                                <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
                                     Total Pawns
                                 </CardTitle>
-                                <div className="bg-amber-500/20 p-2.5 rounded-lg">
-                                    <HandCoins className="size-5 text-amber-400" />
+                                <div className="bg-amber-500/20 p-2 sm:p-2.5 rounded-lg">
+                                    <HandCoins className="size-4 sm:size-5 text-amber-400" />
                                 </div>
                             </CardHeader>
                             <CardContent className="flex items-end justify-between">
                                 <div>
-                                    <div className="text-4xl font-bold bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
+                                    <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
                                         {pawnCount}
                                     </div>
-                                    <p className="text-xs text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Records</p>
+                                    <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Records</p>
                                 </div>
                                 <div className="text-right">
-                                    <div className="text-2xl font-bold text-amber-200">
+                                    <div className="text-xl sm:text-2xl font-bold text-amber-200">
                                         {invoices.filter(i => i.type === 'pawn').reduce((sum, i) => sum + (i.total || 0), 0).toLocaleString()}
                                     </div>
-                                    <p className="text-xs text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Value</p>
+                                    <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Value</p>
                                 </div>
                             </CardContent>
                         </Card>
@@ -189,8 +189,8 @@ export default function SalesPage() {
 
                             return (
                                 <Card key={s.status} className={`bg-gradient-to-br ${colorClasses.split(' ').slice(0, 2).join(' ')} ${colorClasses.split(' ').slice(2, 3).join(' ')} backdrop-blur-sm relative overflow-hidden`}>
-                                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                                        <CardTitle className="text-sm font-medium text-amber-200/70">
+                                    <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
+                                        <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
                                             {s.label}
                                         </CardTitle>
                                         <div className={`${colorClasses.split(' ').slice(4).join(' ')} p-2 rounded-lg`}>
@@ -199,13 +199,13 @@ export default function SalesPage() {
                                     </CardHeader>
                                     <CardContent className="flex items-end justify-between">
                                         <div>
-                                            <div className={`text-3xl font-bold bg-gradient-to-r ${textGradient} bg-clip-text text-transparent`}>
+                                            <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${textGradient} bg-clip-text text-transparent`}>
                                                 {count}
                                             </div>
                                             <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Records</p>
                                         </div>
                                         <div className="text-right">
-                                            <div className="text-xl font-bold text-amber-50/90">
+                                            <div className="text-lg sm:text-xl font-bold text-amber-50/90">
                                                 {total.toLocaleString()}
                                             </div>
                                             <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Value</p>

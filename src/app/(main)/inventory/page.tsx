@@ -136,9 +136,9 @@ export default function InventoryPage() {
                 <div>
                     <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
                         <Package className="size-6 sm:size-8 text-amber-400" />
-                        Inventory Management
+                        Inventory
                     </h2>
-                    <p className="text-amber-200/60 text-sm sm:text-lg">Manage items and stock levels</p>
+                    <p className="text-amber-200/60 text-xs sm:text-lg">Manage items and stock levels</p>
                 </div>
 
                 <Button
@@ -154,19 +154,19 @@ export default function InventoryPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 {/* Total Stock Units Card (Moved from Sales) */}
                 <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 backdrop-blur-sm">
-                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                        <CardTitle className="text-sm font-medium text-amber-200/70">
-                            Inventory Stock
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
+                        <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
+                            Stock Units
                         </CardTitle>
-                        <div className="bg-purple-500/20 p-2.5 rounded-lg">
-                            <Package className="size-5 text-purple-400" />
+                        <div className="bg-purple-500/20 p-2 sm:p-2.5 rounded-lg">
+                            <Package className="size-4 sm:size-5 text-purple-400" />
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-4xl font-bold bg-gradient-to-r from-purple-300 to-purple-500 bg-clip-text text-transparent">
+                        <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-purple-300 to-purple-500 bg-clip-text text-transparent">
                             {stats.totalStockUnits}
                         </div>
-                        <p className="text-xs text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Units</p>
+                        <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Units</p>
                     </CardContent>
                 </Card>
 
@@ -177,20 +177,20 @@ export default function InventoryPage() {
                         } backdrop-blur-sm`}
                     onClick={() => setActiveCard('all')}
                 >
-                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                        <CardTitle className="text-sm font-medium text-amber-200/70">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
+                        <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
                             Total Items
                         </CardTitle>
-                        <div className={`p-2.5 rounded-lg ${activeCard === 'all' ? 'bg-blue-500/30' : 'bg-blue-500/20'
+                        <div className={`p-2 sm:p-2.5 rounded-lg ${activeCard === 'all' ? 'bg-blue-500/30' : 'bg-blue-500/20'
                             }`}>
-                            <Package className="size-5 text-blue-400" />
+                            <Package className="size-4 sm:size-5 text-blue-400" />
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-4xl font-bold bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent">
+                        <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent">
                             {stats.totalCount}
                         </div>
-                        <p className="text-xs text-amber-200/50 mt-2 flex items-center gap-1">
+                        <p className="text-[10px] text-amber-200/50 mt-1 flex items-center gap-1">
                             <Sparkles className="size-3" />
                             In catalog
                         </p>
@@ -204,20 +204,20 @@ export default function InventoryPage() {
                         } backdrop-blur-sm`}
                     onClick={() => setActiveCard('low-stock')}
                 >
-                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                        <CardTitle className="text-sm font-medium text-amber-200/70">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
+                        <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
                             Low Stock
                         </CardTitle>
-                        <div className={`p-2.5 rounded-lg ${activeCard === 'low-stock' ? 'bg-amber-500/30' : 'bg-amber-500/20'
+                        <div className={`p-2 sm:p-2.5 rounded-lg ${activeCard === 'low-stock' ? 'bg-amber-500/30' : 'bg-amber-500/20'
                             }`}>
-                            <AlertTriangle className="size-5 text-amber-400" />
+                            <AlertTriangle className="size-4 sm:size-5 text-amber-400" />
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-4xl font-bold bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
+                        <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
                             {stats.lowStockCount}
                         </div>
-                        <p className="text-xs text-amber-200/50 mt-2 flex items-center gap-1">
+                        <p className="text-[10px] text-amber-200/50 mt-1 flex items-center gap-1">
                             <Sparkles className="size-3" />
                             ≤ 5 units
                         </p>
@@ -231,22 +231,22 @@ export default function InventoryPage() {
                         } backdrop-blur-sm`}
                     onClick={() => setActiveCard('out-of-stock')}
                 >
-                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                        <CardTitle className="text-sm font-medium text-amber-200/70">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
+                        <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
                             Out of Stock
                         </CardTitle>
-                        <div className={`p-2.5 rounded-lg ${activeCard === 'out-of-stock' ? 'bg-red-500/30' : 'bg-red-500/20'
+                        <div className={`p-2 sm:p-2.5 rounded-lg ${activeCard === 'out-of-stock' ? 'bg-red-500/30' : 'bg-red-500/20'
                             }`}>
-                            <TrendingDown className="size-5 text-red-400" />
+                            <TrendingDown className="size-4 sm:size-5 text-red-400" />
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-4xl font-bold bg-gradient-to-r from-red-300 to-red-500 bg-clip-text text-transparent">
+                        <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-red-300 to-red-500 bg-clip-text text-transparent">
                             {stats.outOfStockCount}
                         </div>
-                        <p className="text-xs text-amber-200/50 mt-2 flex items-center gap-1">
+                        <p className="text-[10px] text-amber-200/50 mt-1 flex items-center gap-1">
                             <Sparkles className="size-3" />
-                            Needs restock
+                            Empty
                         </p>
                     </CardContent>
                 </Card>
@@ -256,7 +256,7 @@ export default function InventoryPage() {
             <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-amber-500/20 p-4 sm:p-5 mb-6 sm:mb-8">
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
                     <Select value={tempCategoryFilter} onValueChange={setTempCategoryFilter}>
-                        <SelectTrigger className="w-full sm:w-[280px] bg-slate-900/50 border-amber-500/20 text-amber-50 h-11">
+                        <SelectTrigger className="w-full sm:w-[280px] bg-slate-900/50 border-amber-500/20 text-amber-50 h-10 sm:h-11 text-sm sm:text-base">
                             <SelectValue placeholder="All Categories" />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-900 border-amber-500/20 text-amber-50">
@@ -279,7 +279,7 @@ export default function InventoryPage() {
                     <div className="flex gap-2 sm:gap-4">
                         <Button
                             onClick={applyFilters}
-                            className="flex-1 sm:flex-none bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold h-11 px-5"
+                            className="flex-1 sm:flex-none bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold h-10 sm:h-11 px-5 text-sm sm:text-base"
                         >
                             <Filter className="size-4 mr-2" />
                             Apply
@@ -287,7 +287,7 @@ export default function InventoryPage() {
                         <Button
                             variant="outline"
                             onClick={clearFilters}
-                            className="flex-1 sm:flex-none border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-11 px-5"
+                            className="flex-1 sm:flex-none border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-10 sm:h-11 px-5 text-sm sm:text-base"
                         >
                             <X className="size-4 mr-2" />
                             Clear
@@ -412,10 +412,10 @@ export default function InventoryPage() {
                                 {dbItems.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="bg-slate-900/30 rounded-xl border border-amber-500/20 p-4"
+                                        className="bg-slate-900/40 rounded-2xl border border-amber-500/10 overflow-hidden backdrop-blur-sm"
                                     >
-                                        <div className="flex gap-3 mb-4">
-                                            <div className="size-20 rounded-lg overflow-hidden bg-slate-900/50 flex-shrink-0 relative">
+                                        <div className="p-4 flex gap-4">
+                                            <div className="size-20 rounded-xl overflow-hidden bg-slate-800/50 flex-shrink-0 relative border border-amber-500/10">
                                                 <Image
                                                     src={item.image}
                                                     alt={item.name}
@@ -424,46 +424,38 @@ export default function InventoryPage() {
                                                     unoptimized
                                                 />
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="font-semibold text-amber-50 mb-1">{item.name}</div>
-                                                <div className="text-sm text-amber-200/50 line-clamp-2 mb-2">{item.description}</div>
-                                                <div className="flex gap-2 flex-wrap">
-                                                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 text-xs">
-                                                        {item.category}
-                                                    </Badge>
-                                                    <Badge
-                                                        className={`text-xs ${item.stock === 0
-                                                            ? 'bg-red-500/20 text-red-400 border-red-500/30'
-                                                            : item.stock <= 5
-                                                                ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                                                                : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                                                            }`}
-                                                    >
-                                                        Stock: {item.stock}
-                                                    </Badge>
+                                            <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                                <div className="font-bold text-amber-50 text-base mb-1 line-clamp-1">{item.name}</div>
+                                                <div className="text-[10px] text-amber-200/40 line-clamp-1 uppercase tracking-wider mb-2 font-medium">
+                                                    {item.category} • {item.material}
                                                 </div>
+                                                <Badge
+                                                    className={`w-fit py-0.5 text-[10px] uppercase tracking-wider font-bold ${item.stock === 0
+                                                        ? 'bg-red-500/20 text-red-500 border-red-500/30'
+                                                        : item.stock <= 5
+                                                            ? 'bg-amber-500/20 text-amber-500 border-amber-500/30'
+                                                            : 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30'
+                                                        }`}
+                                                >
+                                                    {item.stock === 0 ? 'Out of Stock' : `${item.stock} Units`}
+                                                </Badge>
                                             </div>
                                         </div>
-                                        <div className="text-sm text-amber-200/70 mb-3">
-                                            Material: <span className="text-amber-100">{item.material}</span>
-                                        </div>
-                                        <div className="flex gap-2">
+                                        <div className="px-4 pb-4 flex gap-2">
                                             <Button
-                                                size="sm"
-                                                variant="outline"
                                                 onClick={() => handleEdit(item)}
-                                                className="flex-1 border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                                                variant="outline"
+                                                className="flex-1 bg-amber-500/5 border-amber-500/20 text-amber-200 hover:bg-amber-500/10 h-10 text-xs font-semibold"
                                             >
-                                                <Edit className="size-4 mr-1" />
+                                                <Edit className="size-3.5 mr-2" />
                                                 Edit
                                             </Button>
                                             <Button
-                                                size="sm"
-                                                variant="outline"
                                                 onClick={() => setItemToDelete(item)}
-                                                className="flex-1 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                                                variant="outline"
+                                                className="flex-1 bg-red-500/5 border-red-500/20 text-red-400 hover:bg-red-500/10 h-10 text-xs font-semibold"
                                             >
-                                                <Trash2 className="size-4 mr-1" />
+                                                <Trash2 className="size-3.5 mr-2" />
                                                 Delete
                                             </Button>
                                         </div>

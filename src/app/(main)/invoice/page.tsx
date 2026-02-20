@@ -371,18 +371,18 @@ export default function InvoicePage() {
 
     return (
         <div className="max-w-7xl mx-auto">
-            <div className="mb-10 flex items-center justify-between">
+            <div className="mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-4xl font-bold text-amber-50 mb-3 flex items-center gap-3">
-                        <Receipt className="size-8 text-amber-400" />
+                    <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+                        <Receipt className="size-6 sm:size-8 text-amber-400" />
                         Invoices
                     </h2>
-                    <p className="text-amber-200/60 text-lg">View and manage customer invoices</p>
+                    <p className="text-amber-200/60 text-xs sm:text-lg">View and manage customer invoices</p>
                 </div>
 
                 <Button
                     onClick={() => setShowInvoiceTypeDialog(true)}
-                    className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold shadow-lg shadow-amber-500/30"
+                    className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold shadow-lg shadow-amber-500/30 w-full sm:w-auto"
                 >
                     <Plus className="size-5 mr-2" />
                     Create Invoice
@@ -390,33 +390,23 @@ export default function InvoicePage() {
             </div>
 
             {/* Filters Top Bar */}
-            <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20 mb-8">
+            <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20 mb-6 sm:mb-8">
                 <CardContent className="p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-end">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 items-end">
                         <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-amber-500/60 uppercase tracking-wider ml-1">Invoice ID</Label>
+                            <Label className="text-[10px] font-bold text-amber-500/60 uppercase tracking-wider ml-1">Invoice ID</Label>
                             <Input
-                                placeholder="Search ID..."
+                                placeholder="Search..."
                                 value={idFilter}
                                 onChange={(e) => setIdFilter(e.target.value)}
-                                className="bg-slate-900/50 border-amber-500/20 text-amber-50 h-10"
+                                className="bg-slate-900/50 border-amber-500/20 text-amber-50 h-10 text-sm"
                             />
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-amber-500/60 uppercase tracking-wider ml-1">Date Range</Label>
-                            <DateRangePicker
-                                id="top-invoice-date-range"
-                                date={dateRange}
-                                setDate={setDateRange}
-                                placeholder="Select range"
-                            />
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-amber-500/60 uppercase tracking-wider ml-1">Type</Label>
+                            <Label className="text-[10px] font-bold text-amber-500/60 uppercase tracking-wider ml-1">Type</Label>
                             <Select value={invoiceTypeFilter} onValueChange={(value) => setInvoiceTypeFilter(value as 'all' | 'sales' | 'pawn' | 'buy')}>
-                                <SelectTrigger className="bg-slate-900/50 border-amber-500/20 text-amber-50 h-10">
+                                <SelectTrigger className="bg-slate-900/50 border-amber-500/20 text-amber-50 h-10 text-sm">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="bg-slate-900 border-amber-500/20">
@@ -428,9 +418,18 @@ export default function InvoicePage() {
                             </Select>
                         </div>
 
+                        <div className="space-y-1.5 sm:col-span-2 lg:col-span-1">
+                            <Label className="text-[10px] font-bold text-amber-500/60 uppercase tracking-wider ml-1">Date Range</Label>
+                            <DateRangePicker
+                                id="top-invoice-date-range"
+                                date={dateRange}
+                                setDate={setDateRange}
+                                placeholder="Select range"
+                            />
+                        </div>
 
-                        <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-amber-500/60 uppercase tracking-wider ml-1">Due Date (Pawn)</Label>
+                        <div className="space-y-1.5 sm:col-span-2 lg:col-span-1">
+                            <Label className="text-[10px] font-bold text-amber-500/60 uppercase tracking-wider ml-1">Due Date</Label>
                             <DateRangePicker
                                 id="top-due-date-range"
                                 date={dueDateRange}
@@ -442,7 +441,7 @@ export default function InvoicePage() {
                         <div className="flex gap-2">
                             <Button
                                 onClick={handleApplyFilters}
-                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-10"
+                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-10 text-sm"
                             >
                                 <Filter className="size-4 mr-2" />
                                 Apply
@@ -459,7 +458,7 @@ export default function InvoicePage() {
                 </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 ${selectedInvoice ? 'hidden lg:grid' : 'grid'}`}>
                 {/* Invoice List */}
                 <div className="lg:col-span-4 flex flex-col gap-4">
                     {/* Invoice Cards */}
@@ -558,30 +557,38 @@ export default function InvoicePage() {
                 </div>
 
                 {/* Invoice Detail */}
-                <div className="lg:col-span-8">
+                <div className={`lg:col-span-8 ${selectedInvoice ? 'block' : 'hidden lg:block'}`}>
                     {selectedInvoice ? (
-                        <div>
+                        <div className="space-y-4">
+                            <Button
+                                onClick={() => setSelectedInvoice(null)}
+                                variant="ghost"
+                                className="lg:hidden text-amber-200/60 hover:text-amber-200 mb-2"
+                            >
+                                <ChevronLeft className="size-5 mr-1" />
+                                Back to Invoices
+                            </Button>
                             <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
-                                <CardHeader>
-                                    <div className="flex items-start justify-between">
+                                <CardHeader className="p-4 sm:p-6 lg:p-8">
+                                    <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
                                         <div className="flex items-center gap-4">
-                                            <div className="relative">
+                                            <div className="relative flex-shrink-0">
                                                 <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg blur-sm opacity-75"></div>
-                                                <div className="relative bg-gradient-to-br from-amber-400 to-amber-600 p-3 rounded-lg">
-                                                    <Diamond className="size-6 text-slate-900" />
+                                                <div className="relative bg-gradient-to-br from-amber-400 to-amber-600 p-2 sm:p-3 rounded-lg">
+                                                    <Diamond className="size-5 sm:size-6 text-slate-900" />
                                                 </div>
                                             </div>
                                             <div>
-                                                <h3 className="text-xl font-bold text-amber-50 flex items-center gap-2">
+                                                <h3 className="text-lg sm:text-xl font-bold text-amber-50 flex items-center gap-2">
                                                     {SITE_CONFIG.name}
                                                 </h3>
-                                                <p className="text-sm text-amber-200/60">{SITE_CONFIG.tagline}</p>
+                                                <p className="text-xs sm:text-sm text-amber-200/60">{SITE_CONFIG.tagline}</p>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <div className="text-2xl font-bold text-amber-400">{selectedInvoice.invoiceNumber}</div>
-                                            <div className="flex flex-col items-end gap-2 mt-1">
-                                                <Badge className={`uppercase font-bold tracking-wider ${selectedInvoice.type === 'sales'
+                                        <div className="text-left sm:text-right w-full sm:w-auto">
+                                            <div className="text-xl sm:text-2xl font-bold text-amber-400">{selectedInvoice.invoiceNumber}</div>
+                                            <div className="flex flex-col items-start sm:items-end gap-2 mt-2 sm:mt-1">
+                                                <Badge className={`uppercase text-[10px] sm:text-xs font-bold tracking-wider ${selectedInvoice.type === 'sales'
                                                     ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
                                                     : selectedInvoice.type === 'pawn'
                                                         ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
@@ -595,7 +602,7 @@ export default function InvoicePage() {
                                                         value={selectedInvoice.status}
                                                         onValueChange={handleStatusChange}
                                                     >
-                                                        <SelectTrigger className="w-[140px] h-8 bg-slate-900/50 border-amber-500/20 text-xs text-amber-50">
+                                                        <SelectTrigger className="w-full sm:w-[140px] h-9 sm:h-8 bg-slate-900/50 border-amber-500/20 text-xs text-amber-50">
                                                             <SelectValue placeholder="Change Status" />
                                                         </SelectTrigger>
                                                         <SelectContent className="bg-slate-900 border-amber-500/20">
@@ -654,41 +661,41 @@ export default function InvoicePage() {
                                     </div>
                                 </CardHeader>
 
-                                <CardContent className="space-y-8 p-8">
+                                <CardContent className="space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8">
                                     {/* Top Header Info */}
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div className="space-y-4">
-                                            <div className="flex items-center gap-2 text-xs font-bold text-amber-500/60 uppercase tracking-widest">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+                                        <div className="space-y-3 sm:space-y-4">
+                                            <div className="flex items-center gap-2 text-[10px] font-bold text-amber-500/60 uppercase tracking-widest">
                                                 <User className="size-3" />
                                                 Customer Information
                                             </div>
                                             <div className="space-y-1">
-                                                <div className="text-xl font-bold text-amber-50">{selectedInvoice.customerName}</div>
-                                                <div className="flex items-center gap-2 text-sm text-amber-200/60">
+                                                <div className="text-lg sm:text-xl font-bold text-amber-50">{selectedInvoice.customerName}</div>
+                                                <div className="flex items-center gap-2 text-xs sm:text-sm text-amber-200/60">
                                                     <Phone className="size-3.5" />
                                                     {selectedInvoice.customerPhone || 'N/A'}
                                                 </div>
-                                                <div className="flex items-start gap-2 text-sm text-amber-200/60">
+                                                <div className="flex items-start gap-2 text-xs sm:text-sm text-amber-200/60">
                                                     <MapPin className="size-3.5 mt-0.5" />
                                                     <span className="max-w-[200px]">{selectedInvoice.customerAddress || 'N/A'}</span>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-col items-end gap-6">
-                                            <div className="text-right space-y-1">
-                                                <span className="text-xs font-bold text-amber-500/60 uppercase tracking-widest block">Issue Date</span>
-                                                <div className="flex items-center justify-end gap-2 text-amber-50">
-                                                    <Calendar className="size-4 text-amber-400" />
+                                        <div className="flex flex-col items-start sm:items-end gap-4 sm:gap-6">
+                                            <div className="text-left sm:text-right space-y-1">
+                                                <span className="text-[10px] font-bold text-amber-500/60 uppercase tracking-widest block">Issue Date</span>
+                                                <div className="flex items-center sm:justify-end gap-2 text-amber-50 text-xs sm:text-base">
+                                                    <Calendar className="size-3.5 sm:size-4 text-amber-400" />
                                                     {format(selectedInvoice.date, 'MMMM dd, yyyy')}
                                                 </div>
                                             </div>
 
                                             {selectedInvoice.dueDate && (
-                                                <div className="text-right space-y-1">
-                                                    <span className="text-xs font-bold text-amber-500/60 uppercase tracking-widest block">Due Date</span>
-                                                    <div className="flex items-center justify-end gap-2 text-red-400 font-medium">
-                                                        <Calendar className="size-4" />
+                                                <div className="text-left sm:text-right space-y-1">
+                                                    <span className="text-[10px] font-bold text-amber-500/60 uppercase tracking-widest block">Due Date</span>
+                                                    <div className="flex items-center sm:justify-end gap-2 text-red-400 font-medium text-xs sm:text-base">
+                                                        <Calendar className="size-3.5 sm:size-4" />
                                                         {format(selectedInvoice.dueDate, 'MMMM dd, yyyy')}
                                                     </div>
                                                 </div>
@@ -699,47 +706,47 @@ export default function InvoicePage() {
                                     <Separator className="bg-amber-500/10" />
 
                                     {/* Items Table with Totals in Footer */}
-                                    <div className="border border-amber-500/20 rounded-xl overflow-hidden">
-                                        <table className="w-full">
+                                    <div className="border border-amber-500/20 rounded-xl overflow-x-auto">
+                                        <table className="w-full min-w-[500px]">
                                             <thead className="bg-slate-900/50">
                                                 <tr>
-                                                    <th className="py-3 px-4 text-left text-amber-200/70 font-medium">Item Details</th>
-                                                    <th className="py-3 px-4 text-center text-amber-200/70 font-medium">Qty</th>
-                                                    <th className="py-3 px-4 text-right text-amber-200/70 font-medium">Price</th>
-                                                    {selectedInvoice.type !== 'buy' && <th className="py-3 px-4 text-right text-amber-200/70 font-medium">Discount</th>}
-                                                    <th className="py-3 px-4 text-right text-amber-200/70 font-medium">Total</th>
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-left text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">Item Details</th>
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">Qty</th>
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">Price</th>
+                                                    {selectedInvoice.type !== 'buy' && <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">Discount</th>}
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">Total</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {selectedInvoice.items.map((item) => (
                                                     <tr key={item.id} className="border-t border-amber-500/10">
-                                                        <td className="py-3 px-4">
-                                                            <div className="text-amber-50">{item.name}</div>
-                                                            <div className="text-xs text-amber-200/50">{item.category}</div>
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4">
+                                                            <div className="text-amber-50 text-xs sm:text-sm font-medium">{item.name}</div>
+                                                            <div className="text-[10px] sm:text-xs text-amber-200/50 tracking-wide uppercase">{item.category}</div>
                                                         </td>
-                                                        <td className="py-3 px-4 text-center text-amber-50">{item.quantity}</td>
-                                                        <td className="py-3 px-4 text-right text-amber-50">{item.price.toFixed(0)}</td>
-                                                        {selectedInvoice.type !== 'buy' && <td className="py-3 px-4 text-right text-red-400">-{(item.discount || 0).toFixed(0)}</td>}
-                                                        <td className="py-3 px-4 text-right text-amber-50 font-medium">{item.total.toFixed(0)}</td>
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-xs sm:text-sm">{item.quantity}</td>
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 text-xs sm:text-sm">{item.price.toFixed(0)}</td>
+                                                        {selectedInvoice.type !== 'buy' && <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-red-400 text-xs sm:text-sm">-{(item.discount || 0).toFixed(0)}</td>}
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 font-bold text-xs sm:text-sm">{item.total.toFixed(0)}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                             <tfoot className="bg-slate-900/30 border-t-2 border-amber-500/20">
                                                 <tr>
-                                                    <td colSpan={selectedInvoice.type !== 'buy' ? 4 : 3} className="py-2 px-4 text-right text-amber-200/70">Subtotal:</td>
-                                                    <td className="py-2 px-4 text-right text-amber-50">
+                                                    <td colSpan={selectedInvoice.type !== 'buy' ? 4 : 3} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">Subtotal:</td>
+                                                    <td className="py-2 px-3 sm:px-4 text-right text-amber-50 text-xs font-bold">
                                                         {selectedInvoice.items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(0)}
                                                     </td>
                                                 </tr>
                                                 {selectedInvoice.type !== 'buy' && selectedInvoice.items.some(item => (item.discount || 0) > 0) && (
                                                     <tr>
-                                                        <td colSpan={4} className="py-2 px-4 text-right text-amber-200/70">Discount:</td>
-                                                        <td className="py-2 px-4 text-right text-red-400">-{selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0).toFixed(0)}</td>
+                                                        <td colSpan={4} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">Discount:</td>
+                                                        <td className="py-2 px-3 sm:px-4 text-right text-red-400 text-xs font-bold">-{selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0).toFixed(0)}</td>
                                                     </tr>
                                                 )}
                                                 <tr>
-                                                    <td colSpan={selectedInvoice.type !== 'buy' ? 4 : 3} className="py-3 px-4 text-right text-xl font-bold text-amber-50">Total:</td>
-                                                    <td className="py-3 px-4 text-right text-amber-400 text-2xl font-bold">{selectedInvoice.total.toFixed(0)}</td>
+                                                    <td colSpan={selectedInvoice.type !== 'buy' ? 4 : 3} className="py-3 px-3 sm:px-4 text-right text-sm sm:text-xl font-bold text-amber-50">Total:</td>
+                                                    <td className="py-3 px-3 sm:px-4 text-right text-amber-400 text-lg sm:text-2xl font-black">{selectedInvoice.total.toFixed(0)}</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -758,11 +765,11 @@ export default function InvoicePage() {
                                     )}
 
                                     {/* Actions */}
-                                    <div className="flex gap-3">
+                                    <div className="flex flex-col sm:flex-row gap-3">
                                         <Button
                                             onClick={() => handlePrint(selectedInvoice)}
                                             disabled={isGenerating}
-                                            className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold disabled:opacity-50"
+                                            className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold disabled:opacity-50 h-11"
                                         >
                                             <Printer className="size-4 mr-2" />
                                             Print Invoice
@@ -771,7 +778,7 @@ export default function InvoicePage() {
                                             onClick={() => handleDownload(selectedInvoice)}
                                             disabled={isGenerating}
                                             variant="outline"
-                                            className="flex-1 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 disabled:opacity-50"
+                                            className="flex-1 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 disabled:opacity-50 h-11"
                                         >
                                             <Download className="size-4 mr-2" />
                                             Download PDF
@@ -799,8 +806,8 @@ export default function InvoicePage() {
                             <div className="text-2xl font-bold text-amber-50 mb-2 font-serif tracking-wide">Select Invoice Type</div>
                             <p className="text-amber-200/60 uppercase tracking-widest text-xs font-bold">Choose your transaction flow</p>
                         </CardHeader>
-                        <CardContent className="pt-8 pb-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <CardContent className="p-4 sm:p-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                 {/* Sales Invoice */}
                                 <div
                                     onClick={() => {
@@ -809,21 +816,21 @@ export default function InvoicePage() {
                                     }}
                                     className="group cursor-pointer"
                                 >
-                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-emerald-500/60 transition-all hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/20 h-full">
-                                        <CardContent className="pt-8 pb-8 text-center flex flex-col items-center">
-                                            <div className="mb-6">
+                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-emerald-500/60 transition-all hover:scale-[1.02] sm:hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/20 h-full">
+                                        <CardContent className="p-4 sm:p-8 text-center flex flex-col items-center">
+                                            <div className="mb-3 sm:mb-6">
                                                 <div className="relative">
                                                     <div className="absolute inset-0 bg-emerald-500/20 rounded-2xl blur-md group-hover:bg-emerald-500/40 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl">
-                                                        <ShoppingCart className="size-12 text-emerald-400" />
+                                                    <div className="relative bg-slate-900 border border-emerald-500/30 p-4 sm:p-6 rounded-2xl">
+                                                        <ShoppingCart className="size-8 sm:size-12 text-emerald-400" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-2xl font-bold text-amber-50 mb-3">Sales</h3>
-                                            <p className="text-amber-200/70 text-sm mb-4 line-clamp-2">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-amber-50 mb-1 sm:mb-3">Sales</h3>
+                                            <p className="text-amber-200/70 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
                                                 Direct customer purchase with automated inventory management.
                                             </p>
-                                            <div className="text-xs text-emerald-400/60 font-medium space-y-1">
+                                            <div className="text-[10px] sm:text-xs text-emerald-400/60 font-medium space-y-0.5 sm:space-y-1">
                                                 <div>• Stock Deductions</div>
                                                 <div>• Inventory Selection</div>
                                             </div>
@@ -839,21 +846,21 @@ export default function InvoicePage() {
                                     }}
                                     className="group cursor-pointer"
                                 >
-                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-amber-500/60 transition-all hover:scale-105 hover:shadow-xl hover:shadow-amber-500/20 h-full">
-                                        <CardContent className="pt-8 pb-8 text-center flex flex-col items-center">
-                                            <div className="mb-6">
+                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-amber-500/60 transition-all hover:scale-[1.02] sm:hover:scale-105 hover:shadow-xl hover:shadow-amber-500/20 h-full">
+                                        <CardContent className="p-4 sm:p-8 text-center flex flex-col items-center">
+                                            <div className="mb-3 sm:mb-6">
                                                 <div className="relative">
                                                     <div className="absolute inset-0 bg-amber-500/20 rounded-2xl blur-md group-hover:bg-amber-500/40 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-amber-500/30 p-6 rounded-2xl">
-                                                        <HandCoins className="size-12 text-amber-400" />
+                                                    <div className="relative bg-slate-900 border border-amber-500/30 p-4 sm:p-6 rounded-2xl">
+                                                        <HandCoins className="size-8 sm:size-12 text-amber-400" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-2xl font-bold text-amber-50 mb-3">Pawn</h3>
-                                            <p className="text-amber-200/70 text-sm mb-4 line-clamp-2">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-amber-50 mb-1 sm:mb-3">Pawn</h3>
+                                            <p className="text-amber-200/70 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
                                                 Loan-based transaction with collateral and maturity tracking.
                                             </p>
-                                            <div className="text-xs text-amber-400/60 font-medium space-y-1">
+                                            <div className="text-[10px] sm:text-xs text-amber-400/60 font-medium space-y-0.5 sm:space-y-1">
                                                 <div>• Collateral Entry</div>
                                                 <div>• Due Date Tracking</div>
                                             </div>
@@ -869,21 +876,21 @@ export default function InvoicePage() {
                                     }}
                                     className="group cursor-pointer"
                                 >
-                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-blue-500/60 transition-all hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20 h-full">
-                                        <CardContent className="pt-8 pb-8 text-center flex flex-col items-center">
-                                            <div className="mb-6">
+                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-blue-500/60 transition-all hover:scale-[1.02] sm:hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20 h-full">
+                                        <CardContent className="p-4 sm:p-8 text-center flex flex-col items-center">
+                                            <div className="mb-3 sm:mb-6">
                                                 <div className="relative">
                                                     <div className="absolute inset-0 bg-blue-500/20 rounded-2xl blur-md group-hover:bg-blue-500/40 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-blue-500/30 p-6 rounded-2xl">
-                                                        <Diamond className="size-12 text-blue-400" />
+                                                    <div className="relative bg-slate-900 border border-blue-500/30 p-4 sm:p-6 rounded-2xl">
+                                                        <Diamond className="size-8 sm:size-12 text-blue-400" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-2xl font-bold text-amber-50 mb-3">Buy</h3>
-                                            <p className="text-amber-200/70 text-sm mb-4 line-clamp-2">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-amber-50 mb-1 sm:mb-3">Buy</h3>
+                                            <p className="text-amber-200/70 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
                                                 Purchase from customer. Support for reuse of old invoice data.
                                             </p>
-                                            <div className="text-xs text-blue-400/60 font-medium space-y-1">
+                                            <div className="text-[10px] sm:text-xs text-blue-400/60 font-medium space-y-0.5 sm:space-y-1">
                                                 <div>• Stock Inbound</div>
                                                 <div>• History Retrieval</div>
                                             </div>
@@ -896,7 +903,7 @@ export default function InvoicePage() {
                                 <Button
                                     onClick={() => setShowInvoiceTypeDialog(false)}
                                     variant="ghost"
-                                    className="text-amber-200/40 hover:text-amber-200/70 hover:bg-amber-500/5 px-8"
+                                    className="text-amber-200/40 hover:text-amber-200/70 hover:bg-amber-500/5 px-8 h-10 sm:h-11"
                                 >
                                     Cancel
                                 </Button>

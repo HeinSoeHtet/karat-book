@@ -116,7 +116,7 @@ export default function NewsPage() {
                     <Newspaper className="size-6 sm:size-8 text-amber-400" />
                     Market Rate
                 </h2>
-                <p className="text-amber-200/60 text-sm sm:text-lg">Real-time world gold price and currency exchange tracking</p>
+                <p className="text-amber-200/60 text-xs sm:text-lg">Real-time world gold price and currency exchange tracking</p>
             </div>
 
             {/* Gold Prices Section */}
@@ -142,7 +142,7 @@ export default function NewsPage() {
                                 <div>
                                     <div className="text-sm text-amber-200/70 mb-1">Current Price</div>
                                     <div className="text-3xl font-bold text-amber-50">
-                                        {currentWorldPrice.price.toFixed(2)}
+                                        {currentWorldPrice.price.toFixed(2)} USD
                                     </div>
                                 </div>
                                 <div className="text-right">

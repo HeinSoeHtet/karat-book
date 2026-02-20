@@ -112,22 +112,22 @@ export default function SettingsPage() {
 
     return (
         <div className="max-w-4xl mx-auto p-4 sm:p-8">
-            <div className="mb-8">
-                <h2 className="text-3xl font-bold text-amber-50 mb-2 flex items-center gap-3">
-                    <Settings className="size-8 text-amber-400" />
-                    System Settings
+            <div className="mb-6 sm:mb-8">
+                <h2 className="text-2xl sm:text-3xl font-bold text-amber-50 mb-2 flex items-center gap-2 sm:gap-3">
+                    <Settings className="size-6 sm:size-8 text-amber-400" />
+                    Settings
                 </h2>
-                <p className="text-amber-200/60">Manage your product categories and materials</p>
+                <p className="text-amber-200/60 text-sm">System configuration and data management</p>
             </div>
 
             <Tabs defaultValue="categories" className="w-full">
-                <TabsList className="bg-slate-900/50 border border-amber-500/20 p-1 mb-8">
-                    <TabsTrigger value="categories" className="data-[state=active]:bg-amber-500 data-[state=active]:text-slate-900 px-8 py-2.5">
-                        <Tag className="size-4 mr-2" />
+                <TabsList className="bg-slate-900/50 border border-amber-500/20 p-1 mb-6 sm:mb-8 flex">
+                    <TabsTrigger value="categories" className="flex-1 data-[state=active]:bg-amber-500 data-[state=active]:text-slate-900 px-4 sm:px-8 py-2 sm:py-2.5 text-xs sm:text-sm">
+                        <Tag className="size-3.5 sm:size-4 mr-2" />
                         Categories
                     </TabsTrigger>
-                    <TabsTrigger value="materials" className="data-[state=active]:bg-amber-500 data-[state=active]:text-slate-900 px-8 py-2.5">
-                        <Diamond className="size-4 mr-2" />
+                    <TabsTrigger value="materials" className="flex-1 data-[state=active]:bg-amber-500 data-[state=active]:text-slate-900 px-4 sm:px-8 py-2 sm:py-2.5 text-xs sm:text-sm">
+                        <Diamond className="size-3.5 sm:size-4 mr-2" />
                         Materials
                     </TabsTrigger>
                 </TabsList>
@@ -142,18 +142,18 @@ export default function SettingsPage() {
                             </CardTitle>
                             <CardDescription className="text-amber-200/40">Enter a name for the new product category</CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex gap-3 mb-8">
+                        <CardContent className="p-4 sm:p-6">
+                            <div className="flex flex-col sm:flex-row gap-3 mb-6 sm:mb-8">
                                 <Input
                                     value={newCategory}
                                     onChange={(e) => setNewCategory(e.target.value)}
                                     placeholder="e.g. Brooches, Pendants..."
-                                    className="bg-slate-900/50 border-amber-500/20 text-amber-50 focus:ring-amber-500/30"
+                                    className="bg-slate-900/50 border-amber-500/20 text-amber-50 focus:ring-amber-500/30 h-11"
                                     onKeyDown={(e) => e.key === 'Enter' && handleAddCategory()}
                                 />
                                 <Button
                                     onClick={handleAddCategory}
-                                    className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold"
+                                    className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold h-11 px-6 flex-shrink-0"
                                 >
                                     Add Category
                                 </Button>
@@ -172,29 +172,29 @@ export default function SettingsPage() {
                                         {categories.map((cat) => (
                                             <div key={cat.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-900/30 border border-amber-500/10 hover:border-amber-500/30 transition-colors group">
                                                 {editingItem?.id === cat.id && editingItem.type === 'category' ? (
-                                                    <div className="flex items-center gap-2 flex-1 mr-4">
+                                                    <div className="flex items-center gap-2 flex-1 mr-2">
                                                         <Input
                                                             value={editingItem.name}
                                                             onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-                                                            className="h-8 bg-slate-800 border-amber-500/40 text-amber-50 text-sm"
+                                                            className="h-9 bg-slate-800 border-amber-500/40 text-amber-50 text-sm"
                                                             autoFocus
                                                             onKeyDown={(e) => e.key === 'Enter' && handleUpdateCategory()}
                                                         />
-                                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-emerald-400 hover:bg-emerald-400/10" onClick={handleUpdateCategory}>
+                                                        <Button size="icon" variant="ghost" className="h-9 w-9 text-emerald-400 hover:bg-emerald-400/10 flex-shrink-0" onClick={handleUpdateCategory}>
                                                             <Save className="size-4" />
                                                         </Button>
-                                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-red-400 hover:bg-red-400/10" onClick={() => setEditingItem(null)}>
+                                                        <Button size="icon" variant="ghost" className="h-9 w-9 text-red-400 hover:bg-red-400/10 flex-shrink-0" onClick={() => setEditingItem(null)}>
                                                             <X className="size-4" />
                                                         </Button>
                                                     </div>
                                                 ) : (
                                                     <>
-                                                        <span className="text-amber-50 font-medium">{cat.name}</span>
-                                                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <span className="text-amber-50 font-medium text-sm sm:text-base">{cat.name}</span>
+                                                        <div className="flex items-center gap-1 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                                                             <Button
                                                                 size="icon"
                                                                 variant="ghost"
-                                                                className="h-8 w-8 text-amber-400 hover:bg-amber-400/10"
+                                                                className="h-8 w-8 sm:h-9 sm:w-9 text-amber-400 hover:bg-amber-400/10"
                                                                 onClick={() => setEditingItem({ id: cat.id, name: cat.name, type: 'category' })}
                                                             >
                                                                 <Edit2 className="size-4" />
@@ -202,7 +202,7 @@ export default function SettingsPage() {
                                                             <Button
                                                                 size="icon"
                                                                 variant="ghost"
-                                                                className="h-8 w-8 text-red-400 hover:bg-red-400/10"
+                                                                className="h-8 w-8 sm:h-9 sm:w-9 text-red-400 hover:bg-red-400/10"
                                                                 onClick={() => setItemToDelete({ id: cat.id, name: cat.name, type: 'category' })}
                                                             >
                                                                 <Trash2 className="size-4" />
@@ -229,18 +229,18 @@ export default function SettingsPage() {
                             </CardTitle>
                             <CardDescription className="text-amber-200/40">Enter a name for the new material option</CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex gap-3 mb-8">
+                        <CardContent className="p-4 sm:p-6">
+                            <div className="flex flex-col sm:flex-row gap-3 mb-6 sm:mb-8">
                                 <Input
                                     value={newMaterial}
                                     onChange={(e) => setNewMaterial(e.target.value)}
                                     placeholder="e.g. 10K Gold, Titanium..."
-                                    className="bg-slate-900/50 border-amber-500/20 text-amber-50 focus:ring-amber-500/30"
+                                    className="bg-slate-900/50 border-amber-500/20 text-amber-50 focus:ring-amber-500/30 h-11"
                                     onKeyDown={(e) => e.key === 'Enter' && handleAddMaterial()}
                                 />
                                 <Button
                                     onClick={handleAddMaterial}
-                                    className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold"
+                                    className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold h-11 px-6 flex-shrink-0"
                                 >
                                     Add Material
                                 </Button>
@@ -259,29 +259,29 @@ export default function SettingsPage() {
                                         {materials.map((mat) => (
                                             <div key={mat.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-900/30 border border-amber-500/10 hover:border-amber-500/30 transition-colors group">
                                                 {editingItem?.id === mat.id && editingItem.type === 'material' ? (
-                                                    <div className="flex items-center gap-2 flex-1 mr-4">
+                                                    <div className="flex items-center gap-2 flex-1 mr-2">
                                                         <Input
                                                             value={editingItem.name}
                                                             onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-                                                            className="h-8 bg-slate-800 border-amber-500/40 text-amber-50 text-sm"
+                                                            className="h-9 bg-slate-800 border-amber-500/40 text-amber-50 text-sm"
                                                             autoFocus
                                                             onKeyDown={(e) => e.key === 'Enter' && handleUpdateMaterial()}
                                                         />
-                                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-emerald-400 hover:bg-emerald-400/10" onClick={handleUpdateMaterial}>
+                                                        <Button size="icon" variant="ghost" className="h-9 w-9 text-emerald-400 hover:bg-emerald-400/10 flex-shrink-0" onClick={handleUpdateMaterial}>
                                                             <Save className="size-4" />
                                                         </Button>
-                                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-red-400 hover:bg-red-400/10" onClick={() => setEditingItem(null)}>
+                                                        <Button size="icon" variant="ghost" className="h-9 w-9 text-red-400 hover:bg-red-400/10 flex-shrink-0" onClick={() => setEditingItem(null)}>
                                                             <X className="size-4" />
                                                         </Button>
                                                     </div>
                                                 ) : (
                                                     <>
-                                                        <span className="text-amber-50 font-medium">{mat.name}</span>
-                                                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <span className="text-amber-50 font-medium text-sm sm:text-base">{mat.name}</span>
+                                                        <div className="flex items-center gap-1 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                                                             <Button
                                                                 size="icon"
                                                                 variant="ghost"
-                                                                className="h-8 w-8 text-amber-400 hover:bg-amber-400/10"
+                                                                className="h-8 w-8 sm:h-9 sm:w-9 text-amber-400 hover:bg-amber-400/10"
                                                                 onClick={() => setEditingItem({ id: mat.id, name: mat.name, type: 'material' })}
                                                             >
                                                                 <Edit2 className="size-4" />
@@ -289,7 +289,7 @@ export default function SettingsPage() {
                                                             <Button
                                                                 size="icon"
                                                                 variant="ghost"
-                                                                className="h-8 w-8 text-red-400 hover:bg-red-400/10"
+                                                                className="h-8 w-8 sm:h-9 sm:w-9 text-red-400 hover:bg-red-400/10"
                                                                 onClick={() => setItemToDelete({ id: mat.id, name: mat.name, type: 'material' })}
                                                             >
                                                                 <Trash2 className="size-4" />
