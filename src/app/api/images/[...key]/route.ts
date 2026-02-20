@@ -4,10 +4,11 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: Promise<{ key: string }> }
+    { params }: { params: Promise<{ key: string[] }> }
 ) {
     try {
         const { key } = await params;
+        const keyStr = key.join('/');
         const context = await getCloudflareContext();
         const bucket = context.env.BUCKET;
 
@@ -15,7 +16,7 @@ export async function GET(
             return new Response('R2 Bucket not configured', { status: 500 });
         }
 
-        const object = await bucket.get(key);
+        const object = await bucket.get(keyStr);
 
         if (!object) {
             return new Response('Image not found', { status: 404 });
