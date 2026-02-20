@@ -8,6 +8,26 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { toast } from 'sonner';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { getInvoicesAction, updateInvoiceStatusAction } from '@/app/actions/invoiceActions';
+import { Invoice } from '@/types';
+import { SITE_CONFIG } from '@/lib/config';
+import jsPDF from 'jspdf';
+import { toPng } from 'html-to-image';
+import { Separator } from '@/components/ui/separator';
+import { format, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
+import { DateRange } from 'react-day-picker';
 import {
     Receipt,
     Printer,
@@ -25,17 +45,11 @@ import {
     HandCoins,
     ChevronLeft,
     ChevronRight,
-    X
+    X,
+    CheckCircle2,
+    Clock,
+    AlertCircle
 } from 'lucide-react';
-import jsPDF from 'jspdf';
-import { toPng } from 'html-to-image';
-import { Separator } from '@/components/ui/separator';
-import { format, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { DateRange } from 'react-day-picker';
-import { toast } from 'sonner';
-import { getInvoicesAction } from '@/app/actions/invoiceActions';
-import { Invoice } from '@/types';
 
 
 
@@ -45,6 +59,8 @@ export default function InvoicePage() {
     const [showInvoiceTypeDialog, setShowInvoiceTypeDialog] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isStatusConfirmOpen, setIsStatusConfirmOpen] = useState(false);
+    const [pendingStatus, setPendingStatus] = useState<string | null>(null);
     const invoicesPerPage = 5;
 
     // --- Premium PDF Template Generation ---
@@ -74,7 +90,7 @@ export default function InvoicePage() {
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M11 3 8 9l3 12"/><path d="M13 3l3 6-3 12"/><path d="M2.3 9h19.4"/></svg>
                         </div>
                         <div>
-                            <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #000;">Luxe Jewelry</h1>
+                            <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #000;">${SITE_CONFIG.name}</h1>
                             <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
                                 <p style="margin: 0; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px;">${invoice.invoiceNumber}</p>
                                 <span style="font-size: 10px; font-weight: bold; text-transform: uppercase; background: #000; color: #fff; padding: 2px 8px; border-radius: 40px; letter-spacing: 0.5px;">${invoice.type}</span>
@@ -248,6 +264,38 @@ export default function InvoicePage() {
         setAppliedDueDateRange(dueDateRange);
         setSelectedInvoice(null);
         setCurrentPage(1);
+    };
+
+    const handleStatusChange = (newStatus: string) => {
+        if (!selectedInvoice) return;
+        setPendingStatus(newStatus);
+        setIsStatusConfirmOpen(true);
+    };
+
+    const confirmStatusChange = async () => {
+        if (!selectedInvoice || !pendingStatus) return;
+
+        const loadingToast = toast.loading('Updating status...');
+        try {
+            const result = await updateInvoiceStatusAction(selectedInvoice.id, pendingStatus);
+            if (result.success) {
+                toast.success('Status updated successfully');
+                // Update local state
+                setInvoices(prev => prev.map(inv =>
+                    inv.id === selectedInvoice.id ? { ...inv, status: pendingStatus as any } : inv
+                ));
+                setSelectedInvoice(prev => prev ? { ...prev, status: pendingStatus as any } : null);
+            } else {
+                toast.error(result.error || 'Failed to update status');
+            }
+        } catch (error) {
+            console.error('Status Update Error:', error);
+            toast.error('An error occurred while updating status');
+        } finally {
+            toast.dismiss(loadingToast);
+            setIsStatusConfirmOpen(false);
+            setPendingStatus(null);
+        }
     };
 
     const handleClearFilters = () => {
@@ -450,6 +498,10 @@ export default function InvoicePage() {
                                                     <div className="text-xs text-amber-200/50 flex items-center gap-1">
                                                         <Calendar className="size-3" />
                                                         {format(invoice.date, 'MMM dd, yyyy')}
+                                                        <span className="mx-1">•</span>
+                                                        <span className={`capitalize ${['active', 'paid', 'redeemed'].includes(invoice.status) ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                                            {invoice.status.replace('_', ' ')}
+                                                        </span>
                                                     </div>
                                                     <div className="text-sm font-bold text-amber-400">
                                                         {invoice.total.toFixed(0)}
@@ -521,22 +573,83 @@ export default function InvoicePage() {
                                             </div>
                                             <div>
                                                 <h3 className="text-xl font-bold text-amber-50 flex items-center gap-2">
-                                                    Luxe Jewelry
-                                                    <Sparkles className="size-4 text-amber-400" />
+                                                    {SITE_CONFIG.name}
                                                 </h3>
-                                                <p className="text-sm text-amber-200/60">Premium Point of Sale</p>
+                                                <p className="text-sm text-amber-200/60">{SITE_CONFIG.tagline}</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
                                             <div className="text-2xl font-bold text-amber-400">{selectedInvoice.invoiceNumber}</div>
-                                            <Badge className={`mt-1 uppercase font-bold tracking-wider ${selectedInvoice.type === 'sales'
-                                                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                                                : selectedInvoice.type === 'pawn'
-                                                    ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                                                    : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-                                                }`}>
-                                                {selectedInvoice.type} Invoice
-                                            </Badge>
+                                            <div className="flex flex-col items-end gap-2 mt-1">
+                                                <Badge className={`uppercase font-bold tracking-wider ${selectedInvoice.type === 'sales'
+                                                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                                                    : selectedInvoice.type === 'pawn'
+                                                        ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                                                        : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                                                    }`}>
+                                                    {selectedInvoice.type} Invoice
+                                                </Badge>
+
+                                                {(selectedInvoice.type === 'pawn' || selectedInvoice.type === 'sales') ? (
+                                                    <Select
+                                                        value={selectedInvoice.status}
+                                                        onValueChange={handleStatusChange}
+                                                    >
+                                                        <SelectTrigger className="w-[140px] h-8 bg-slate-900/50 border-amber-500/20 text-xs text-amber-50">
+                                                            <SelectValue placeholder="Change Status" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="bg-slate-900 border-amber-500/20">
+                                                            {selectedInvoice.type === 'pawn' ? (
+                                                                <>
+                                                                    <SelectItem value="active" className="text-amber-50">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Clock className="size-3 text-amber-400" />
+                                                                            Active
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                    <SelectItem value="overdue" className="text-amber-50">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <AlertCircle className="size-3 text-red-400" />
+                                                                            Overdue
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                    <SelectItem value="expired" className="text-amber-50">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <X className="size-3 text-slate-400" />
+                                                                            Expired
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                    <SelectItem value="redeemed" className="text-amber-50">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <CheckCircle2 className="size-3 text-emerald-400" />
+                                                                            Redeemed
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <SelectItem value="paid" className="text-amber-50">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <CheckCircle2 className="size-3 text-emerald-400" />
+                                                                            Paid
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                    <SelectItem value="partially_paid" className="text-amber-50">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Clock className="size-3 text-amber-400" />
+                                                                            Partially Paid
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                </>
+                                                            )}
+                                                        </SelectContent>
+                                                    </Select>
+                                                ) : (
+                                                    <Badge variant="outline" className="border-amber-500/20 text-amber-200/60 text-[10px] uppercase">
+                                                        Status: {selectedInvoice.status.replace('_', ' ')}
+                                                    </Badge>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </CardHeader>
@@ -606,7 +719,7 @@ export default function InvoicePage() {
                                                         </td>
                                                         <td className="py-3 px-4 text-center text-amber-50">{item.quantity}</td>
                                                         <td className="py-3 px-4 text-right text-amber-50">{item.price.toFixed(0)}</td>
-                                                        {selectedInvoice.type !== 'buy' && <td className="py-3 px-4 text-right text-red-400">-${(item.discount || 0).toFixed(0)}</td>}
+                                                        {selectedInvoice.type !== 'buy' && <td className="py-3 px-4 text-right text-red-400">-{(item.discount || 0).toFixed(0)}</td>}
                                                         <td className="py-3 px-4 text-right text-amber-50 font-medium">{item.total.toFixed(0)}</td>
                                                     </tr>
                                                 ))}
@@ -621,7 +734,7 @@ export default function InvoicePage() {
                                                 {selectedInvoice.type !== 'buy' && selectedInvoice.items.some(item => (item.discount || 0) > 0) && (
                                                     <tr>
                                                         <td colSpan={4} className="py-2 px-4 text-right text-amber-200/70">Discount:</td>
-                                                        <td className="py-2 px-4 text-right text-red-400">-${selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0).toFixed(0)}</td>
+                                                        <td className="py-2 px-4 text-right text-red-400">-{selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0).toFixed(0)}</td>
                                                     </tr>
                                                 )}
                                                 <tr>
@@ -792,6 +905,29 @@ export default function InvoicePage() {
                     </Card>
                 </div>
             )}
+
+            {/* Status Change Confirmation Dialog */}
+            <AlertDialog open={isStatusConfirmOpen} onOpenChange={setIsStatusConfirmOpen}>
+                <AlertDialogContent className="bg-slate-900 border-amber-500/20">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="text-amber-50">Confirm Status Change</AlertDialogTitle>
+                        <AlertDialogDescription className="text-amber-200/60">
+                            Are you sure you want to change the status of this invoice to <span className="text-amber-400 font-bold capitalize">{pendingStatus?.replace('_', ' ')}</span>? This action will be recorded in the system.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="bg-slate-800 border-amber-500/20 text-amber-50 hover:bg-slate-700 hover:text-amber-50">
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={confirmStatusChange}
+                            className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+                        >
+                            Confirm Change
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

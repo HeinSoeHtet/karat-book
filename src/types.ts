@@ -44,6 +44,7 @@ export interface Invoice {
   items: InvoiceItem[];
   total: number;
   type: 'sales' | 'pawn' | 'buy';
+  status: 'paid' | 'unpaid' | 'partially_paid' | 'cancelled' | 'active' | 'overdue' | 'expired' | 'redeemed';
   dueDate?: Date;
   notes?: string;
 }

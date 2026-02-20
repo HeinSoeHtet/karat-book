@@ -26,6 +26,11 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
         if (!isOpen) return;
 
         const checkPermission = async () => {
+            if (!navigator.permissions || !navigator.permissions.query) {
+                setPermissionState('prompt');
+                return;
+            }
+
             try {
                 // Not all browsers support the 'camera' name in permissions.query
                 const result = await navigator.permissions.query({ name: 'camera' as unknown as PermissionName });
@@ -60,6 +65,11 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
         setIsCameraReady(false);
         setError(null);
 
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            setError("Your browser does not support camera access.");
+            return;
+        }
+
         try {
             const constraints = {
                 video: {
@@ -87,9 +97,9 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
         }
     };
 
-    // Automatically try to start if permission is already granted
+    // Automatically try to start if permission is already granted or if we should prompt
     useEffect(() => {
-        if (isOpen && permissionState === 'granted' && !stream && !error && !capturedImage) {
+        if (isOpen && (permissionState === 'granted' || permissionState === 'prompt') && !stream && !error && !capturedImage) {
             startCamera();
         }
     }, [isOpen, permissionState, stream, error, capturedImage]);
@@ -97,37 +107,40 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
     // Effect to bind stream to video element
     useEffect(() => {
         let mounted = true;
-        const videoElement = videoRef.current;
 
-        if (stream && videoElement && !capturedImage) {
-            videoElement.srcObject = stream;
+        // Use a timeout to ensure the video element has had a chance to render
+        const timer = setTimeout(() => {
+            const videoElement = videoRef.current;
+            if (stream && videoElement && !capturedImage && mounted) {
+                videoElement.srcObject = stream;
 
-            const handleCanPlay = async () => {
-                if (!mounted) return;
-                try {
-                    await videoElement.play();
-                    setIsCameraReady(true);
-                } catch (e) {
-                    console.error("Video play failed:", e);
-                }
-            };
+                const handleCanPlay = async () => {
+                    if (!mounted) return;
+                    try {
+                        await videoElement.play();
+                        setIsCameraReady(true);
+                    } catch (e) {
+                        console.error("Video play failed:", e);
+                    }
+                };
 
-            videoElement.addEventListener('canplay', handleCanPlay);
-
-            // Force check if canplay doesn't fire
-            const timer = setTimeout(() => {
-                if (mounted && !isCameraReady && videoElement.readyState >= 2) {
+                videoElement.addEventListener('canplay', handleCanPlay);
+                // If it's already ready
+                if (videoElement.readyState >= 2) {
                     handleCanPlay();
                 }
-            }, 1500);
 
-            return () => {
-                mounted = false;
-                clearTimeout(timer);
-                videoElement.removeEventListener('canplay', handleCanPlay);
-            };
-        }
-    }, [stream, capturedImage, isCameraReady]);
+                return () => {
+                    videoElement.removeEventListener('canplay', handleCanPlay);
+                };
+            }
+        }, 100);
+
+        return () => {
+            mounted = false;
+            clearTimeout(timer);
+        };
+    }, [stream, capturedImage, permissionState]);
 
     const capturePhoto = () => {
         if (videoRef.current && canvasRef.current) {
@@ -161,15 +174,15 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-            <DialogContent className="fixed top-0 left-0 translate-x-0 translate-y-0 sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] w-full h-[100dvh] sm:h-auto sm:max-w-md bg-black sm:bg-slate-900 border-none sm:border sm:border-amber-500/20 text-amber-50 overflow-hidden shadow-2xl p-0 sm:p-6 rounded-none sm:rounded-2xl flex flex-col gap-0">
-                <DialogHeader className="border-b border-white/5 p-4 sm:pb-4 flex-row items-center justify-between space-y-0 shrink-0 z-30 bg-slate-900/50 backdrop-blur-md sm:bg-transparent sm:backdrop-blur-none">
-                    <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <DialogContent className="sm:max-w-md bg-slate-900 border-amber-500/20 text-amber-50 overflow-hidden shadow-2xl p-0 sm:p-6 rounded-2xl flex flex-col gap-4">
+                <DialogHeader className="p-4 sm:pb-4 flex-row items-center justify-between space-y-0 shrink-0">
+                    <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl text-amber-50">
                         <Camera className="size-5 sm:size-6 text-amber-400" />
                         Capture Photo
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="flex-1 relative flex flex-col items-center justify-center overflow-hidden bg-black">
+                <div className="relative aspect-square w-full overflow-hidden bg-black rounded-xl">
                     {/* Permission Request Landing */}
                     {permissionState === 'prompt' && !stream && !error && (
                         <div className="text-center p-8 space-y-6 animate-in fade-in zoom-in-95 duration-300 z-30">
@@ -245,7 +258,7 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
                     </div>
                 </div>
 
-                <DialogFooter className={`shrink-0 p-8 sm:p-6 bg-slate-900/80 backdrop-blur-xl sm:bg-transparent sm:backdrop-blur-none z-30 flex-row items-center justify-center gap-6 ${permissionState === 'prompt' || permissionState === 'denied' ? 'hidden' : ''}`}>
+                <DialogFooter className={`p-6 flex-row items-center justify-center gap-6 ${permissionState === 'prompt' || permissionState === 'denied' ? 'hidden' : ''}`}>
                     {capturedImage ? (
                         <div className="flex w-full gap-4 max-w-sm">
                             <Button

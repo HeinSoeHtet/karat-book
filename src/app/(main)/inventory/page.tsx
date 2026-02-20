@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from 'sonner';
 import { Item } from '@/types';
-import { CATEGORY_OPTIONS, MATERIAL_OPTIONS } from '@/constants/inventory';
 import { getItemsAction, deleteItemAction } from '@/app/actions/itemActions';
+import { useSettings } from '@/context/SettingsContext';
 
 export default function InventoryPage() {
     const [dbItems, setDbItems] = useState<Item[]>([]);
@@ -38,11 +38,13 @@ export default function InventoryPage() {
     const [stats, setStats] = useState({
         totalCount: 0,
         lowStockCount: 0,
-        outOfStockCount: 0
+        outOfStockCount: 0,
+        totalStockUnits: 0
     });
 
     const [itemToDelete, setItemToDelete] = useState<Item | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const { categories: dbCategories, materials: dbMaterials } = useSettings();
     const router = useRouter();
 
     // Active card filter
@@ -149,7 +151,25 @@ export default function InventoryPage() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                {/* Total Stock Units Card (Moved from Sales) */}
+                <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 backdrop-blur-sm">
+                    <CardHeader className="flex flex-row items-center justify-between pb-3">
+                        <CardTitle className="text-sm font-medium text-amber-200/70">
+                            Inventory Stock
+                        </CardTitle>
+                        <div className="bg-purple-500/20 p-2.5 rounded-lg">
+                            <Package className="size-5 text-purple-400" />
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-4xl font-bold bg-gradient-to-r from-purple-300 to-purple-500 bg-clip-text text-transparent">
+                            {stats.totalStockUnits}
+                        </div>
+                        <p className="text-xs text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Units</p>
+                    </CardContent>
+                </Card>
+
                 <Card
                     className={`cursor-pointer transition-all duration-200 ${activeCard === 'all'
                         ? 'bg-gradient-to-br from-blue-500/20 to-blue-600/10 border-blue-500/40 shadow-lg shadow-blue-500/20'
@@ -241,16 +261,16 @@ export default function InventoryPage() {
                         </SelectTrigger>
                         <SelectContent className="bg-slate-900 border-amber-500/20 text-amber-50">
                             <SelectItem value="all">All Categories</SelectItem>
-                            {CATEGORY_OPTIONS.map((cat) => (
-                                <SelectItem key={cat.value} value={cat.value}>
-                                    {cat.label}
+                            {dbCategories.map((cat) => (
+                                <SelectItem key={cat.id} value={cat.id}>
+                                    {cat.name}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
                     <div className="w-full sm:w-[280px]">
                         <MultiSelect
-                            options={[...MATERIAL_OPTIONS]}
+                            options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
                             selected={tempMaterialFilters}
                             onChange={setTempMaterialFilters}
                             placeholder="Select materials"

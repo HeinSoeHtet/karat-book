@@ -31,13 +31,28 @@ import { cn } from '@/components/ui/utils';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { searchItemsAction } from '@/app/actions/itemActions';
 import { createInvoiceAction, getInvoiceByNumberAction } from '@/app/actions/invoiceActions';
+import { useSettings } from '@/context/SettingsContext';
+import { Suspense } from 'react';
 import { Item, Invoice, InvoiceItem } from '@/types';
 
 export default function CreateInvoicePage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+            </div>
+        }>
+            <CreateInvoiceContent />
+        </Suspense>
+    );
+}
+
+function CreateInvoiceContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const invoiceType = (searchParams.get('type') as 'sales' | 'pawn' | 'buy') || 'sales';
     const [dbItems, setDbItems] = useState<Item[]>([]);
+    const { categories: dbCategories, materials: dbMaterials, isLoading: isOptionsLoading } = useSettings();
 
     const [isSearchingItems, setIsSearchingItems] = useState(false);
     const [hasSearchedItems, setHasSearchedItems] = useState(false);
@@ -53,6 +68,8 @@ export default function CreateInvoicePage() {
     // Sales invoice items (from inventory)
     const [selectedItems, setSelectedItems] = useState<Array<{
         productId: string;
+        name: string;
+        category: string;
         quantity: number;
         returnType: 'making-charges' | 'percentage';
         price: number;
@@ -131,34 +148,6 @@ export default function CreateInvoicePage() {
         }
     }, [showItemDialog]);
 
-    const categories = [
-        { value: 'all', label: 'All Categories' },
-        { value: 'rings', label: 'Rings' },
-        { value: 'necklaces', label: 'Necklaces' },
-        { value: 'bracelets', label: 'Bracelets' },
-        { value: 'earrings', label: 'Earrings' },
-        { value: 'watches', label: 'Watches' },
-    ];
-
-    const materials = [
-        { value: '24K Gold', label: '24K Gold' },
-        { value: '22K Gold', label: '22K Gold' },
-        { value: '18K Gold', label: '18K Gold' },
-        { value: '14K Gold', label: '14K Gold' },
-        { value: 'White Gold', label: 'White Gold' },
-        { value: 'Yellow Gold', label: 'Yellow Gold' },
-        { value: 'Rose Gold', label: 'Rose Gold' },
-        { value: 'Platinum', label: 'Platinum' },
-        { value: 'Sterling Silver', label: 'Sterling Silver' },
-        { value: 'Stainless Steel', label: 'Stainless Steel' },
-        { value: 'Diamond', label: 'Diamond' },
-        { value: 'Pearl', label: 'Pearl' },
-        { value: 'Gemstone', label: 'Gemstone' },
-        { value: 'Sapphire', label: 'Sapphire' },
-        { value: 'Emerald', label: 'Emerald' },
-        { value: 'Ruby', label: 'Ruby' },
-    ];
-
 
     // Pawn item functions
     const addPawnItem = () => {
@@ -223,7 +212,15 @@ export default function CreateInvoicePage() {
                 }]);
             } else {
                 const price = 0; // Or get from product if available
-                setSelectedItems([...selectedItems, { productId, quantity: 1, returnType: 'percentage', price, discount: 0 }]);
+                setSelectedItems([...selectedItems, {
+                    productId,
+                    name: product.name,
+                    category: product.category,
+                    quantity: 1,
+                    returnType: 'percentage',
+                    price,
+                    discount: 0
+                }]);
             }
         }
         setShowItemDialog(false);
@@ -297,11 +294,10 @@ export default function CreateInvoicePage() {
                 const { total } = calculateInvoiceTotal();
                 invoiceData.total = total;
                 invoiceData.items = selectedItems.map(item => {
-                    const product = dbItems.find(p => p.id === item.productId);
                     return {
                         productId: item.productId,
-                        name: product?.name || 'Unknown Product',
-                        category: product?.category,
+                        name: item.name,
+                        category: item.category,
                         quantity: item.quantity,
                         price: item.price,
                         discount: item.discount,
@@ -562,7 +558,6 @@ export default function CreateInvoicePage() {
                                     <table className="w-full">
                                         <thead className="bg-slate-900/50">
                                             <tr>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">ID</th>
                                                 <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Item</th>
                                                 <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Return Type</th>
                                                 <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Qty</th>
@@ -574,17 +569,13 @@ export default function CreateInvoicePage() {
                                         </thead>
                                         <tbody>
                                             {selectedItems.map((item, index) => {
-                                                const product = dbItems.find(p => p.id === item.productId);
                                                 const lineTotal = (item.price * item.quantity) - item.discount;
                                                 return (
                                                     <tr key={index} className="border-t border-amber-500/10">
                                                         <td className="py-3 px-4">
-                                                            <div className="text-xs text-amber-200/50">{product?.id.slice(0, 8)}</div>
-                                                        </td>
-                                                        <td className="py-3 px-4">
                                                             <div className="flex flex-col">
-                                                                <span className="text-amber-50 text-sm">{product ? product.name : 'Unknown Product'}</span>
-                                                                {product && <span className="text-xs text-amber-200/50">{product.category}</span>}
+                                                                <span className="text-amber-50 text-sm">{item.name}</span>
+                                                                <span className="text-xs text-amber-200/50">{item.category}</span>
                                                             </div>
                                                         </td>
                                                         <td className="py-3 px-4">
@@ -646,7 +637,7 @@ export default function CreateInvoicePage() {
                                         </tbody>
                                         <tfoot className="bg-slate-900/50 border-t-2 border-amber-500/30">
                                             <tr>
-                                                <td colSpan={6} className="py-2 px-4 text-right text-amber-200/70">
+                                                <td colSpan={5} className="py-2 px-4 text-right text-amber-200/70">
                                                     Subtotal:
                                                 </td>
                                                 <td className="py-2 px-4 text-left text-amber-50 font-medium">
@@ -655,7 +646,7 @@ export default function CreateInvoicePage() {
                                                 <td></td>
                                             </tr>
                                             <tr>
-                                                <td colSpan={6} className="py-2 px-4 text-right text-amber-200/70">
+                                                <td colSpan={5} className="py-2 px-4 text-right text-amber-200/70">
                                                     Total Discount:
                                                 </td>
                                                 <td className="py-2 px-4 text-left text-amber-50 font-medium">
@@ -664,7 +655,7 @@ export default function CreateInvoicePage() {
                                                 <td></td>
                                             </tr>
                                             <tr>
-                                                <td colSpan={6} className="py-3 px-4 text-right text-amber-200/70 font-semibold text-lg">
+                                                <td colSpan={5} className="py-3 px-4 text-right text-amber-200/70 font-semibold text-lg">
                                                     Total:
                                                 </td>
                                                 <td className="py-3 px-4 text-left text-amber-400 font-bold text-lg">
@@ -796,22 +787,23 @@ export default function CreateInvoicePage() {
                                 <div className="flex gap-4">
                                     <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                                         <SelectTrigger className="flex-1 bg-slate-900/50 border-amber-500/20 text-amber-50 h-11">
-                                            <SelectValue />
+                                            <SelectValue placeholder={isOptionsLoading ? "Loading..." : "Select category"} />
                                         </SelectTrigger>
                                         <SelectContent className="bg-slate-900 border-amber-500/20">
-                                            {categories.map((cat) => (
-                                                <SelectItem key={cat.value} value={cat.value} className="text-amber-50">
-                                                    {cat.label}
+                                            <SelectItem value="all" className="text-amber-50">All Categories</SelectItem>
+                                            {dbCategories.map((cat) => (
+                                                <SelectItem key={cat.id} value={cat.id} className="text-amber-50">
+                                                    {cat.name}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                     <div className="flex-1">
                                         <MultiSelect
-                                            options={materials}
+                                            options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
                                             selected={materialFilters}
                                             onChange={setMaterialFilters}
-                                            placeholder="Filter by materials"
+                                            placeholder={isOptionsLoading ? "Loading materials..." : "Filter by materials"}
                                         />
                                     </div>
                                 </div>
@@ -858,7 +850,6 @@ export default function CreateInvoicePage() {
                                     <table className="w-full">
                                         <thead className="bg-slate-900/50">
                                             <tr>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">ID</th>
                                                 <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Name</th>
                                                 <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Category</th>
                                                 <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Material</th>
@@ -872,9 +863,6 @@ export default function CreateInvoicePage() {
                                                     className="border-t border-amber-500/10 hover:bg-slate-900/50 cursor-pointer transition-colors group"
                                                     onClick={() => addItemToInvoice(product.id)}
                                                 >
-                                                    <td className="py-3 px-4">
-                                                        <div className="text-xs text-amber-200/50">{product.id.slice(0, 8)}</div>
-                                                    </td>
                                                     <td className="py-3 px-4">
                                                         <div className="flex items-center gap-2">
                                                             <Diamond className="size-4 text-amber-400/60 group-hover:text-amber-400 transition-colors" />

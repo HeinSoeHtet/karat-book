@@ -14,8 +14,8 @@ import { Package, ArrowLeft, Sparkles, Image as ImageIcon, Boxes, Award, Upload,
 import { CameraModal } from '@/components/inventory/CameraModal';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CATEGORY_OPTIONS, MATERIAL_OPTIONS } from '@/constants/inventory';
 import { updateItemAction, getItemByIdAction } from '@/app/actions/itemActions';
+import { useSettings } from '@/context/SettingsContext';
 
 export default function EditItemPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
@@ -23,7 +23,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    // ... (rest of states)
+    const { categories: dbCategories, materials: dbMaterials, isLoading: isOptionsLoading } = useSettings();
 
     const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -51,19 +51,18 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     useEffect(() => {
         const fetchItem = async () => {
             setIsLoading(true);
-            const result = await getItemByIdAction(id);
+            const itemRes = await getItemByIdAction(id);
 
-            if (result.success && result.data) {
-                const item = result.data;
+            if (itemRes.success && itemRes.data) {
+                const item = itemRes.data;
                 setFormData(item as unknown as ItemFormData);
                 setImagePreview(item.image);
-                // Parse materials from comma-separated string
                 if (item.material) {
                     const materials = item.material.split(',').map(m => m.trim());
                     setSelectedMaterials(materials);
                 }
             } else {
-                toast.error(result.error || 'Item not found');
+                toast.error(itemRes.error || 'Item not found');
                 router.push('/inventory');
             }
             setIsLoading(false);
@@ -254,14 +253,15 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                                 <Select
                                     value={formData.category}
                                     onValueChange={(value) => setFormData({ ...formData, category: value })}
+                                    disabled={isOptionsLoading}
                                 >
-                                    <SelectTrigger className="bg-slate-900/50 border-amber-500/30 text-amber-50 h-11">
-                                        <SelectValue placeholder="Select category" />
+                                    <SelectTrigger className="bg-slate-900 border-amber-500/20 text-amber-50 h-11">
+                                        <SelectValue placeholder={isOptionsLoading ? "Loading..." : "Select category"} />
                                     </SelectTrigger>
                                     <SelectContent className="bg-slate-900 border-amber-500/20 text-amber-50">
-                                        {CATEGORY_OPTIONS.map((opt) => (
-                                            <SelectItem key={opt.value} value={opt.value} className="hover:bg-amber-500/10">
-                                                {opt.label}
+                                        {dbCategories.map((option) => (
+                                            <SelectItem key={option.id} value={option.id}>
+                                                {option.name}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -294,12 +294,11 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                                     Materials <span className="text-red-400">*</span>
                                 </Label>
                                 <MultiSelect
-                                    options={[...MATERIAL_OPTIONS]}
+                                    options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
                                     selected={selectedMaterials}
                                     onChange={setSelectedMaterials}
-                                    placeholder="Select materials..."
-                                />
-                            </div>
+                                    placeholder={isOptionsLoading ? "Loading materials..." : "Select materials"}
+                                />                       </div>
 
                             {/* Description */}
                             <div className="md:col-span-2">

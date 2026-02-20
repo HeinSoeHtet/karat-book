@@ -6,32 +6,39 @@ import { eq, and, gte, lte } from 'drizzle-orm';
 import { HourlyRateEntry } from '@/types';
 
 interface MarketRateRequestBody {
-    time: string;
-    gold_price: number;
-    exchange_rate: number;
+    usdt_mmk: number;
+    gold_usd: number;
+    timestamp: string;
 }
 
 export async function POST(request: NextRequest) {
     try {
+        const context = await getCloudflareContext();
+        const apiSecret = context.env.MARKET_RATE_API_SECRET;
+        const authHeader = request.headers.get('Authorization');
+
+        if (!apiSecret || authHeader !== apiSecret) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const body = await request.json() as MarketRateRequestBody;
-        const { time, gold_price, exchange_rate } = body;
+        const { usdt_mmk, gold_usd, timestamp } = body;
 
         // Validation
-        if (!time || gold_price === undefined || exchange_rate === undefined) {
+        if (!timestamp || gold_usd === undefined || usdt_mmk === undefined) {
             return NextResponse.json({
-                error: 'Missing required fields. Expected: { time, gold_price, exchange_rate }'
+                error: 'Missing required fields. Expected: { usdt_mmk, gold_usd, timestamp }'
             }, { status: 400 });
         }
 
-        if (typeof gold_price !== 'number' || gold_price <= 0) {
-            return NextResponse.json({ error: 'gold_price must be a positive number' }, { status: 400 });
+        if (typeof gold_usd !== 'number' || gold_usd <= 0) {
+            return NextResponse.json({ error: 'gold_usd must be a positive number' }, { status: 400 });
         }
 
-        if (typeof exchange_rate !== 'number' || exchange_rate <= 0) {
-            return NextResponse.json({ error: 'exchange_rate must be a positive number' }, { status: 400 });
+        if (typeof usdt_mmk !== 'number' || usdt_mmk <= 0) {
+            return NextResponse.json({ error: 'usdt_mmk must be a positive number' }, { status: 400 });
         }
 
-        const context = await getCloudflareContext();
         const d1 = context.env.DB as D1Database;
         const db = getDb(d1);
 
@@ -49,7 +56,7 @@ export async function POST(request: NextRequest) {
                 ))
                 .limit(1);
 
-            const newEntry: HourlyRateEntry = { time, value: Number(value) };
+            const newEntry: HourlyRateEntry = { time: timestamp, value: Number(value) };
 
             if (existing.length > 0) {
                 const currentRates = JSON.parse(existing[0].hourlyRate) as HourlyRateEntry[];
@@ -68,8 +75,8 @@ export async function POST(request: NextRequest) {
             }
         };
 
-        await processType('gold', gold_price);
-        await processType('exchange_rate', exchange_rate);
+        await processType('gold', gold_usd);
+        await processType('exchange_rate', usdt_mmk);
 
         return NextResponse.json({
             success: true,

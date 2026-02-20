@@ -13,9 +13,12 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
+import { SITE_CONFIG } from "@/lib/config";
+import { SettingsProvider } from "@/context/SettingsContext";
+
 export const metadata: Metadata = {
-	title: "Luxe Jewelry - Premium POS",
-	description: "Premium Point of Sale System for Jewelry Shops",
+	title: `${SITE_CONFIG.name} - ${SITE_CONFIG.tagline}`,
+	description: SITE_CONFIG.description,
 };
 
 export default function RootLayout({
@@ -29,7 +32,9 @@ export default function RootLayout({
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				{children}
+				<SettingsProvider>
+					{children}
+				</SettingsProvider>
 				<Toaster position="top-right" />
 			</body>
 		</html>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Package, HandCoins, TrendingUp, Diamond } from 'lucide-react';
+import { Package, HandCoins, TrendingUp, Diamond, AlertTriangle, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart } from 'recharts';
 import { Item, Invoice } from '@/types';
@@ -10,7 +10,6 @@ import { getItemsAction } from '@/app/actions/itemActions';
 import { getInvoicesAction } from '@/app/actions/invoiceActions';
 
 export default function SalesPage() {
-    const [dbItems, setDbItems] = useState<Item[]>([]);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -18,14 +17,8 @@ export default function SalesPage() {
         const fetchData = async () => {
             setIsLoading(true);
             try {
-                const [itemsRes, invoicesRes] = await Promise.all([
-                    getItemsAction(),
-                    getInvoicesAction()
-                ]);
+                const invoicesRes = await getInvoicesAction();
 
-                if (itemsRes.success && itemsRes.data) {
-                    setDbItems(itemsRes.data);
-                }
                 if (invoicesRes.success && invoicesRes.data) {
                     setInvoices(invoicesRes.data as unknown as Invoice[]);
                 }
@@ -146,8 +139,8 @@ export default function SalesPage() {
             ) : (
                 <>
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                        {/* Pawn Invoices Card with Value */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                        {/* Total Pawns Card (Primary) */}
                         <Card className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/20 backdrop-blur-sm relative overflow-hidden">
                             <CardHeader className="flex flex-row items-center justify-between pb-3">
                                 <CardTitle className="text-sm font-medium text-amber-200/70">
@@ -162,7 +155,7 @@ export default function SalesPage() {
                                     <div className="text-4xl font-bold bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
                                         {pawnCount}
                                     </div>
-                                    <p className="text-xs text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Active Records</p>
+                                    <p className="text-xs text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Records</p>
                                 </div>
                                 <div className="text-right">
                                     <div className="text-2xl font-bold text-amber-200">
@@ -173,23 +166,54 @@ export default function SalesPage() {
                             </CardContent>
                         </Card>
 
-                        {/* Inventory Card */}
-                        <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 backdrop-blur-sm">
-                            <CardHeader className="flex flex-row items-center justify-between pb-3">
-                                <CardTitle className="text-sm font-medium text-amber-200/70">
-                                    Inventory Stock
-                                </CardTitle>
-                                <div className="bg-purple-500/20 p-2.5 rounded-lg">
-                                    <Package className="size-5 text-purple-400" />
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-4xl font-bold bg-gradient-to-r from-purple-300 to-purple-500 bg-clip-text text-transparent">
-                                    {dbItems.reduce((sum, item) => sum + (item.stock || 0), 0)}
-                                </div>
-                                <p className="text-xs text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Units</p>
-                            </CardContent>
-                        </Card>
+                        {[
+                            { status: 'active', label: 'Active Pawns', color: 'emerald', icon: TrendingUp },
+                            { status: 'overdue', label: 'Overdue Pawns', color: 'red', icon: AlertTriangle },
+                            { status: 'expired', label: 'Expired Pawns', color: 'orange', icon: Clock }
+                        ].map((s) => {
+                            const filteredInvoices = invoices.filter(i => i.type === 'pawn' && i.status === s.status);
+                            const count = filteredInvoices.length;
+                            const total = filteredInvoices.reduce((sum, i) => sum + (i.total || 0), 0);
+
+                            const colorClasses = {
+                                emerald: 'from-emerald-500/10 to-emerald-600/5 border-emerald-500/20 text-emerald-400 bg-emerald-500/20',
+                                red: 'from-red-500/10 to-red-600/5 border-red-500/20 text-red-400 bg-red-500/20',
+                                orange: 'from-orange-500/10 to-orange-600/5 border-orange-500/20 text-orange-400 bg-orange-500/20'
+                            }[s.color as 'emerald' | 'red' | 'orange'];
+
+                            const textGradient = {
+                                emerald: 'from-emerald-300 to-emerald-500',
+                                red: 'from-red-300 to-red-500',
+                                orange: 'from-orange-300 to-orange-500'
+                            }[s.color as 'emerald' | 'red' | 'orange'];
+
+                            return (
+                                <Card key={s.status} className={`bg-gradient-to-br ${colorClasses.split(' ').slice(0, 2).join(' ')} ${colorClasses.split(' ').slice(2, 3).join(' ')} backdrop-blur-sm relative overflow-hidden`}>
+                                    <CardHeader className="flex flex-row items-center justify-between pb-3">
+                                        <CardTitle className="text-sm font-medium text-amber-200/70">
+                                            {s.label}
+                                        </CardTitle>
+                                        <div className={`${colorClasses.split(' ').slice(4).join(' ')} p-2 rounded-lg`}>
+                                            <s.icon className={`size-4 ${colorClasses.split(' ').slice(3, 4).join(' ')}`} />
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="flex items-end justify-between">
+                                        <div>
+                                            <div className={`text-3xl font-bold bg-gradient-to-r ${textGradient} bg-clip-text text-transparent`}>
+                                                {count}
+                                            </div>
+                                            <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Records</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-xl font-bold text-amber-50/90">
+                                                {total.toLocaleString()}
+                                            </div>
+                                            <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Value</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
                     </div>
 
                     {/* Detailed Metrics Grid (6 Charts) */}

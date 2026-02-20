@@ -72,6 +72,7 @@ export async function createInvoiceAction(data: CreateInvoiceData) {
             customerAddress: data.customerAddress || null,
             total: data.total,
             type: data.type,
+            status: (data.type === 'pawn' ? 'active' : 'paid') as any,
             dueDate: data.dueDate ? new Date(data.dueDate) : null,
             notes: data.notes || null,
         };
@@ -189,5 +190,26 @@ export async function getInvoiceByNumberAction(invoiceNumber: string) {
     } catch (error) {
         console.error('Error fetching invoice by number:', error);
         return { success: false, error: error instanceof Error ? error.message : 'Failed to fetch invoice' };
+    }
+}
+
+export async function updateInvoiceStatusAction(id: string, status: string) {
+    try {
+        const { env } = await getCloudflareContext();
+        if (!env.DB) throw new Error('D1 Database not configured');
+        const db = getDb(env.DB);
+
+        await db.update(invoices)
+            .set({
+                status,
+                updatedAt: new Date()
+            })
+            .where(eq(invoices.id, id));
+
+        revalidatePath('/invoice');
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating invoice status:', error);
+        return { success: false, error: error instanceof Error ? error.message : 'Failed to update invoice status' };
     }
 }

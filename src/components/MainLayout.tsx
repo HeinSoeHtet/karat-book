@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Receipt, TrendingUp, Diamond, Warehouse, Newspaper, Menu, X } from 'lucide-react';
+import { Receipt, TrendingUp, Diamond, Warehouse, Newspaper, Menu, X, Settings } from 'lucide-react';
 import { useState } from 'react';
+
+import { SITE_CONFIG } from '@/lib/config';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -14,6 +16,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         { path: '/inventory', label: 'Inventory', icon: Warehouse },
         { path: '/invoice', label: 'Invoice', icon: Receipt },
         { path: '/sales', label: 'Sales', icon: TrendingUp },
+        { path: '/settings', label: 'Settings', icon: Settings },
     ];
 
     const handleNavClick = () => {
@@ -26,7 +29,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             <header className="bg-slate-950/50 backdrop-blur-xl border-b border-amber-500/20 sticky top-0 z-50">
                 <div className="px-4 sm:px-8 py-5">
                     <div className="flex items-center justify-between max-w-7xl mx-auto">
-                        <div className="flex items-center gap-3 sm:gap-4">
+                        <Link href="/" className="flex items-center gap-3 sm:gap-4">
                             <div className="relative">
                                 <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl blur-sm opacity-75"></div>
                                 <div className="relative bg-gradient-to-br from-amber-400 to-amber-600 p-2.5 sm:p-3 rounded-xl">
@@ -35,13 +38,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                             </div>
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent">
-                                    Luxe Jewelry
+                                    {SITE_CONFIG.name}
                                 </h1>
                                 <p className="text-xs sm:text-sm text-amber-200/60 flex items-center gap-1">
-                                    Premium Point of Sale
+                                    {SITE_CONFIG.tagline}
                                 </p>
                             </div>
-                        </div>
+                        </Link>
 
                         {/* Desktop Navigation */}
                         <div className="hidden md:flex items-center gap-4">

@@ -14,14 +14,15 @@ import { Package, ArrowLeft, Sparkles, Image as ImageIcon, Boxes, Award, Upload,
 import { CameraModal } from '@/components/inventory/CameraModal';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CATEGORY_OPTIONS, MATERIAL_OPTIONS } from '@/constants/inventory';
 import { createItemAction } from '@/app/actions/itemActions';
+import { useSettings } from '@/context/SettingsContext';
+import { useEffect } from 'react';
 
 export default function NewItemPage() {
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // ... (rest of states)
+    const { categories: dbCategories, materials: dbMaterials, isLoading: isOptionsLoading } = useSettings();
 
     const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -38,13 +39,19 @@ export default function NewItemPage() {
 
     const [formData, setFormData] = useState<ItemFormData>({
         name: '',
-        category: 'rings',
+        category: '',
         description: '',
         material: '',
         stock: 0,
         image: '',
     });
     const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (dbCategories.length > 0 && !formData.category) {
+            setFormData(prev => ({ ...prev, category: dbCategories[0].id }));
+        }
+    }, [dbCategories, formData.category]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -182,14 +189,15 @@ export default function NewItemPage() {
                                 <Select
                                     value={formData.category}
                                     onValueChange={(value) => setFormData({ ...formData, category: value })}
+                                    disabled={isOptionsLoading}
                                 >
-                                    <SelectTrigger className="bg-slate-900/50 border-amber-500/30 text-amber-50 h-11">
-                                        <SelectValue placeholder="Select category" />
+                                    <SelectTrigger className="bg-slate-900 border-amber-500/20 text-amber-50 h-11">
+                                        <SelectValue placeholder={isOptionsLoading ? "Loading..." : "Select category"} />
                                     </SelectTrigger>
                                     <SelectContent className="bg-slate-900 border-amber-500/20 text-amber-50">
-                                        {CATEGORY_OPTIONS.map((opt) => (
-                                            <SelectItem key={opt.value} value={opt.value} className="hover:bg-amber-500/10">
-                                                {opt.label}
+                                        {dbCategories.map((option) => (
+                                            <SelectItem key={option.id} value={option.id}>
+                                                {option.name}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -222,12 +230,11 @@ export default function NewItemPage() {
                                     Materials <span className="text-red-400">*</span>
                                 </Label>
                                 <MultiSelect
-                                    options={[...MATERIAL_OPTIONS]}
+                                    options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
                                     selected={selectedMaterials}
                                     onChange={setSelectedMaterials}
-                                    placeholder="Select materials..."
-                                />
-                            </div>
+                                    placeholder={isOptionsLoading ? "Loading materials..." : "Select materials"}
+                                />                       </div>
 
                             {/* Description */}
                             <div className="md:col-span-2">
