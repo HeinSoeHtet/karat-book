@@ -173,10 +173,10 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-            <DialogContent className="sm:max-w-md bg-slate-900 border-amber-500/20 text-amber-50 overflow-hidden shadow-2xl p-0 sm:p-6 rounded-2xl flex flex-col gap-4">
-                <DialogHeader className="p-4 sm:pb-4 flex-row items-center justify-between space-y-0 shrink-0">
-                    <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl text-amber-50">
-                        <Camera className="size-5 sm:size-6 text-amber-400" />
+            <DialogContent className="sm:max-w-md w-full max-w-[95vw] h-auto bg-slate-900 border-amber-500/20 text-amber-50 overflow-hidden shadow-2xl p-0 sm:p-6 rounded-2xl flex flex-col gap-2 sm:gap-4">
+                <DialogHeader className="p-3 sm:p-4 sm:pb-4 flex-row items-center justify-between space-y-0 shrink-0">
+                    <DialogTitle className="flex items-center gap-2 text-base sm:text-xl text-amber-50">
+                        <Camera className="size-4 sm:size-6 text-amber-400" />
                         Capture Photo
                     </DialogTitle>
                 </DialogHeader>
@@ -257,21 +257,21 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
                     </div>
                 </div>
 
-                <DialogFooter className={`p-6 flex-row items-center justify-center gap-6 ${permissionState === 'prompt' || permissionState === 'denied' ? 'hidden' : ''}`}>
+                <DialogFooter className={`p-4 sm:p-6 flex-row items-center justify-center gap-3 sm:gap-6 ${permissionState === 'prompt' || permissionState === 'denied' ? 'hidden' : ''}`}>
                     {capturedImage ? (
-                        <div className="flex w-full gap-4 max-w-sm">
+                        <div className="flex w-full gap-3 sm:gap-4 max-w-sm">
                             <Button
                                 variant="outline"
                                 onClick={() => { setCapturedImage(null); startCamera(); }}
-                                className="flex-1 bg-white/5 border-white/10 text-white h-14 rounded-2xl hover:bg-white/10"
+                                className="flex-1 bg-white/5 border-white/10 text-white h-12 sm:h-14 rounded-xl sm:rounded-2xl hover:bg-white/10 text-xs sm:text-base"
                             >
-                                <RefreshCw className="size-5 mr-2" /> Retake
+                                <RefreshCw className="size-4 sm:size-5 mr-1.5 sm:mr-2" /> Retake
                             </Button>
                             <Button
                                 onClick={confirmPhoto}
-                                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold h-14 rounded-2xl shadow-xl shadow-amber-500/20"
+                                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold h-12 sm:h-14 rounded-xl sm:rounded-2xl shadow-xl shadow-amber-500/20 text-xs sm:text-base"
                             >
-                                <Check className="size-5 mr-2" /> Use Photo
+                                <Check className="size-4 sm:size-5 mr-1.5 sm:mr-2" /> Use Photo
                             </Button>
                         </div>
                     ) : (
@@ -279,10 +279,10 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
                             {isCameraReady && (
                                 <Button
                                     onClick={capturePhoto}
-                                    className="bg-white hover:bg-amber-50 text-slate-950 rounded-full size-20 p-0 shadow-2xl border-[6px] border-white/20 transform active:scale-90 transition-all flex items-center justify-center"
+                                    className="bg-white hover:bg-amber-50 text-slate-950 rounded-full size-16 sm:size-20 p-0 shadow-2xl border-[4px] sm:border-[6px] border-white/20 transform active:scale-90 transition-all flex items-center justify-center"
                                 >
-                                    <div className="size-14 rounded-full border-2 border-black/5 flex items-center justify-center">
-                                        <div className="size-12 rounded-full bg-black/5"></div>
+                                    <div className="size-10 sm:size-14 rounded-full border-2 border-black/5 flex items-center justify-center">
+                                        <div className="size-8 sm:size-12 rounded-full bg-black/5"></div>
                                     </div>
                                 </Button>
                             )}

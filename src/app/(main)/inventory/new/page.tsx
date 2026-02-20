@@ -138,31 +138,31 @@ export default function NewItemPage() {
     return (
         <div className="max-w-4xl mx-auto">
             {/* Header */}
-            <div className="mb-10">
+            <div className="mb-6 sm:mb-10">
                 <Button
                     variant="ghost"
                     onClick={handleCancel}
-                    className="text-amber-200/70 hover:text-amber-50 hover:bg-slate-800/50 mb-4"
+                    className="text-amber-200/70 hover:text-amber-50 hover:bg-slate-800/50 mb-4 px-2"
                 >
                     <ArrowLeft className="size-4 mr-2" />
-                    Back to Inventory
+                    Back
                 </Button>
-                <h2 className="text-4xl font-bold text-amber-50 mb-3 flex items-center gap-3">
-                    <Package className="size-8 text-amber-400" />
+                <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+                    <Package className="size-6 sm:size-8 text-amber-400" />
                     Add New Item
                 </h2>
-                <p className="text-amber-200/60 text-lg">Create a new inventory item for your jewelry collection</p>
+                <p className="text-amber-200/60 text-xs sm:text-lg">Create a new inventory item for your collection</p>
             </div>
 
             {/* Form Card */}
             <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
-                <CardHeader>
-                    <CardTitle className="text-amber-50 flex items-center gap-2">
-                        <Sparkles className="size-5 text-amber-400" />
+                <CardHeader className="p-4 sm:p-6">
+                    <CardTitle className="text-lg sm:text-xl text-amber-50 flex items-center gap-2">
+                        <Sparkles className="size-4 sm:size-5 text-amber-400" />
                         Item Information
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Item Name */}
@@ -258,7 +258,7 @@ export default function NewItemPage() {
 
                                 <div
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="mt-2 flex flex-col items-center justify-center border-2 border-dashed border-amber-500/20 rounded-xl p-8 bg-slate-900/30 hover:bg-slate-900/50 transition-colors cursor-pointer relative"
+                                    className="mt-2 flex flex-col items-center justify-center border-2 border-dashed border-amber-500/20 rounded-xl p-4 sm:p-8 bg-slate-900/30 hover:bg-slate-900/50 transition-colors cursor-pointer relative"
                                 >
                                     <input
                                         type="file"
@@ -271,14 +271,14 @@ export default function NewItemPage() {
                                     {isSubmitting ? (
                                         <div className="text-center space-y-4">
                                             <div className="relative">
-                                                <Skeleton className="size-16 rounded-full bg-amber-500/10 mx-auto" />
-                                                <Loader2 className="size-8 text-amber-500 animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                                                <Skeleton className="size-12 sm:size-16 rounded-full bg-amber-500/10 mx-auto" />
+                                                <Loader2 className="size-6 sm:size-8 text-amber-500 animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                                             </div>
-                                            <p className="text-amber-200/60 font-medium animate-pulse">Processing metadata...</p>
+                                            <p className="text-amber-200/60 text-xs sm:text-sm font-medium animate-pulse">Processing metadata...</p>
                                         </div>
                                     ) : imagePreview ? (
-                                        <div className="relative group">
-                                            <div className="relative h-[300px] w-full flex items-center justify-center">
+                                        <div className="relative group w-full">
+                                            <div className="relative h-[200px] sm:h-[300px] w-full flex items-center justify-center">
                                                 <img
                                                     src={imagePreview}
                                                     alt="Preview"
@@ -286,7 +286,7 @@ export default function NewItemPage() {
                                                 />
                                             </div>
                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                                                <p className="text-white text-sm font-medium">Click to change image</p>
+                                                <p className="text-white text-xs sm:text-sm font-medium">Click to change image</p>
                                             </div>
                                             <button
                                                 type="button"
@@ -294,23 +294,23 @@ export default function NewItemPage() {
                                                     e.stopPropagation();
                                                     removeImage();
                                                 }}
-                                                className="absolute -top-3 -right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors shadow-lg z-20"
+                                                className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-red-500 text-white p-1.5 sm:p-2 rounded-full hover:bg-red-600 transition-colors shadow-lg z-20"
                                             >
-                                                <X className="size-4" />
+                                                <X className="size-3 sm:size-4" />
                                             </button>
                                         </div>
                                     ) : (
                                         <div className="text-center w-full">
-                                            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-4">
+                                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center mb-4">
                                                 <div
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         fileInputRef.current?.click();
                                                     }}
-                                                    className="bg-amber-500/10 p-6 rounded-2xl hover:bg-amber-500/20 transition-all border border-amber-500/10 hover:border-amber-500/30 group"
+                                                    className="w-full sm:w-auto bg-amber-500/10 p-4 sm:p-6 rounded-2xl hover:bg-amber-500/20 transition-all border border-amber-500/10 hover:border-amber-500/30 group"
                                                 >
-                                                    <Upload className="size-8 text-amber-400 group-hover:scale-110 transition-transform mb-2 mx-auto" />
-                                                    <p className="text-amber-50 text-xs font-bold uppercase tracking-widest">Upload File</p>
+                                                    <Upload className="size-6 sm:size-8 text-amber-400 group-hover:scale-110 transition-transform mb-1 sm:mb-2 mx-auto" />
+                                                    <p className="text-amber-50 text-[10px] sm:text-xs font-bold uppercase tracking-widest">Upload File</p>
                                                 </div>
 
                                                 <div className="text-amber-200/20 font-bold hidden sm:block">OR</div>
@@ -320,13 +320,13 @@ export default function NewItemPage() {
                                                         e.stopPropagation();
                                                         setIsCameraModalOpen(true);
                                                     }}
-                                                    className="bg-purple-500/10 p-6 rounded-2xl hover:bg-purple-500/20 transition-all border border-purple-500/10 hover:border-purple-500/30 group"
+                                                    className="w-full sm:w-auto bg-purple-500/10 p-4 sm:p-6 rounded-2xl hover:bg-purple-500/20 transition-all border border-purple-500/10 hover:border-purple-500/30 group"
                                                 >
-                                                    <Camera className="size-8 text-purple-400 group-hover:scale-110 transition-transform mb-2 mx-auto" />
-                                                    <p className="text-amber-50 text-xs font-bold uppercase tracking-widest">Direct Camera</p>
+                                                    <Camera className="size-6 sm:size-8 text-purple-400 group-hover:scale-110 transition-transform mb-1 sm:mb-2 mx-auto" />
+                                                    <p className="text-amber-50 text-[10px] sm:text-xs font-bold uppercase tracking-widest">Direct Camera</p>
                                                 </div>
                                             </div>
-                                            <p className="text-amber-200/40 text-sm">PNG, JPG or WebP (max. 5MB)</p>
+                                            <p className="text-amber-200/40 text-[10px] sm:text-sm">PNG, JPG or WebP (max. 5MB)</p>
                                         </div>
                                     )}
                                 </div>
@@ -340,28 +340,28 @@ export default function NewItemPage() {
                         />
 
                         {/* Form Actions */}
-                        <div className="flex gap-4 pt-6 border-t border-amber-500/20">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-amber-500/20">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={handleCancel}
-                                className="flex-1 bg-slate-900/50 border-amber-500/50 text-amber-50 hover:bg-amber-500/10 hover:border-amber-500/70 hover:text-amber-50 h-12"
+                                className="flex-1 bg-slate-900/50 border-amber-500/50 text-amber-50 hover:bg-amber-500/10 hover:border-amber-500/70 hover:text-amber-50 h-10 sm:h-12 text-sm sm:text-base order-2 sm:order-1"
                             >
                                 Cancel
                             </Button>
                             <Button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold shadow-lg shadow-amber-500/30 h-12"
+                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold shadow-lg shadow-amber-500/30 h-10 sm:h-12 text-sm sm:text-base order-1 sm:order-2"
                             >
                                 {isSubmitting ? (
                                     <>
-                                        <Loader2 className="size-5 mr-2 animate-spin" />
+                                        <Loader2 className="size-4 sm:size-5 mr-2 animate-spin" />
                                         Adding Item...
                                     </>
                                 ) : (
                                     <>
-                                        <Package className="size-5 mr-2" />
+                                        <Package className="size-4 sm:size-5 mr-2" />
                                         Add Item
                                     </>
                                 )}
