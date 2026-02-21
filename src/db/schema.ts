@@ -47,6 +47,7 @@ export const invoiceItems = sqliteTable('invoice_items', {
     discount: real('discount').default(0),
     total: real('total').notNull(),
     returnType: text('return_type'), // making-charges, percentage
+    weight: real('weight'),
 });
 
 export const invoiceRelations = relations(invoices, ({ many }) => ({

@@ -31,6 +31,8 @@ export interface InvoiceItem {
   discount?: number;
   total: number;
   itemId?: string;
+  weight?: number | null;
+  returnType?: 'making-charges' | 'percentage' | null;
 }
 
 export interface Invoice {

@@ -13,7 +13,7 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
         if (!d1) throw new Error("Database not found");
 
         const db = getDb(d1);
-        const results = await db.select().from(dailyMarketRate).orderBy(desc(dailyMarketRate.createdAt)).limit(60);
+        const results = await db.select().from(dailyMarketRate).orderBy(desc(dailyMarketRate.createdAt)).limit(2);
 
         const parsedData: DailyMarketRate[] = results.map(r => ({
             id: r.id,

@@ -30,7 +30,6 @@ import { useTranslations } from 'next-intl';
 
 export default function InventoryPage() {
     const t = useTranslations('inventory');
-    const tCommon = useTranslations('common');
     const [dbItems, setDbItems] = useState<Item[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [pagination, setPagination] = useState({
@@ -81,10 +80,10 @@ export default function InventoryPage() {
                 setStats(result.stats);
             }
         } else {
-            toast.error(tCommon('errorLoadingInventory'));
+            toast.error(t('errorLoadingInventory'));
         }
         setIsLoading(false);
-    }, [appliedCategoryFilter, appliedMaterialFilters, activeCard, pagination.pageSize, tCommon]);
+    }, [appliedCategoryFilter, appliedMaterialFilters, activeCard, pagination.pageSize, t]);
 
     useEffect(() => {
         fetchItems(pagination.currentPage);
@@ -107,10 +106,10 @@ export default function InventoryPage() {
         if (result.success) {
             // Re-fetch current page to ensure stats and pagination are updated
             fetchItems(pagination.currentPage);
-            toast.success(`${itemToDelete.name} ${tCommon('deleteSuccess')}`);
+            toast.success(`${itemToDelete.name} ${t('deleteSuccess')}`);
             setItemToDelete(null);
         } else {
-            toast.error(tCommon('deleteError'));
+            toast.error(t('deleteError'));
         }
         setIsDeleting(false);
     };
@@ -119,7 +118,7 @@ export default function InventoryPage() {
         setAppliedCategoryFilter(tempCategoryFilter);
         setAppliedMaterialFilters(tempMaterialFilters);
         setPagination(prev => ({ ...prev, currentPage: 1 }));
-        toast.success(tCommon('filtersApplied'));
+        toast.success(t('filtersApplied'));
     };
 
     const clearFilters = () => {
@@ -128,7 +127,7 @@ export default function InventoryPage() {
         setAppliedCategoryFilter('all');
         setAppliedMaterialFilters([]);
         setPagination(prev => ({ ...prev, currentPage: 1 }));
-        toast.success(tCommon('filtersCleared'));
+        toast.success(t('filtersCleared'));
     };
 
     return (
@@ -147,7 +146,7 @@ export default function InventoryPage() {
                     className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold shadow-lg shadow-amber-500/30 w-full sm:w-auto"
                 >
                     <Plus className="size-5 mr-2" />
-                    {tCommon('addItem')}
+                    {t('addItem')}
                 </Button>
             </div>
 
@@ -273,7 +272,7 @@ export default function InventoryPage() {
                             className="flex-1 sm:flex-none bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold h-10 sm:h-11 px-5 text-sm sm:text-base"
                         >
                             <Filter className="size-4 mr-2" />
-                            {tCommon('apply')}
+                            {t('search')}
                         </Button>
                         <Button
                             variant="outline"
@@ -281,7 +280,7 @@ export default function InventoryPage() {
                             className="flex-1 sm:flex-none border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-10 sm:h-11 px-5 text-sm sm:text-base"
                         >
                             <X className="size-4 mr-2" />
-                            {tCommon('clear')}
+                            {t('clear')}
                         </Button>
                     </div>
                 </div>
@@ -328,7 +327,7 @@ export default function InventoryPage() {
                                             <TableHead className="text-amber-200/70">{t('category')}</TableHead>
                                             <TableHead className="text-amber-200/70">{t('material')}</TableHead>
                                             <TableHead className="text-amber-200/70">{t('stock')}</TableHead>
-                                            <TableHead className="text-right text-amber-200/70">{tCommon('actions')}</TableHead>
+                                            <TableHead className="text-right text-amber-200/70">{t('actions')}</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -379,7 +378,7 @@ export default function InventoryPage() {
                                                             className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
                                                         >
                                                             <Edit className="size-4 mr-1" />
-                                                            {tCommon('edit')}
+                                                            {t('edit')}
                                                         </Button>
                                                         <Button
                                                             size="sm"
@@ -388,7 +387,7 @@ export default function InventoryPage() {
                                                             className="border-red-500/30 text-red-400 hover:bg-red-500/10"
                                                         >
                                                             <Trash2 className="size-4 mr-1" />
-                                                            {tCommon('delete')}
+                                                            {t('delete')}
                                                         </Button>
                                                     </div>
                                                 </TableCell>
@@ -439,7 +438,7 @@ export default function InventoryPage() {
                                                 className="flex-1 bg-amber-500/5 border-amber-500/20 text-amber-200 hover:bg-amber-500/10 h-10 text-xs font-semibold"
                                             >
                                                 <Edit className="size-3.5 mr-2" />
-                                                {tCommon('edit')}
+                                                {t('edit')}
                                             </Button>
                                             <Button
                                                 onClick={() => setItemToDelete(item)}
@@ -447,7 +446,7 @@ export default function InventoryPage() {
                                                 className="flex-1 bg-red-500/5 border-red-500/20 text-red-400 hover:bg-red-500/10 h-10 text-xs font-semibold"
                                             >
                                                 <Trash2 className="size-3.5 mr-2" />
-                                                {tCommon('delete')}
+                                                {t('delete')}
                                             </Button>
                                         </div>
                                     </div>
@@ -457,7 +456,7 @@ export default function InventoryPage() {
                             {/* Pagination Controls */}
                             <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 py-4 border-t border-amber-500/10">
                                 <div className="text-sm text-amber-200/40">
-                                    {tCommon('page')} <span className="text-amber-50 font-medium">{pagination.currentPage}</span> {tCommon('of')} <span className="text-amber-50 font-medium">{pagination.totalPages}</span>
+                                    {t('page')} <span className="text-amber-50 font-medium">{pagination.currentPage}</span> {t('of')} <span className="text-amber-50 font-medium">{pagination.totalPages}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Button
@@ -467,7 +466,7 @@ export default function InventoryPage() {
                                         onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
                                         className="border-amber-500/20 text-amber-200 hover:bg-amber-500/10"
                                     >
-                                        {tCommon('previous')}
+                                        {t('previous')}
                                     </Button>
                                     <div className="flex items-center gap-1">
                                         {[...Array(pagination.totalPages)].map((_, i) => {
@@ -509,7 +508,7 @@ export default function InventoryPage() {
                                         onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
                                         className="border-amber-500/20 text-amber-200 hover:bg-amber-500/10"
                                     >
-                                        {tCommon('next')}
+                                        {t('next')}
                                     </Button>
                                 </div>
                             </div>
@@ -532,14 +531,14 @@ export default function InventoryPage() {
                     </AlertDialogHeader>
                     <AlertDialogFooter className="mt-4">
                         <AlertDialogCancel className="bg-slate-800 border-amber-500/20 text-amber-200 hover:bg-slate-700 hover:text-amber-50">
-                            {tCommon('cancel')}
+                            {t('cancel')}
                         </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
                             disabled={isDeleting}
                             className="bg-red-500 hover:bg-red-600 text-white border-none shadow-lg shadow-red-500/20"
                         >
-                            {isDeleting ? t('deleting') : tCommon('delete')}
+                            {isDeleting ? t('deleting') : t('delete')}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

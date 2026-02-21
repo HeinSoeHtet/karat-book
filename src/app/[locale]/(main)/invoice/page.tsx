@@ -79,6 +79,8 @@ export default function InvoicePage() {
                     <div style="font-weight: 600; color: #000;">${item.name}</div>
                     <div style="font-size: 11px; color: #666;">${item.category || 'N/A'}</div>
                 </td>
+                ${invoice.type === 'sales' ? `<td style="padding: 12px 16px; text-align: center; color: #000; font-size: 12px;">${item.returnType === 'making-charges' ? t('makingCharges') : t('percentage')}</td>` : ''}
+                <td style="padding: 12px 16px; text-align: center; color: #000;">${item.weight || '-'}</td>
                 <td style="padding: 12px 16px; text-align: center; color: #000;">${item.quantity}</td>
                 <td style="padding: 12px 16px; text-align: right; color: #000;">${item.price.toFixed(0)}</td>
                 ${invoice.type !== 'buy' ? `<td style="padding: 12px 16px; text-align: right; color: #000;">${(item.discount || 0) > 0 ? `-${(item.discount || 0).toFixed(0)}` : '0'}</td>` : ''}
@@ -147,6 +149,8 @@ export default function InvoicePage() {
                         <thead>
                             <tr style="background: #f8f8f8;">
                                 <th style="padding: 12px 16px; text-align: left; font-size: 12px; text-transform: uppercase; color: #666; font-weight: 500;">${t('itemDetails')}</th>
+                                ${invoice.type === 'sales' ? `<th style="padding: 12px 16px; text-align: center; font-size: 12px; text-transform: uppercase; width: 100px; color: #666; font-weight: 500;">${t('returnType')}</th>` : ''}
+                                <th style="padding: 12px 16px; text-align: center; font-size: 12px; text-transform: uppercase; width: 60px; color: #666; font-weight: 500;">${t('weight')}</th>
                                 <th style="padding: 12px 16px; text-align: center; font-size: 12px; text-transform: uppercase; width: 60px; color: #666; font-weight: 500;">${t('qty')}</th>
                                 <th style="padding: 12px 16px; text-align: right; font-size: 12px; text-transform: uppercase; width: 100px; color: #666; font-weight: 500;">${t('price')}</th>
                                 ${invoice.type !== 'buy' ? `<th style="padding: 12px 16px; text-align: right; font-size: 12px; text-transform: uppercase; width: 100px; color: #666; font-weight: 500;">${t('discount')}</th>` : ''}
@@ -158,17 +162,17 @@ export default function InvoicePage() {
                         </tbody>
                         <tfoot style="background: #f8f8f8; border-top: 2px solid #ddd;">
                             <tr>
-                                <td colspan="${invoice.type !== 'buy' ? 4 : 3}" style="padding: 10px 16px; text-align: right; color: #666; font-size: 14px;">${t('subtotal')}:</td>
+                                <td colspan="${invoice.type === 'sales' ? 6 : (invoice.type === 'pawn' ? 5 : 4)}" style="padding: 10px 16px; text-align: right; color: #666; font-size: 14px;">${t('subtotal')}:</td>
                                 <td style="padding: 10px 16px; text-align: right; font-weight: 600; color: #000;">${subtotal.toFixed(0)}</td>
                             </tr>
                             ${(totalDiscount > 0 && invoice.type !== 'buy') ? `
                             <tr>
-                                <td colspan="4" style="padding: 10px 16px; text-align: right; color: #666; font-size: 14px;">${t('total')} ${t('discount')}:</td>
+                                <td colspan="${invoice.type === 'sales' ? 6 : 5}" style="padding: 10px 16px; text-align: right; color: #666; font-size: 14px;">${t('totalDiscount')}:</td>
                                 <td style="padding: 10px 16px; text-align: right; font-weight: 600; color: #000;">-${totalDiscount.toFixed(0)}</td>
                             </tr>
                             ` : ''}
                             <tr>
-                                <td colspan="${invoice.type !== 'buy' ? 4 : 3}" style="padding: 16px; text-align: right; font-size: 18px; font-weight: bold; text-transform: uppercase; color: #000;">${t('totalAmount')}</td>
+                                <td colspan="${invoice.type === 'sales' ? 6 : (invoice.type === 'pawn' ? 5 : 4)}" style="padding: 16px; text-align: right; font-size: 18px; font-weight: bold; text-transform: uppercase; color: #000;">${t('totalAmount')}</td>
                                 <td style="padding: 16px; text-align: right; font-size: 24px; font-weight: bold; color: #000;">${invoice.total.toFixed(0)}</td>
                             </tr>
                         </tfoot>
@@ -716,6 +720,8 @@ export default function InvoicePage() {
                                             <thead className="bg-slate-900/50">
                                                 <tr>
                                                     <th className="py-2 sm:py-3 px-3 sm:px-4 text-left text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('itemDetails')}</th>
+                                                    {selectedInvoice.type === 'sales' && <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('returnType')}</th>}
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('weight')}</th>
                                                     <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('qty')}</th>
                                                     <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('price')}</th>
                                                     {selectedInvoice.type !== 'buy' && <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('discount')}</th>}
@@ -729,6 +735,12 @@ export default function InvoicePage() {
                                                             <div className="text-amber-50 text-xs sm:text-sm font-medium">{item.name}</div>
                                                             <div className="text-[10px] sm:text-xs text-amber-200/50 tracking-wide uppercase">{item.category}</div>
                                                         </td>
+                                                        {selectedInvoice.type === 'sales' && (
+                                                            <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-[10px] sm:text-xs">
+                                                                {item.returnType === 'making-charges' ? t('makingCharges') : t('percentage')}
+                                                            </td>
+                                                        )}
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-xs sm:text-sm">{item.weight || '-'}</td>
                                                         <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-xs sm:text-sm">{item.quantity}</td>
                                                         <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 text-xs sm:text-sm">{item.price.toFixed(0)}</td>
                                                         {selectedInvoice.type !== 'buy' && <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-red-400 text-xs sm:text-sm">-{(item.discount || 0).toFixed(0)}</td>}
@@ -738,19 +750,19 @@ export default function InvoicePage() {
                                             </tbody>
                                             <tfoot className="bg-slate-900/30 border-t-2 border-amber-500/20">
                                                 <tr>
-                                                    <td colSpan={selectedInvoice.type !== 'buy' ? 4 : 3} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">{t('subtotal')}:</td>
+                                                    <td colSpan={selectedInvoice.type === 'sales' ? 6 : (selectedInvoice.type === 'pawn' ? 5 : 4)} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">{t('subtotal')}:</td>
                                                     <td className="py-2 px-3 sm:px-4 text-right text-amber-50 text-xs font-bold">
                                                         {selectedInvoice.items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(0)}
                                                     </td>
                                                 </tr>
                                                 {selectedInvoice.type !== 'buy' && selectedInvoice.items.some(item => (item.discount || 0) > 0) && (
                                                     <tr>
-                                                        <td colSpan={4} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">{t('discount')}:</td>
+                                                        <td colSpan={selectedInvoice.type === 'sales' ? 6 : 5} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">{t('totalDiscount')}:</td>
                                                         <td className="py-2 px-3 sm:px-4 text-right text-red-400 text-xs font-bold">-{selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0).toFixed(0)}</td>
                                                     </tr>
                                                 )}
                                                 <tr>
-                                                    <td colSpan={selectedInvoice.type !== 'buy' ? 4 : 3} className="py-3 px-3 sm:px-4 text-right text-sm sm:text-xl font-bold text-amber-50">{tCommon('total')}:</td>
+                                                    <td colSpan={selectedInvoice.type === 'sales' ? 6 : (selectedInvoice.type === 'pawn' ? 5 : 4)} className="py-3 px-3 sm:px-4 text-right text-sm sm:text-xl font-bold text-amber-50">{tCommon('total')}:</td>
                                                     <td className="py-3 px-3 sm:px-4 text-right text-amber-400 text-lg sm:text-2xl font-black">{selectedInvoice.total.toFixed(0)}</td>
                                                 </tr>
                                             </tfoot>

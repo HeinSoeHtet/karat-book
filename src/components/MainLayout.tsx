@@ -15,7 +15,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         { path: '/news', label: t('news'), icon: Newspaper },
         { path: '/inventory', label: t('inventory'), icon: Warehouse },
         { path: '/invoice', label: t('invoice'), icon: Receipt },
-        { path: '/sales', label: t('sales'), icon: TrendingUp },
+        { path: '/analytics', label: t('analytics'), icon: TrendingUp },
         { path: '/settings', label: t('settings'), icon: Settings },
     ];
 

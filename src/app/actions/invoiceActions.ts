@@ -22,7 +22,9 @@ export interface CreateInvoiceData {
         price: number;
         discount?: number;
         returnType?: string;
+        weight?: number;
     }[];
+    skipStockUpdate?: boolean;
 }
 
 export async function createInvoiceAction(data: CreateInvoiceData) {
@@ -92,6 +94,7 @@ export async function createInvoiceAction(data: CreateInvoiceData) {
             discount: item.discount || 0,
             total: (item.price * item.quantity) - (item.discount || 0),
             returnType: item.returnType || null,
+            weight: item.weight || null,
         }));
 
         if (itemsToInsert.length > 0) {
@@ -99,7 +102,7 @@ export async function createInvoiceAction(data: CreateInvoiceData) {
         }
 
         // 3. Update stock for sales (decrease) or buy (increase)
-        if (data.type === 'sales' || data.type === 'buy') {
+        if (data.type === 'sales' || (data.type === 'buy' && !data.skipStockUpdate)) {
             for (const item of data.items) {
                 if (item.productId) {
                     await db.update(items)
@@ -116,7 +119,7 @@ export async function createInvoiceAction(data: CreateInvoiceData) {
 
         revalidatePath('/invoice');
         revalidatePath('/inventory');
-        revalidatePath('/sales');
+        revalidatePath('/analytics');
 
         return { success: true, data: { id: invoiceId, invoiceNumber } };
     } catch (error) {

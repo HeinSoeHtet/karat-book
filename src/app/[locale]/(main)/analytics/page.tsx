@@ -11,8 +11,8 @@ import { getInvoicesAction } from '@/app/actions/invoiceActions';
 
 import { useTranslations, useFormatter } from 'next-intl';
 
-export default function SalesPage() {
-    const t = useTranslations('sales');
+export default function AnalyticsPage() {
+    const t = useTranslations('analytics');
     const formatIntl = useFormatter();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [isLoading, setIsLoading] = useState(true);
