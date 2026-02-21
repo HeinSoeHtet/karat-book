@@ -35,6 +35,8 @@ import { useSettings } from '@/context/SettingsContext';
 import { Suspense } from 'react';
 import { Item, Invoice, InvoiceItem } from '@/types';
 
+import { useTranslations, useFormatter } from 'next-intl';
+
 export default function CreateInvoicePage() {
     return (
         <Suspense fallback={
@@ -48,6 +50,10 @@ export default function CreateInvoicePage() {
 }
 
 function CreateInvoiceContent() {
+    const t = useTranslations('invoice_create');
+    const tInvoice = useTranslations('invoice');
+    const tCommon = useTranslations('common');
+    const formatIntl = useFormatter();
     const router = useRouter();
     const searchParams = useSearchParams();
     const invoiceType = (searchParams.get('type') as 'sales' | 'pawn' | 'buy') || 'sales';
@@ -100,11 +106,11 @@ function CreateInvoiceContent() {
             if (result.success && result.data) {
                 setFoundInvoice(result.data as unknown as Invoice);
             } else {
-                toast.error('Invoice not found');
+                toast.error(t('invoiceNotFound'));
             }
         } catch (error) {
             console.error('Search failed', error);
-            toast.error('Search failed');
+            toast.error(t('searchFailed'));
         } finally {
             setIsSearchingHistory(false);
         }
@@ -189,7 +195,7 @@ function CreateInvoiceContent() {
         }));
         setPawnItems(itemsToCopy);
         setShowHistoryDialog(false);
-        toast.success(`Data copied from ${invoice.invoiceNumber}`);
+        toast.success(t('copySuccess', { number: invoice.invoiceNumber }));
     };
 
     const calculatePawnTotal = () => {
@@ -228,7 +234,7 @@ function CreateInvoiceContent() {
         setCategoryFilter('all');
         setMaterialFilters([]);
         setSearchTerm('');
-        toast.success('Item added to invoice');
+        toast.success(tCommon('addItem'));
     };
 
     const removeItemFromInvoice = (index: number) => {
@@ -270,12 +276,12 @@ function CreateInvoiceContent() {
 
     const handleCreateInvoice = async () => {
         if (!customerName || (invoiceType === 'sales' && selectedItems.length === 0) || ((invoiceType === 'pawn' || invoiceType === 'buy') && pawnItems.length === 0)) {
-            toast.error('Please fill customer name and add at least one item');
+            toast.error(t('enterCustomerAndItem'));
             return;
         }
 
         if (invoiceType === 'pawn' && !dueDate) {
-            toast.error('Please select a due date for pawn invoice');
+            toast.error(t('selectPawnDueDate'));
             return;
         }
 
@@ -321,14 +327,14 @@ function CreateInvoiceContent() {
 
             const result = await createInvoiceAction(invoiceData);
             if (result.success) {
-                toast.success(`Invoice created successfully!`);
+                toast.success(t('invoiceCreated'));
                 router.push('/invoice');
             } else {
-                toast.error(result.error || 'Failed to create invoice');
+                toast.error(result.error || tCommon('error'));
             }
         } catch (error) {
             console.error(error);
-            toast.error('An unexpected error occurred');
+            toast.error(tCommon('error'));
         } finally {
             setIsSubmitting(false);
         }
@@ -340,22 +346,22 @@ function CreateInvoiceContent() {
                 <div>
                     <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center flex-wrap gap-2 sm:gap-3">
                         <Receipt className="size-6 sm:size-8 text-amber-400" />
-                        Create New Invoice
+                        {t('title')}
                         <Badge className={invoiceType === 'buy'
                             ? 'bg-blue-500/20 text-blue-300 border-blue-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
                             : invoiceType === 'pawn'
                                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
                                 : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
                         }>
-                            {invoiceType === 'buy' ? 'Buy' : invoiceType === 'pawn' ? 'Pawn' : 'Sales'}
+                            {invoiceType === 'buy' ? tInvoice('buy') : invoiceType === 'pawn' ? tInvoice('pawn') : tInvoice('sales')}
                         </Badge>
                     </h2>
                     <p className="text-amber-200/60 text-sm sm:text-lg">
                         {invoiceType === 'buy'
-                            ? 'Fill in details for purchasing items from customers'
+                            ? t('buyDescription')
                             : invoiceType === 'pawn'
-                                ? 'Fill in the details to create a new pawn invoice with custom items'
-                                : 'Fill in the details to create a new sales invoice from inventory'
+                                ? t('pawnDescription')
+                                : t('salesDescription')
                         }
                     </p>
                 </div>
@@ -366,7 +372,7 @@ function CreateInvoiceContent() {
                     className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 w-full sm:w-auto"
                 >
                     <ArrowLeft className="size-5 mr-2" />
-                    Back to Invoices
+                    {tInvoice('backToInvoices')}
                 </Button>
             </div>
 
@@ -376,39 +382,39 @@ function CreateInvoiceContent() {
                     <CardHeader>
                         <div className="text-lg font-semibold text-amber-50 flex items-center gap-2">
                             <User className="size-5 text-amber-400" />
-                            Customer Information
+                            {t('customerInfo')}
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <Label className="text-sm text-amber-200/60 mb-1.5 block">Name *</Label>
+                                <Label className="text-sm text-amber-200/60 mb-1.5 block">{t('name')} *</Label>
                                 <Input
                                     type="text"
                                     value={customerName}
                                     onChange={(e) => setCustomerName(e.target.value)}
-                                    placeholder="Enter customer name"
+                                    placeholder={t('namePlaceholder')}
                                     className="w-full pl-4 pr-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20"
                                 />
                             </div>
                             <div>
-                                <Label className="text-sm text-amber-200/60 mb-1.5 block">Phone</Label>
+                                <Label className="text-sm text-amber-200/60 mb-1.5 block">{t('phone')}</Label>
                                 <Input
                                     type="tel"
                                     value={customerPhone}
                                     onChange={(e) => setCustomerPhone(e.target.value)}
-                                    placeholder="Enter phone number"
+                                    placeholder={t('phonePlaceholder')}
                                     className="w-full pl-4 pr-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20"
                                 />
                             </div>
                         </div>
                         <div>
-                            <Label className="text-sm text-amber-200/60 mb-1.5 block">Address</Label>
+                            <Label className="text-sm text-amber-200/60 mb-1.5 block">{t('address')}</Label>
                             <Input
                                 type="text"
                                 value={customerAddress}
                                 onChange={(e) => setCustomerAddress(e.target.value)}
-                                placeholder="Enter address"
+                                placeholder={t('addressPlaceholder')}
                                 className="w-full pl-4 pr-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20"
                             />
                         </div>
@@ -421,7 +427,7 @@ function CreateInvoiceContent() {
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div className="text-base sm:text-lg font-semibold text-amber-50 flex items-center gap-2">
                                 <ShoppingCart className="size-5 text-amber-400" />
-                                Invoice Items
+                                {t('invoiceItems')}
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2">
                                 {invoiceType === 'buy' && (
@@ -432,7 +438,7 @@ function CreateInvoiceContent() {
                                             className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-10 text-sm px-3"
                                         >
                                             <Search className="size-4 mr-2" />
-                                            Old Invoice
+                                            {t('oldInvoice')}
                                         </Button>
                                         <Button
                                             onClick={() => setShowItemDialog(true)}
@@ -440,7 +446,7 @@ function CreateInvoiceContent() {
                                             className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-10 text-sm px-3"
                                         >
                                             <Diamond className="size-4 mr-2" />
-                                            Pick Inventory Item
+                                            {t('pickInventoryItem')}
                                         </Button>
                                     </>
                                 )}
@@ -455,7 +461,7 @@ function CreateInvoiceContent() {
                                     className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-10 text-sm px-4"
                                 >
                                     <Plus className="size-4 mr-2" />
-                                    {invoiceType === 'sales' ? 'Add Item' : 'Add Custom Item'}
+                                    {invoiceType === 'sales' ? tCommon('addItem') : t('addCustomItem')}
                                 </Button>
                             </div>
                         </div>
@@ -468,10 +474,10 @@ function CreateInvoiceContent() {
                                     <table className="w-full">
                                         <thead className="bg-slate-900/50">
                                             <tr>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Item</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Qty</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Price</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Total</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('itemName') || tInvoice('item')}</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('qty')}</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('price')}</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('total')}</th>
                                                 <th className="text-left py-3 px-4 text-amber-200/70 font-medium"></th>
                                             </tr>
                                         </thead>
@@ -485,7 +491,7 @@ function CreateInvoiceContent() {
                                                                 type="text"
                                                                 value={item.name}
                                                                 onChange={(e) => updatePawnItemName(index, e.target.value)}
-                                                                placeholder="Enter item name"
+                                                                placeholder={t('itemPlaceholder')}
                                                                 className="w-full min-w-[200px] px-3 py-2 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 placeholder-amber-200/40 h-9"
                                                             />
                                                         </td>
@@ -526,7 +532,7 @@ function CreateInvoiceContent() {
                                         <tfoot className="bg-slate-900/50 border-t-2 border-amber-500/30">
                                             <tr>
                                                 <td colSpan={3} className="py-2 px-4 text-right text-amber-200/70">
-                                                    Subtotal:
+                                                    {tInvoice('subtotal')}:
                                                 </td>
                                                 <td className="py-2 px-4 text-left text-amber-50 font-medium">
                                                     {calculatePawnTotal().total.toFixed(0)}
@@ -535,7 +541,7 @@ function CreateInvoiceContent() {
                                             </tr>
                                             <tr>
                                                 <td colSpan={3} className="py-3 px-4 text-right text-amber-200/70 font-semibold text-lg">
-                                                    Total:
+                                                    {tInvoice('total')}:
                                                 </td>
                                                 <td className="py-3 px-4 text-left text-amber-400 font-bold text-lg">
                                                     {calculatePawnTotal().total.toFixed(0)}
@@ -548,7 +554,7 @@ function CreateInvoiceContent() {
                             ) : (
                                 <div className="border border-amber-500/20 rounded-xl p-12 text-center">
                                     <ShoppingCart className="size-12 text-amber-400/40 mx-auto mb-4" />
-                                    <p className="text-amber-200/60">No items added yet. Click &quot;Add Item&quot; to get started.</p>
+                                    <p className="text-amber-200/60">{tInvoice('noItems')}</p>
                                 </div>
                             )
                         ) : (
@@ -558,12 +564,12 @@ function CreateInvoiceContent() {
                                     <table className="w-full">
                                         <thead className="bg-slate-900/50">
                                             <tr>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Item</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Return Type</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Qty</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Price</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Discount</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Total</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('itemName') || tInvoice('item')}</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('returnType')}</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('qty')}</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('price')}</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('discount')}</th>
+                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{tInvoice('total')}</th>
                                                 <th className="text-left py-3 px-4 text-amber-200/70 font-medium"></th>
                                             </tr>
                                         </thead>
@@ -587,8 +593,8 @@ function CreateInvoiceContent() {
                                                                     <SelectValue />
                                                                 </SelectTrigger>
                                                                 <SelectContent className="bg-slate-900 border-amber-500/20">
-                                                                    <SelectItem value="making-charges" className="text-amber-50">Making Charges</SelectItem>
-                                                                    <SelectItem value="percentage" className="text-amber-50">Percentage</SelectItem>
+                                                                    <SelectItem value="making-charges" className="text-amber-50">{t('makingCharges')}</SelectItem>
+                                                                    <SelectItem value="percentage" className="text-amber-50">{t('percentage')}</SelectItem>
                                                                 </SelectContent>
                                                             </Select>
                                                         </td>
@@ -638,7 +644,7 @@ function CreateInvoiceContent() {
                                         <tfoot className="bg-slate-900/50 border-t-2 border-amber-500/30">
                                             <tr>
                                                 <td colSpan={5} className="py-2 px-4 text-right text-amber-200/70">
-                                                    Subtotal:
+                                                    {tInvoice('subtotal')}:
                                                 </td>
                                                 <td className="py-2 px-4 text-left text-amber-50 font-medium">
                                                     {calculateInvoiceTotal().subtotal.toFixed(0)}
@@ -647,7 +653,7 @@ function CreateInvoiceContent() {
                                             </tr>
                                             <tr>
                                                 <td colSpan={5} className="py-2 px-4 text-right text-amber-200/70">
-                                                    Total Discount:
+                                                    {tInvoice('totalDiscount')}:
                                                 </td>
                                                 <td className="py-2 px-4 text-left text-amber-50 font-medium">
                                                     {calculateInvoiceTotal().totalDiscount.toFixed(0)}
@@ -656,7 +662,7 @@ function CreateInvoiceContent() {
                                             </tr>
                                             <tr>
                                                 <td colSpan={5} className="py-3 px-4 text-right text-amber-200/70 font-semibold text-lg">
-                                                    Total:
+                                                    {tInvoice('totalAmount')}:
                                                 </td>
                                                 <td className="py-3 px-4 text-left text-amber-400 font-bold text-lg">
                                                     {calculateInvoiceTotal().total.toFixed(0)}
@@ -669,7 +675,7 @@ function CreateInvoiceContent() {
                             ) : (
                                 <div className="border border-amber-500/20 rounded-xl p-12 text-center">
                                     <ShoppingCart className="size-12 text-amber-400/40 mx-auto mb-4" />
-                                    <p className="text-amber-200/60">No items added yet. Click &quot;Add Item&quot; to get started.</p>
+                                    <p className="text-amber-200/60">{tInvoice('noItems')}</p>
                                 </div>
                             )
                         )}
@@ -679,7 +685,7 @@ function CreateInvoiceContent() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {(invoiceType === 'pawn') && (
                                 <div className="space-y-1.5">
-                                    <Label className="text-sm text-amber-200/60 ml-1">Due Date *</Label>
+                                    <Label className="text-sm text-amber-200/60 ml-1">{t('pickDueDate')} *</Label>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <Button
@@ -689,7 +695,7 @@ function CreateInvoiceContent() {
                                                     !dueDate && "text-amber-200/40"
                                                 )}
                                             >
-                                                {dueDate ? format(dueDate, "PPP") : <span>Pick a due date</span>}
+                                                {dueDate ? formatIntl.dateTime(dueDate, { year: 'numeric', month: 'long', day: 'numeric' }) : <span>{t('pickDueDate')}</span>}
                                                 <CalendarIcon className="size-5 text-amber-400/60" />
                                             </Button>
                                         </PopoverTrigger>
@@ -706,11 +712,11 @@ function CreateInvoiceContent() {
                                 </div>
                             )}
                             <div className={invoiceType === 'pawn' ? '' : 'col-span-2'}>
-                                <Label className="text-sm text-amber-200/60 mb-1.5 ml-1 block">Notes</Label>
+                                <Label className="text-sm text-amber-200/60 mb-1.5 ml-1 block">{tInvoice('notes')}</Label>
                                 <Textarea
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
-                                    placeholder="Add any additional notes or comments..."
+                                    placeholder={t('notesPlaceholder')}
                                     rows={invoiceType === 'pawn' ? 2 : 3}
                                     className="w-full px-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20 resize-none"
                                 />
@@ -730,7 +736,7 @@ function CreateInvoiceContent() {
                                 className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-12 sm:h-14 text-base sm:text-lg"
                             >
                                 <Receipt className="size-5 mr-2" />
-                                {isSubmitting ? 'Creating...' : 'Create Invoice'}
+                                {isSubmitting ? t('creating') : tInvoice('createInvoice')}
                             </Button>
                             <Button
                                 onClick={() => router.push('/invoice')}
@@ -738,7 +744,7 @@ function CreateInvoiceContent() {
                                 className="flex-1 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-12 sm:h-14 text-base sm:text-lg"
                             >
                                 <X className="size-5 mr-2" />
-                                Cancel
+                                {tCommon('cancel')}
                             </Button>
                         </div>
                     </CardContent>
@@ -753,7 +759,7 @@ function CreateInvoiceContent() {
                             <div className="flex items-center justify-between">
                                 <h3 className="text-lg sm:text-xl font-bold text-amber-50 flex items-center gap-2">
                                     <ShoppingCart className="size-5 text-amber-400" />
-                                    Select Item
+                                    {t('selectItem')}
                                 </h3>
                                 <Button
                                     onClick={() => {
@@ -780,14 +786,14 @@ function CreateInvoiceContent() {
                                         type="text"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        placeholder="Search by name or ID..."
+                                        placeholder={t('searchItems')}
                                         className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20"
                                     />
                                 </div>
                                 <div className="flex gap-4">
                                     <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                                         <SelectTrigger className="flex-1 bg-slate-900/50 border-amber-500/20 text-amber-50 h-11">
-                                            <SelectValue placeholder={isOptionsLoading ? "Loading..." : "Select category"} />
+                                            <SelectValue placeholder={t('selectCategory')} />
                                         </SelectTrigger>
                                         <SelectContent className="bg-slate-900 border-amber-500/20">
                                             <SelectItem value="all" className="text-amber-50">All Categories</SelectItem>
@@ -798,183 +804,164 @@ function CreateInvoiceContent() {
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <div className="flex-1">
+
+                                    <div className="w-[280px]">
                                         <MultiSelect
                                             options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
                                             selected={materialFilters}
                                             onChange={setMaterialFilters}
-                                            placeholder={isOptionsLoading ? "Loading materials..." : "Filter by materials"}
+                                            placeholder={tCommon('selectMaterials')}
+                                            className="bg-slate-900/50 border-amber-500/20 text-amber-50"
                                         />
                                     </div>
-                                </div>
-                                <div className="flex gap-2 justify-end">
-                                    <Button
-                                        variant="outline"
-                                        onClick={handleClearFilters}
-                                        className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10"
-                                    >
-                                        Clear
-                                    </Button>
+
                                     <Button
                                         onClick={fetchFilteredItems}
-                                        className="bg-amber-500 hover:bg-amber-600 text-slate-900"
+                                        disabled={isSearchingItems}
+                                        className="bg-amber-500 hover:bg-amber-600 text-slate-900 flex items-center gap-2 h-11"
                                     >
-                                        Apply Filter
+                                        <Search className="size-4" />
+                                        {tCommon('search')}
                                     </Button>
                                 </div>
                             </div>
 
-                            {!hasSearchedItems && !isSearchingItems ? (
-                                <div className="text-center py-16 border border-amber-500/20 rounded-xl bg-slate-900/30 shadow-inner">
-                                    <Search className="size-16 text-amber-500/20 mx-auto mb-4" />
-                                    <h4 className="text-lg font-semibold text-amber-50/80 mb-2">Ready to Search</h4>
-                                    <p className="text-amber-200/40 max-w-xs mx-auto">
-                                        Adjust the filters above and click <strong>Apply Filter</strong> to browse inventory.
-                                    </p>
-                                </div>
-                            ) : isSearchingItems ? (
+                            <Separator className="bg-amber-500/10 mb-6" />
+
+                            {/* Item List */}
+                            {isSearchingItems ? (
                                 <div className="space-y-4">
-                                    {[...Array(3)].map((_, i) => (
-                                        <div key={i} className="flex items-center gap-4 p-4 border border-amber-500/10 rounded-xl bg-slate-900/20">
-                                            <Skeleton className="size-10 rounded-lg bg-amber-500/5" />
-                                            <div className="flex-1 space-y-2">
-                                                <Skeleton className="h-4 w-1/3 bg-amber-500/5" />
-                                                <Skeleton className="h-3 w-1/4 bg-amber-500/5" />
-                                            </div>
-                                            <Skeleton className="h-8 w-16 bg-amber-500/5" />
-                                        </div>
+                                    {[1, 2, 3].map(i => (
+                                        <Skeleton key={i} className="h-20 w-full bg-slate-800/50 rounded-xl" />
                                     ))}
                                 </div>
                             ) : dbItems.length > 0 ? (
-                                <div className="border border-amber-500/20 rounded-xl overflow-hidden">
-                                    <table className="w-full">
-                                        <thead className="bg-slate-900/50">
-                                            <tr>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Name</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Category</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">Material</th>
-                                                <th className="text-center py-3 px-4 text-amber-200/70 font-medium">Stock</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {dbItems.map((product) => (
-                                                <tr
-                                                    key={product.id}
-                                                    className="border-t border-amber-500/10 hover:bg-slate-900/50 cursor-pointer transition-colors group"
-                                                    onClick={() => addItemToInvoice(product.id)}
-                                                >
-                                                    <td className="py-3 px-4">
-                                                        <div className="flex items-center gap-2">
-                                                            <Diamond className="size-4 text-amber-400/60 group-hover:text-amber-400 transition-colors" />
-                                                            <span className="text-amber-50 group-hover:text-amber-400 transition-colors font-medium">
-                                                                {product.name}
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-3 px-4">
-                                                        <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-xs">
-                                                            {product.category}
-                                                        </Badge>
-                                                    </td>
-                                                    <td className="py-3 px-4">
-                                                        <span className="text-sm text-amber-50">{product.material}</span>
-                                                    </td>
-                                                    <td className="py-3 px-4 text-center">
-                                                        <Badge className={product.stock > 10 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : product.stock > 0 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}>
-                                                            {product.stock}
-                                                        </Badge>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                <div className="grid grid-cols-1 gap-3">
+                                    {dbItems.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            className="p-4 bg-slate-900/40 border border-amber-500/10 rounded-xl hover:border-amber-500/30 transition-all flex items-center justify-between group"
+                                        >
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-amber-50 font-medium">{item.name}</span>
+                                                    <span className="text-[10px] bg-amber-500/10 text-amber-400 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">{item.id}</span>
+                                                </div>
+                                                <div className="flex items-center gap-4 text-sm text-amber-200/50 mt-1">
+                                                    <span>{item.category}</span>
+                                                    <span>•</span>
+                                                    <span>{item.material}</span>
+                                                    <span>•</span>
+                                                    <span className={item.stock <= 2 ? 'text-red-400/80' : ''}>
+                                                        {item.stock} {tCommon('units')}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                onClick={() => addItemToInvoice(item.id)}
+                                                variant="outline"
+                                                size="sm"
+                                                className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                {tCommon('add')}
+                                            </Button>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : hasSearchedItems ? (
+                                <div className="text-center py-12">
+                                    <p className="text-amber-200/60">{tCommon('noItemsFound')}</p>
                                 </div>
                             ) : (
-                                <div className="text-center py-16 border border-amber-500/20 rounded-xl bg-slate-900/30">
-                                    <Search className="size-16 text-amber-400/40 mx-auto mb-4" />
-                                    <h4 className="text-lg font-semibold text-amber-50 mb-2">No Items Found</h4>
-                                    <p className="text-amber-200/60">Try adjusting your filters or search term</p>
+                                <div className="text-center py-12">
+                                    <p className="text-amber-200/40">{tCommon('search')}</p>
                                 </div>
                             )}
                         </CardContent>
                     </Card>
                 </div>
             )}
-            {/* History Retrieval Dialog */}
+
+            {/* Old Invoice History Dialog */}
             {showHistoryDialog && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <Card className="bg-slate-800/95 backdrop-blur-md border-amber-500/20 w-full max-w-2xl max-h-[80vh] flex flex-col">
-                        <CardHeader className="border-b border-amber-500/20">
+                    <Card className="bg-slate-800/95 backdrop-blur-md border-amber-500/20 w-full max-w-2xl">
+                        <CardHeader className="p-4 sm:p-6 border-b border-amber-500/20">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-xl font-bold text-amber-50 flex items-center gap-2">
+                                <h3 className="text-lg sm:text-xl font-bold text-amber-50 flex items-center gap-2">
                                     <Search className="size-5 text-amber-400" />
-                                    Retrieve Customer History
+                                    {t('oldInvoice')}
                                 </h3>
                                 <Button
-                                    onClick={() => setShowHistoryDialog(false)}
+                                    onClick={() => {
+                                        setShowHistoryDialog(false);
+                                        setFoundInvoice(null);
+                                        setHistorySearchTerm('');
+                                    }}
                                     variant="outline"
                                     size="sm"
-                                    className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10"
+                                    className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-8 w-8 p-0"
                                 >
                                     <X className="size-4" />
                                 </Button>
                             </div>
                         </CardHeader>
-                        <CardContent className="pt-6 flex-1 overflow-auto">
-                            <div className="mb-6 flex gap-2">
-                                <Input
-                                    type="text"
-                                    value={historySearchTerm}
-                                    onChange={(e) => setHistorySearchTerm(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleSearchHistory()}
-                                    placeholder="Enter exact invoice number (e.g. INV-2026-...)"
-                                    className="w-full bg-slate-900/50 border-amber-500/20 text-amber-50"
-                                />
-                                <Button
-                                    onClick={handleSearchHistory}
-                                    disabled={isSearchingHistory || !historySearchTerm.trim()}
-                                    className="bg-amber-500 hover:bg-amber-600 text-slate-900"
-                                >
-                                    {isSearchingHistory ? '...' : <Search className="size-4" />}
-                                </Button>
-                            </div>
-                            <div className="space-y-4">
-                                {foundInvoice && (
-                                    <div
-                                        key={foundInvoice.id}
-                                        className="p-4 bg-slate-900/50 border border-amber-500/20 rounded-xl hover:border-amber-500/40 cursor-pointer transition-all"
-                                        onClick={() => {
-                                            copyFromInvoice(foundInvoice);
-                                            setShowHistoryDialog(false);
-                                        }}
+                        <CardContent className="pt-6">
+                            <div className="space-y-6">
+                                <div className="flex gap-3">
+                                    <div className="relative flex-1">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-amber-400/60" />
+                                        <Input
+                                            type="text"
+                                            value={historySearchTerm}
+                                            onChange={(e) => setHistorySearchTerm(e.target.value)}
+                                            placeholder={tInvoice('searchPlaceholder')}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSearchHistory()}
+                                            className="w-full pl-10 pr-4 h-11 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50"
+                                        />
+                                    </div>
+                                    <Button
+                                        onClick={handleSearchHistory}
+                                        disabled={isSearchingHistory}
+                                        className="bg-amber-500 hover:bg-amber-600 text-slate-900 h-11 px-6 font-medium"
                                     >
-                                        <div className="flex justify-between items-start mb-2">
+                                        {isSearchingHistory ? tCommon('search') : tCommon('search')}
+                                    </Button>
+                                </div>
+
+                                {foundInvoice ? (
+                                    <div className="p-5 bg-slate-900/60 border border-amber-500/20 rounded-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+                                        <div className="flex items-center justify-between mb-4 pb-4 border-b border-amber-500/10">
                                             <div>
-                                                <div className="font-bold text-amber-50">{foundInvoice.customerName}</div>
-                                                <div className="text-sm text-amber-200/50">{foundInvoice.invoiceNumber} • {format(new Date(foundInvoice.createdAt || foundInvoice.date || Date.now()), 'PP')}</div>
+                                                <h4 className="text-lg font-bold text-amber-50">{foundInvoice.customerName}</h4>
+                                                <p className="text-sm text-amber-400/80 font-mono mt-0.5">{foundInvoice.invoiceNumber}</p>
                                             </div>
-                                            <Badge className="bg-amber-500/20 text-amber-400 capitalize">{foundInvoice.type}</Badge>
-                                        </div>
-                                        <div className="text-xs text-amber-200/40 line-clamp-1">
-                                            Items: {foundInvoice.items.map((i: InvoiceItem) => i.name).join(', ')}
-                                        </div>
-                                    </div>
-                                )}
-                                {isSearchingHistory && (
-                                    <div className="p-4 bg-slate-900/50 border border-amber-500/10 rounded-xl space-y-3">
-                                        <div className="flex justify-between items-start">
-                                            <div className="space-y-2 flex-1">
-                                                <Skeleton className="h-4 w-1/3 bg-amber-500/5" />
-                                                <Skeleton className="h-3 w-1/2 bg-amber-500/5" />
+                                            <div className="text-right text-sm text-amber-200/50">
+                                                {formatIntl.dateTime(new Date(foundInvoice.createdAt || new Date()), { year: 'numeric', month: 'long', day: 'numeric' })}
                                             </div>
-                                            <Skeleton className="h-5 w-16 rounded-full bg-amber-500/5" />
                                         </div>
-                                        <Skeleton className="h-3 w-full bg-amber-500/5" />
+
+                                        <div className="space-y-1 max-h-48 overflow-y-auto pr-2 mb-6">
+                                            {foundInvoice.items?.map((item, idx) => (
+                                                <div key={idx} className="flex justify-between text-sm py-1.5 border-b border-amber-500/5 last:border-0 hover:bg-amber-500/5 px-2 rounded-lg transition-colors">
+                                                    <span className="text-amber-50/90">{item.name}</span>
+                                                    <span className="text-amber-200/60">x{item.quantity}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <Button
+                                            onClick={() => copyFromInvoice(foundInvoice)}
+                                            className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white h-11 rounded-xl shadow-lg shadow-emerald-900/20 font-medium"
+                                        >
+                                            {tCommon('apply')}
+                                        </Button>
                                     </div>
-                                )}
-                                {!foundInvoice && !isSearchingHistory && historySearchTerm.trim() && (
-                                    <div className="text-center py-8 text-amber-200/30">
-                                        No invoice found with that number.
+                                ) : historySearchTerm && !isSearchingHistory && (
+                                    <div className="text-center py-10 px-4 bg-slate-900/30 rounded-2xl border border-dashed border-amber-500/10">
+                                        <p className="text-amber-200/40 text-sm">
+                                            Enter an invoice number to find and copy customer data
+                                        </p>
                                     </div>
                                 )}
                             </div>

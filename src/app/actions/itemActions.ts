@@ -3,7 +3,7 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb } from '@/db';
 import { items } from '@/db/schema';
-import { eq, and, or, sql, count, sum } from 'drizzle-orm';
+import { eq, and, or, sql, count, sum, desc } from 'drizzle-orm';
 import { Item } from '@/types';
 import { revalidatePath } from 'next/cache';
 
@@ -198,13 +198,13 @@ export async function getItemsAction(params: {
         const outOfStockResult = await db.select({ value: count() }).from(items).where(eq(items.stock, 0));
         const totalStockResult = await db.select({ value: sum(items.stock) }).from(items);
 
-        // Get paginated items
-        const paginatedItems = await db.query.items.findMany({
-            where: finalWhere,
-            orderBy: (items, { desc }) => [desc(items.createdAt)],
-            limit: pageSize,
-            offset: offset,
-        });
+        // Get paginated items using standard select builder (more reliable limit/offset on D1)
+        const paginatedItems = await db.select()
+            .from(items)
+            .where(finalWhere)
+            .orderBy(desc(items.createdAt))
+            .limit(pageSize)
+            .offset(offset);
 
         return {
             success: true,

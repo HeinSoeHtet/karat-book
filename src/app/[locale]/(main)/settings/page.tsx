@@ -27,7 +27,11 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+import { useTranslations } from 'next-intl';
+
 export default function SettingsPage() {
+    const t = useTranslations('settings');
+    const tCommon = useTranslations('common');
     const { categories, materials, isLoading, refreshSettings } = useSettings();
 
     // Form States
@@ -41,7 +45,7 @@ export default function SettingsPage() {
         if (!newCategory.trim()) return;
         const res = await createCategoryAction(newCategory.trim());
         if (res.success) {
-            toast.success('Category added');
+            toast.success(t('categoryAdded'));
             setNewCategory('');
             refreshSettings();
         } else {
@@ -53,7 +57,7 @@ export default function SettingsPage() {
         if (!editingItem || !editingItem.name.trim()) return;
         const res = await updateCategoryAction(editingItem.id, editingItem.name.trim());
         if (res.success) {
-            toast.success('Category updated');
+            toast.success(t('categoryUpdated'));
             setEditingItem(null);
             refreshSettings();
         } else {
@@ -65,7 +69,7 @@ export default function SettingsPage() {
         if (!itemToDelete) return;
         const res = await deleteCategoryAction(itemToDelete.id);
         if (res.success) {
-            toast.success('Category deleted');
+            toast.success(t('categoryDeleted'));
             setItemToDelete(null);
             refreshSettings();
         } else {
@@ -78,7 +82,7 @@ export default function SettingsPage() {
         if (!newMaterial.trim()) return;
         const res = await createMaterialAction(newMaterial.trim());
         if (res.success) {
-            toast.success('Material added');
+            toast.success(t('materialAdded'));
             setNewMaterial('');
             refreshSettings();
         } else {
@@ -90,7 +94,7 @@ export default function SettingsPage() {
         if (!editingItem || !editingItem.name.trim()) return;
         const res = await updateMaterialAction(editingItem.id, editingItem.name.trim());
         if (res.success) {
-            toast.success('Material updated');
+            toast.success(t('materialUpdated'));
             setEditingItem(null);
             refreshSettings();
         } else {
@@ -102,7 +106,7 @@ export default function SettingsPage() {
         if (!itemToDelete) return;
         const res = await deleteMaterialAction(itemToDelete.id);
         if (res.success) {
-            toast.success('Material deleted');
+            toast.success(t('materialDeleted'));
             setItemToDelete(null);
             refreshSettings();
         } else {
@@ -115,20 +119,20 @@ export default function SettingsPage() {
             <div className="mb-6 sm:mb-8">
                 <h2 className="text-2xl sm:text-3xl font-bold text-amber-50 mb-2 flex items-center gap-2 sm:gap-3">
                     <Settings className="size-6 sm:size-8 text-amber-400" />
-                    Settings
+                    {t('title')}
                 </h2>
-                <p className="text-amber-200/60 text-sm">System configuration and data management</p>
+                <p className="text-amber-200/60 text-sm">{t('subtitle')}</p>
             </div>
 
             <Tabs defaultValue="categories" className="w-full">
                 <TabsList className="bg-slate-900/50 border border-amber-500/20 p-1 mb-6 sm:mb-8 flex">
                     <TabsTrigger value="categories" className="flex-1 data-[state=active]:bg-amber-500 data-[state=active]:text-slate-900 px-4 sm:px-8 py-2 sm:py-2.5 text-xs sm:text-sm">
                         <Tag className="size-3.5 sm:size-4 mr-2" />
-                        Categories
+                        {t('categories')}
                     </TabsTrigger>
                     <TabsTrigger value="materials" className="flex-1 data-[state=active]:bg-amber-500 data-[state=active]:text-slate-900 px-4 sm:px-8 py-2 sm:py-2.5 text-xs sm:text-sm">
                         <Diamond className="size-3.5 sm:size-4 mr-2" />
-                        Materials
+                        {t('materials')}
                     </TabsTrigger>
                 </TabsList>
 
@@ -138,16 +142,16 @@ export default function SettingsPage() {
                         <CardHeader>
                             <CardTitle className="text-amber-50 flex items-center gap-2">
                                 <Plus className="size-5 text-amber-400" />
-                                Add New Category
+                                {t('addNewCategory')}
                             </CardTitle>
-                            <CardDescription className="text-amber-200/40">Enter a name for the new product category</CardDescription>
+                            <CardDescription className="text-amber-200/40">{t('enterCategoryName')}</CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 sm:p-6">
                             <div className="flex flex-col sm:flex-row gap-3 mb-6 sm:mb-8">
                                 <Input
                                     value={newCategory}
                                     onChange={(e) => setNewCategory(e.target.value)}
-                                    placeholder="e.g. Brooches, Pendants..."
+                                    placeholder={t('categoryPlaceholder')}
                                     className="bg-slate-900/50 border-amber-500/20 text-amber-50 focus:ring-amber-500/30 h-11"
                                     onKeyDown={(e) => e.key === 'Enter' && handleAddCategory()}
                                 />
@@ -155,18 +159,18 @@ export default function SettingsPage() {
                                     onClick={handleAddCategory}
                                     className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold h-11 px-6 flex-shrink-0"
                                 >
-                                    Add Category
+                                    {t('addCategory')}
                                 </Button>
                             </div>
 
                             <div className="space-y-3">
-                                <h3 className="text-sm font-semibold text-amber-200/50 uppercase tracking-wider mb-4">Existing Categories</h3>
+                                <h3 className="text-sm font-semibold text-amber-200/50 uppercase tracking-wider mb-4">{t('existingCategories')}</h3>
                                 {isLoading ? (
                                     <div className="h-20 flex items-center justify-center">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
                                     </div>
                                 ) : categories.length === 0 ? (
-                                    <p className="text-center py-8 text-amber-200/20 italic">No categories found</p>
+                                    <p className="text-center py-8 text-amber-200/20 italic">{t('noCategoriesFound')}</p>
                                 ) : (
                                     <div className="grid grid-cols-1 gap-2">
                                         {categories.map((cat) => (
@@ -225,16 +229,16 @@ export default function SettingsPage() {
                         <CardHeader>
                             <CardTitle className="text-amber-50 flex items-center gap-2">
                                 <Plus className="size-5 text-amber-400" />
-                                Add New Material
+                                {t('addNewMaterial')}
                             </CardTitle>
-                            <CardDescription className="text-amber-200/40">Enter a name for the new material option</CardDescription>
+                            <CardDescription className="text-amber-200/40">{t('enterMaterialName')}</CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 sm:p-6">
                             <div className="flex flex-col sm:flex-row gap-3 mb-6 sm:mb-8">
                                 <Input
                                     value={newMaterial}
                                     onChange={(e) => setNewMaterial(e.target.value)}
-                                    placeholder="e.g. 10K Gold, Titanium..."
+                                    placeholder={t('materialPlaceholder')}
                                     className="bg-slate-900/50 border-amber-500/20 text-amber-50 focus:ring-amber-500/30 h-11"
                                     onKeyDown={(e) => e.key === 'Enter' && handleAddMaterial()}
                                 />
@@ -242,18 +246,18 @@ export default function SettingsPage() {
                                     onClick={handleAddMaterial}
                                     className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold h-11 px-6 flex-shrink-0"
                                 >
-                                    Add Material
+                                    {t('addMaterial')}
                                 </Button>
                             </div>
 
                             <div className="space-y-3">
-                                <h3 className="text-sm font-semibold text-amber-200/50 uppercase tracking-wider mb-4">Existing Materials</h3>
+                                <h3 className="text-sm font-semibold text-amber-200/50 uppercase tracking-wider mb-4">{t('existingMaterials')}</h3>
                                 {isLoading ? (
                                     <div className="h-20 flex items-center justify-center">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
                                     </div>
                                 ) : materials.length === 0 ? (
-                                    <p className="text-center py-8 text-amber-200/20 italic">No materials found</p>
+                                    <p className="text-center py-8 text-amber-200/20 italic">{t('noMaterialsFound')}</p>
                                 ) : (
                                     <div className="grid grid-cols-1 gap-2">
                                         {materials.map((mat) => (
@@ -313,22 +317,21 @@ export default function SettingsPage() {
                     <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2 text-amber-400">
                             <AlertTriangle className="size-5" />
-                            Confirm Deletion
+                            {t('confirmDeletion')}
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-amber-200/60">
-                            Are you sure you want to delete <span className="text-amber-100 font-semibold">{itemToDelete?.name}</span>?
-                            This might affect items currently assigned to this {itemToDelete?.type}.
+                            {t('deleteDescription', { name: itemToDelete?.name || '', type: itemToDelete ? t(itemToDelete.type) : '' })}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="mt-4">
                         <AlertDialogCancel className="bg-slate-800 border-amber-500/20 text-amber-200 hover:bg-slate-700 hover:text-amber-50">
-                            Cancel
+                            {tCommon('cancel')}
                         </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={itemToDelete?.type === 'category' ? handleDeleteCategory : handleDeleteMaterial}
                             className="bg-red-500 hover:bg-red-600 text-white border-none shadow-lg shadow-red-500/20"
                         >
-                            Delete
+                            {tCommon('delete')}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

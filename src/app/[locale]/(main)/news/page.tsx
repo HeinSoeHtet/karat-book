@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Newspaper, ArrowUp, ArrowDown, Coins, Clock } from 'lucide-react';
-import { format } from 'date-fns';
+import { useTranslations, useFormatter } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { getDailyMarketRatesAction } from '@/app/actions/marketActions';
 import { HourlyRateEntry } from '@/types';
@@ -76,6 +76,10 @@ export default function NewsPage() {
     const displayGoldPrices = [...worldGoldHourlyPrices].reverse();
     const displayExchangeRates = [...usdToMmkHourlyRates].reverse();
 
+    const tCommon = useTranslations('common');
+    const tNews = useTranslations('news');
+    const formatIntl = useFormatter();
+
     if (loading) {
         return (
             <div className="max-w-6xl mx-auto space-y-6 sm:space-y-10 animate-pulse">
@@ -114,9 +118,9 @@ export default function NewsPage() {
             <div className="mb-6 sm:mb-10">
                 <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
                     <Newspaper className="size-6 sm:size-8 text-amber-400" />
-                    Market Rate
+                    {tCommon('news')}
                 </h2>
-                <p className="text-amber-200/60 text-xs sm:text-lg">Real-time world gold price and currency exchange tracking</p>
+                <p className="text-amber-200/60 text-xs sm:text-lg">{tNews('subtitle')}</p>
             </div>
 
             {/* Gold Prices Section */}
@@ -128,11 +132,11 @@ export default function NewsPage() {
                         <div className="flex items-center justify-between">
                             <CardTitle className="text-amber-50 flex items-center gap-2">
                                 <Coins className="size-6 text-amber-400" />
-                                World Gold Price (24K)
+                                {tNews('worldGoldPrice')}
                             </CardTitle>
                         </div>
                         <p className="text-xs text-amber-200/50 mt-2">
-                            Last updated: {format(lastUpdated, 'MMM dd, yyyy hh:mm a')}
+                            {tNews('lastUpdated')}: {formatIntl.dateTime(lastUpdated, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' })}
                         </p>
                     </CardHeader>
                     <CardContent className="relative space-y-4">
@@ -140,9 +144,9 @@ export default function NewsPage() {
                         <div className="p-5 bg-slate-900/50 rounded-xl border border-amber-500/30">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
-                                    <div className="text-sm text-amber-200/70 mb-1">Current Price</div>
+                                    <div className="text-sm text-amber-200/70 mb-1">{tNews('currentPrice')}</div>
                                     <div className="text-3xl font-bold text-amber-50">
-                                        {currentWorldPrice.price.toFixed(2)} USD
+                                        {formatIntl.number(currentWorldPrice.price, { maximumFractionDigits: 2 })} USD
                                     </div>
                                 </div>
                                 <div className="text-right">
@@ -153,11 +157,11 @@ export default function NewsPage() {
                                         ) : (
                                             <ArrowDown className="size-5" />
                                         )}
-                                        {Math.abs(totalDayChange).toFixed(2)}
+                                        {formatIntl.number(Math.abs(totalDayChange), { maximumFractionDigits: 2 })}
                                     </div>
                                     <div className={`text-sm ${totalDayChangePercent >= 0 ? 'text-emerald-400/70' : 'text-red-400/70'
                                         }`}>
-                                        {totalDayChangePercent >= 0 ? '+' : ''}{totalDayChangePercent.toFixed(2)}% today
+                                        {totalDayChangePercent >= 0 ? '+' : ''}{formatIntl.number(totalDayChangePercent, { maximumFractionDigits: 2 })}% {tNews('today')}
                                     </div>
                                 </div>
                             </div>
@@ -167,7 +171,7 @@ export default function NewsPage() {
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-sm text-amber-200/70 mb-3">
                                 <Clock className="size-4" />
-                                <span>Hourly Price Movement</span>
+                                <span>{tNews('hourlyPriceMovement')}</span>
                             </div>
                             <div className="max-h-64 overflow-y-auto space-y-2">
                                 {displayGoldPrices.length > 0 ? (
@@ -187,7 +191,7 @@ export default function NewsPage() {
                                                     {item.time}
                                                 </div>
                                                 <div className="text-amber-50 font-semibold">
-                                                    {item.price.toFixed(2)}
+                                                    {formatIntl.number(item.price, { maximumFractionDigits: 2 })}
                                                 </div>
                                             </div>
                                             <div className={`flex items-center gap-1 text-xs font-medium ${item.change > 0 ? 'text-emerald-400' :
@@ -196,13 +200,13 @@ export default function NewsPage() {
                                                 }`}>
                                                 {item.change > 0 && <ArrowUp className="size-3" />}
                                                 {item.change < 0 && <ArrowDown className="size-3" />}
-                                                {item.change !== 0 ? `${Math.abs(item.change).toFixed(2)}` : '—'}
+                                                {item.change !== 0 ? formatIntl.number(Math.abs(item.change), { maximumFractionDigits: 2 }) : '—'}
                                             </div>
                                         </div>
                                     ))
                                 ) : (
                                     <div className="text-center py-8 text-amber-200/40 border border-dashed border-amber-500/20 rounded-xl">
-                                        No gold price movements recorded yet.
+                                        {tNews('noGoldData')}
                                     </div>
                                 )}
                             </div>
@@ -217,11 +221,11 @@ export default function NewsPage() {
                         <div className="flex items-center justify-between">
                             <CardTitle className="text-amber-50 flex items-center gap-2">
                                 <Coins className="size-6 text-blue-400" />
-                                USD to MMK Exchange Rate
+                                {tNews('usdToMmk')}
                             </CardTitle>
                         </div>
                         <p className="text-xs text-amber-200/50 mt-2">
-                            Last updated: {format(lastUpdated, 'MMM dd, yyyy hh:mm a')}
+                            {tNews('lastUpdated')}: {formatIntl.dateTime(lastUpdated, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' })}
                         </p>
                     </CardHeader>
                     <CardContent className="relative space-y-4">
@@ -229,9 +233,9 @@ export default function NewsPage() {
                         <div className="p-5 bg-slate-900/50 rounded-xl border border-blue-500/30">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
-                                    <div className="text-sm text-amber-200/70 mb-1">Current Rate</div>
+                                    <div className="text-sm text-amber-200/70 mb-1">{tNews('currentRate')}</div>
                                     <div className="text-3xl font-bold text-amber-50">
-                                        {currentExchangeRate.rate.toFixed(2)} MMK
+                                        {formatIntl.number(currentExchangeRate.rate, { maximumFractionDigits: 2 })} MMK
                                     </div>
                                 </div>
                                 <div className="text-right">
@@ -242,11 +246,11 @@ export default function NewsPage() {
                                         ) : (
                                             <ArrowDown className="size-5" />
                                         )}
-                                        {Math.abs(totalRateChange).toFixed(2)}
+                                        {formatIntl.number(Math.abs(totalRateChange), { maximumFractionDigits: 2 })}
                                     </div>
                                     <div className={`text-sm ${totalRateChangePercent >= 0 ? 'text-emerald-400/70' : 'text-red-400/70'
                                         }`}>
-                                        {totalRateChangePercent >= 0 ? '+' : ''}{totalRateChangePercent.toFixed(2)}% today
+                                        {totalRateChangePercent >= 0 ? '+' : ''}{formatIntl.number(totalRateChangePercent, { maximumFractionDigits: 2 })}% {tNews('today')}
                                     </div>
                                 </div>
                             </div>
@@ -256,7 +260,7 @@ export default function NewsPage() {
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-sm text-amber-200/70 mb-3">
                                 <Clock className="size-4" />
-                                <span>Hourly Rate Movement</span>
+                                <span>{tNews('hourlyRateMovement')}</span>
                             </div>
                             <div className="max-h-64 overflow-y-auto space-y-2">
                                 {displayExchangeRates.length > 0 ? (
@@ -276,7 +280,7 @@ export default function NewsPage() {
                                                     {item.time}
                                                 </div>
                                                 <div className="text-amber-50 font-semibold">
-                                                    {item.rate.toFixed(2)} MMK
+                                                    {formatIntl.number(item.rate, { maximumFractionDigits: 2 })} MMK
                                                 </div>
                                             </div>
                                             <div className={`flex items-center gap-1 text-xs font-medium ${item.change > 0 ? 'text-emerald-400' :
@@ -285,13 +289,13 @@ export default function NewsPage() {
                                                 }`}>
                                                 {item.change > 0 && <ArrowUp className="size-3" />}
                                                 {item.change < 0 && <ArrowDown className="size-3" />}
-                                                {item.change !== 0 ? `${Math.abs(item.change).toFixed(2)}` : '—'}
+                                                {item.change !== 0 ? formatIntl.number(Math.abs(item.change), { maximumFractionDigits: 2 }) : '—'}
                                             </div>
                                         </div>
                                     ))
                                 ) : (
                                     <div className="text-center py-8 text-blue-200/40 border border-dashed border-blue-500/20 rounded-xl">
-                                        No rate movements recorded yet.
+                                        {tNews('noRateData')}
                                     </div>
                                 )}
                             </div>

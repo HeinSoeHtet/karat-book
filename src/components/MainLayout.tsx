@@ -1,22 +1,22 @@
 "use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/routing';
 import { Receipt, TrendingUp, Diamond, Warehouse, Newspaper, Menu, X, Settings } from 'lucide-react';
 import { useState } from 'react';
-
-import { SITE_CONFIG } from '@/lib/config';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
+    const t = useTranslations('common');
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const navItems = [
-        { path: '/news', label: 'News', icon: Newspaper },
-        { path: '/inventory', label: 'Inventory', icon: Warehouse },
-        { path: '/invoice', label: 'Invoice', icon: Receipt },
-        { path: '/sales', label: 'Sales', icon: TrendingUp },
-        { path: '/settings', label: 'Settings', icon: Settings },
+        { path: '/news', label: t('news'), icon: Newspaper },
+        { path: '/inventory', label: t('inventory'), icon: Warehouse },
+        { path: '/invoice', label: t('invoice'), icon: Receipt },
+        { path: '/sales', label: t('sales'), icon: TrendingUp },
+        { path: '/settings', label: t('settings'), icon: Settings },
     ];
 
     const handleNavClick = () => {
@@ -38,10 +38,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                             </div>
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent">
-                                    {SITE_CONFIG.name}
+                                    {t('title')}
                                 </h1>
                                 <p className="text-xs sm:text-sm text-amber-200/60 flex items-center gap-1">
-                                    {SITE_CONFIG.tagline}
+                                    {t('tagline')}
                                 </p>
                             </div>
                         </Link>
@@ -71,20 +71,26 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                     );
                                 })}
                             </nav>
+                            <div className="ml-4 pl-4 border-l border-amber-500/20">
+                                <LanguageSwitcher />
+                            </div>
                         </div>
 
                         {/* Mobile Menu Button */}
-                        <button
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="md:hidden p-2 rounded-lg text-amber-100 hover:bg-slate-800/50 transition-colors"
-                            aria-label="Toggle menu"
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="size-6" />
-                            ) : (
-                                <Menu className="size-6" />
-                            )}
-                        </button>
+                        <div className="flex items-center gap-2 md:hidden">
+                            <LanguageSwitcher />
+                            <button
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                className="p-2 rounded-lg text-amber-100 hover:bg-slate-800/50 transition-colors"
+                                aria-label="Toggle menu"
+                            >
+                                {isMobileMenuOpen ? (
+                                    <X className="size-6" />
+                                ) : (
+                                    <Menu className="size-6" />
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Mobile Navigation */}

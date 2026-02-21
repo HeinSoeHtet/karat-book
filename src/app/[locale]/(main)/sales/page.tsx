@@ -9,7 +9,11 @@ import { getItemsAction } from '@/app/actions/itemActions';
 
 import { getInvoicesAction } from '@/app/actions/invoiceActions';
 
+import { useTranslations, useFormatter } from 'next-intl';
+
 export default function SalesPage() {
+    const t = useTranslations('sales');
+    const formatIntl = useFormatter();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -32,14 +36,13 @@ export default function SalesPage() {
     }, []);
 
     // Prepare monthly data for charts (Last 6 months including current)
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const today = new Date();
     const last6Months = [];
 
     for (let i = 5; i >= 0; i--) {
         const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
         last6Months.push({
-            label: monthNames[d.getMonth()],
+            label: formatIntl.dateTime(d, { month: 'short' }),
             month: d.getMonth(),
             year: d.getFullYear()
         });
@@ -112,9 +115,9 @@ export default function SalesPage() {
             <div className="mb-6 sm:mb-10">
                 <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
                     <TrendingUp className="size-6 sm:size-8 text-amber-400" />
-                    Analytics
+                    {t('title')}
                 </h2>
-                <p className="text-amber-200/60 text-xs sm:text-lg">Track your revenue and invoices</p>
+                <p className="text-amber-200/60 text-xs sm:text-lg">{t('subtitle')}</p>
             </div>
 
             {isLoading ? (
@@ -144,7 +147,7 @@ export default function SalesPage() {
                         <Card className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/20 backdrop-blur-sm relative overflow-hidden">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
                                 <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
-                                    Total Pawns
+                                    {t('totalPawns')}
                                 </CardTitle>
                                 <div className="bg-amber-500/20 p-2 sm:p-2.5 rounded-lg">
                                     <HandCoins className="size-4 sm:size-5 text-amber-400" />
@@ -155,21 +158,21 @@ export default function SalesPage() {
                                     <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
                                         {pawnCount}
                                     </div>
-                                    <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Records</p>
+                                    <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">{t('totalRecords')}</p>
                                 </div>
                                 <div className="text-right">
                                     <div className="text-xl sm:text-2xl font-bold text-amber-200">
                                         {invoices.filter(i => i.type === 'pawn').reduce((sum, i) => sum + (i.total || 0), 0).toLocaleString()}
                                     </div>
-                                    <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Value</p>
+                                    <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">{t('totalValue')}</p>
                                 </div>
                             </CardContent>
                         </Card>
 
                         {[
-                            { status: 'active', label: 'Active Pawns', color: 'emerald', icon: TrendingUp },
-                            { status: 'overdue', label: 'Overdue Pawns', color: 'red', icon: AlertTriangle },
-                            { status: 'expired', label: 'Expired Pawns', color: 'orange', icon: Clock }
+                            { status: 'active', label: t('activePawns'), color: 'emerald', icon: TrendingUp },
+                            { status: 'overdue', label: t('overduePawns'), color: 'red', icon: AlertTriangle },
+                            { status: 'expired', label: t('expiredPawns'), color: 'orange', icon: Clock }
                         ].map((s) => {
                             const filteredInvoices = invoices.filter(i => i.type === 'pawn' && i.status === s.status);
                             const count = filteredInvoices.length;
@@ -202,13 +205,13 @@ export default function SalesPage() {
                                             <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${textGradient} bg-clip-text text-transparent`}>
                                                 {count}
                                             </div>
-                                            <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Records</p>
+                                            <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">{t('records')}</p>
                                         </div>
                                         <div className="text-right">
                                             <div className="text-lg sm:text-xl font-bold text-amber-50/90">
                                                 {total.toLocaleString()}
                                             </div>
-                                            <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Value</p>
+                                            <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">{t('value')}</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -219,12 +222,12 @@ export default function SalesPage() {
                     {/* Detailed Metrics Grid (6 Charts) */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-10">
                         {[
-                            { key: 'salesAmount', label: 'Monthly Sales Volume', color: '#10b981', icon: TrendingUp, format: 'amount' },
-                            { key: 'salesCount', label: 'Monthly Sales Transactions', color: '#10b981', icon: TrendingUp, format: 'count' },
-                            { key: 'pawnAmount', label: 'Monthly Pawn Volume', color: '#fbbf24', icon: HandCoins, format: 'amount' },
-                            { key: 'pawnCount', label: 'Monthly Pawn Transactions', color: '#fbbf24', icon: HandCoins, format: 'count' },
-                            { key: 'buyAmount', label: 'Monthly Buying Volume', color: '#60a5fa', icon: Diamond, format: 'amount' },
-                            { key: 'buyCount', label: 'Monthly Buying Transactions', color: '#60a5fa', icon: Diamond, format: 'count' }
+                            { key: 'salesAmount', label: t('monthlySalesVolume'), color: '#10b981', icon: TrendingUp, format: t('amount') },
+                            { key: 'salesCount', label: t('monthlySalesTransactions'), color: '#10b981', icon: TrendingUp, format: t('count') },
+                            { key: 'pawnAmount', label: t('monthlyPawnVolume'), color: '#fbbf24', icon: HandCoins, format: t('amount') },
+                            { key: 'pawnCount', label: t('monthlyPawnTransactions'), color: '#fbbf24', icon: HandCoins, format: t('count') },
+                            { key: 'buyAmount', label: t('monthlyBuyingVolume'), color: '#60a5fa', icon: Diamond, format: t('amount') },
+                            { key: 'buyCount', label: t('monthlyBuyingTransactions'), color: '#60a5fa', icon: Diamond, format: t('count') }
                         ].map((chart) => (
                             <Card key={chart.key} className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20 overflow-hidden">
                                 <CardHeader className="py-4 border-b border-amber-500/10">
@@ -258,7 +261,7 @@ export default function SalesPage() {
                                                     fontSize={9}
                                                     tickLine={false}
                                                     axisLine={false}
-                                                    tickFormatter={(v) => chart.format === 'amount' && v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}
+                                                    tickFormatter={(v) => chart.key.includes('Amount') && v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}
                                                 />
                                                 <Tooltip content={<CustomTooltip />} cursor={{ fill: `${chart.color}08` }} />
                                                 <Bar

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MultiSelect } from '@/components/ui/multi-select';
-import { Package, Plus, Edit, AlertTriangle, TrendingDown, Sparkles, Trash2, Filter, X } from 'lucide-react';
+import { Package, Plus, Edit, AlertTriangle, TrendingDown, Trash2, Filter, X } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
     AlertDialog,
@@ -26,7 +26,11 @@ import { Item } from '@/types';
 import { getItemsAction, deleteItemAction } from '@/app/actions/itemActions';
 import { useSettings } from '@/context/SettingsContext';
 
+import { useTranslations } from 'next-intl';
+
 export default function InventoryPage() {
+    const t = useTranslations('inventory');
+    const tCommon = useTranslations('common');
     const [dbItems, setDbItems] = useState<Item[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [pagination, setPagination] = useState({
@@ -77,10 +81,10 @@ export default function InventoryPage() {
                 setStats(result.stats);
             }
         } else {
-            toast.error('Failed to load inventory from database');
+            toast.error(tCommon('errorLoadingInventory'));
         }
         setIsLoading(false);
-    }, [appliedCategoryFilter, appliedMaterialFilters, activeCard, pagination.pageSize]);
+    }, [appliedCategoryFilter, appliedMaterialFilters, activeCard, pagination.pageSize, tCommon]);
 
     useEffect(() => {
         fetchItems(pagination.currentPage);
@@ -90,9 +94,6 @@ export default function InventoryPage() {
     useEffect(() => {
         setPagination(prev => ({ ...prev, currentPage: 1 }));
     }, [appliedCategoryFilter, appliedMaterialFilters, activeCard]);
-
-
-
 
     const handleEdit = (item: Item) => {
         router.push(`/inventory/edit/${item.id}`);
@@ -106,10 +107,10 @@ export default function InventoryPage() {
         if (result.success) {
             // Re-fetch current page to ensure stats and pagination are updated
             fetchItems(pagination.currentPage);
-            toast.success(`${itemToDelete.name} deleted from inventory`);
+            toast.success(`${itemToDelete.name} ${tCommon('deleteSuccess')}`);
             setItemToDelete(null);
         } else {
-            toast.error('Failed to delete item from database');
+            toast.error(tCommon('deleteError'));
         }
         setIsDeleting(false);
     };
@@ -118,7 +119,7 @@ export default function InventoryPage() {
         setAppliedCategoryFilter(tempCategoryFilter);
         setAppliedMaterialFilters(tempMaterialFilters);
         setPagination(prev => ({ ...prev, currentPage: 1 }));
-        toast.success('Filters applied');
+        toast.success(tCommon('filtersApplied'));
     };
 
     const clearFilters = () => {
@@ -127,7 +128,7 @@ export default function InventoryPage() {
         setAppliedCategoryFilter('all');
         setAppliedMaterialFilters([]);
         setPagination(prev => ({ ...prev, currentPage: 1 }));
-        toast.success('Filters cleared');
+        toast.success(tCommon('filtersCleared'));
     };
 
     return (
@@ -136,9 +137,9 @@ export default function InventoryPage() {
                 <div>
                     <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
                         <Package className="size-6 sm:size-8 text-amber-400" />
-                        Inventory
+                        {t('title')}
                     </h2>
-                    <p className="text-amber-200/60 text-xs sm:text-lg">Manage items and stock levels</p>
+                    <p className="text-amber-200/60 text-xs sm:text-lg">{t('subtitle')}</p>
                 </div>
 
                 <Button
@@ -146,7 +147,7 @@ export default function InventoryPage() {
                     className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold shadow-lg shadow-amber-500/30 w-full sm:w-auto"
                 >
                     <Plus className="size-5 mr-2" />
-                    Add Item
+                    {tCommon('addItem')}
                 </Button>
             </div>
 
@@ -156,7 +157,7 @@ export default function InventoryPage() {
                 <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 backdrop-blur-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
                         <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
-                            Stock Units
+                            {t('stockUnits')}
                         </CardTitle>
                         <div className="bg-purple-500/20 p-2 sm:p-2.5 rounded-lg">
                             <Package className="size-4 sm:size-5 text-purple-400" />
@@ -166,7 +167,6 @@ export default function InventoryPage() {
                         <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-purple-300 to-purple-500 bg-clip-text text-transparent">
                             {stats.totalStockUnits}
                         </div>
-                        <p className="text-[10px] text-amber-200/40 mt-1 uppercase tracking-wider font-bold">Total Units</p>
                     </CardContent>
                 </Card>
 
@@ -179,7 +179,7 @@ export default function InventoryPage() {
                 >
                     <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
                         <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
-                            Total Items
+                            {t('totalItems')}
                         </CardTitle>
                         <div className={`p-2 sm:p-2.5 rounded-lg ${activeCard === 'all' ? 'bg-blue-500/30' : 'bg-blue-500/20'
                             }`}>
@@ -190,10 +190,6 @@ export default function InventoryPage() {
                         <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent">
                             {stats.totalCount}
                         </div>
-                        <p className="text-[10px] text-amber-200/50 mt-1 flex items-center gap-1">
-                            <Sparkles className="size-3" />
-                            In catalog
-                        </p>
                     </CardContent>
                 </Card>
 
@@ -206,7 +202,7 @@ export default function InventoryPage() {
                 >
                     <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
                         <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
-                            Low Stock
+                            {t('lowStock')}
                         </CardTitle>
                         <div className={`p-2 sm:p-2.5 rounded-lg ${activeCard === 'low-stock' ? 'bg-amber-500/30' : 'bg-amber-500/20'
                             }`}>
@@ -218,8 +214,7 @@ export default function InventoryPage() {
                             {stats.lowStockCount}
                         </div>
                         <p className="text-[10px] text-amber-200/50 mt-1 flex items-center gap-1">
-                            <Sparkles className="size-3" />
-                            ≤ 5 units
+                            ≤ 5 {t('units')}
                         </p>
                     </CardContent>
                 </Card>
@@ -233,7 +228,7 @@ export default function InventoryPage() {
                 >
                     <CardHeader className="flex flex-row items-center justify-between pb-2 sm:pb-3">
                         <CardTitle className="text-[10px] sm:text-sm font-medium text-amber-200/70 uppercase tracking-wider">
-                            Out of Stock
+                            {t('outOfStock')}
                         </CardTitle>
                         <div className={`p-2 sm:p-2.5 rounded-lg ${activeCard === 'out-of-stock' ? 'bg-red-500/30' : 'bg-red-500/20'
                             }`}>
@@ -244,10 +239,6 @@ export default function InventoryPage() {
                         <div className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-red-300 to-red-500 bg-clip-text text-transparent">
                             {stats.outOfStockCount}
                         </div>
-                        <p className="text-[10px] text-amber-200/50 mt-1 flex items-center gap-1">
-                            <Sparkles className="size-3" />
-                            Empty
-                        </p>
                     </CardContent>
                 </Card>
             </div>
@@ -257,10 +248,10 @@ export default function InventoryPage() {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
                     <Select value={tempCategoryFilter} onValueChange={setTempCategoryFilter}>
                         <SelectTrigger className="w-full sm:w-[280px] bg-slate-900/50 border-amber-500/20 text-amber-50 h-10 sm:h-11 text-sm sm:text-base">
-                            <SelectValue placeholder="All Categories" />
+                            <SelectValue placeholder={t('allCategories')} />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-900 border-amber-500/20 text-amber-50">
-                            <SelectItem value="all">All Categories</SelectItem>
+                            <SelectItem value="all">{t('allCategories')}</SelectItem>
                             {dbCategories.map((cat) => (
                                 <SelectItem key={cat.id} value={cat.id}>
                                     {cat.name}
@@ -273,7 +264,7 @@ export default function InventoryPage() {
                             options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
                             selected={tempMaterialFilters}
                             onChange={setTempMaterialFilters}
-                            placeholder="Select materials"
+                            placeholder={t('selectMaterials')}
                         />
                     </div>
                     <div className="flex gap-2 sm:gap-4">
@@ -282,7 +273,7 @@ export default function InventoryPage() {
                             className="flex-1 sm:flex-none bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold h-10 sm:h-11 px-5 text-sm sm:text-base"
                         >
                             <Filter className="size-4 mr-2" />
-                            Apply
+                            {tCommon('apply')}
                         </Button>
                         <Button
                             variant="outline"
@@ -290,7 +281,7 @@ export default function InventoryPage() {
                             className="flex-1 sm:flex-none border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-10 sm:h-11 px-5 text-sm sm:text-base"
                         >
                             <X className="size-4 mr-2" />
-                            Clear
+                            {tCommon('clear')}
                         </Button>
                     </div>
                 </div>
@@ -301,7 +292,7 @@ export default function InventoryPage() {
                 <CardHeader>
                     <CardTitle className="text-amber-50 flex items-center gap-2">
                         <Package className="size-5 text-amber-400" />
-                        Item Inventory
+                        {t('itemInventory')}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -323,8 +314,8 @@ export default function InventoryPage() {
                     ) : dbItems.length === 0 ? (
                         <div className="text-center py-16">
                             <Package className="size-16 text-amber-400/20 mx-auto mb-6" />
-                            <h3 className="text-xl font-semibold text-amber-50 mb-3">No items found</h3>
-                            <p className="text-amber-200/60">Add items to start managing inventory</p>
+                            <h3 className="text-xl font-semibold text-amber-50 mb-3">{t('noItemsFound')}</h3>
+                            <p className="text-amber-200/60">{t('addItemsToStart')}</p>
                         </div>
                     ) : (
                         <>
@@ -333,11 +324,11 @@ export default function InventoryPage() {
                                 <Table>
                                     <TableHeader>
                                         <TableRow className="bg-slate-900/50 border-amber-500/20 hover:bg-slate-900/50">
-                                            <TableHead className="text-amber-200/70">Item</TableHead>
-                                            <TableHead className="text-amber-200/70">Category</TableHead>
-                                            <TableHead className="text-amber-200/70">Material</TableHead>
-                                            <TableHead className="text-amber-200/70">Stock</TableHead>
-                                            <TableHead className="text-right text-amber-200/70">Actions</TableHead>
+                                            <TableHead className="text-amber-200/70">{t('item')}</TableHead>
+                                            <TableHead className="text-amber-200/70">{t('category')}</TableHead>
+                                            <TableHead className="text-amber-200/70">{t('material')}</TableHead>
+                                            <TableHead className="text-amber-200/70">{t('stock')}</TableHead>
+                                            <TableHead className="text-right text-amber-200/70">{tCommon('actions')}</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -388,7 +379,7 @@ export default function InventoryPage() {
                                                             className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
                                                         >
                                                             <Edit className="size-4 mr-1" />
-                                                            Edit
+                                                            {tCommon('edit')}
                                                         </Button>
                                                         <Button
                                                             size="sm"
@@ -397,7 +388,7 @@ export default function InventoryPage() {
                                                             className="border-red-500/30 text-red-400 hover:bg-red-500/10"
                                                         >
                                                             <Trash2 className="size-4 mr-1" />
-                                                            Delete
+                                                            {tCommon('delete')}
                                                         </Button>
                                                     </div>
                                                 </TableCell>
@@ -437,7 +428,7 @@ export default function InventoryPage() {
                                                             : 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30'
                                                         }`}
                                                 >
-                                                    {item.stock === 0 ? 'Out of Stock' : `${item.stock} Units`}
+                                                    {item.stock === 0 ? t('outOfStock') : `${item.stock} ${t('units')}`}
                                                 </Badge>
                                             </div>
                                         </div>
@@ -448,7 +439,7 @@ export default function InventoryPage() {
                                                 className="flex-1 bg-amber-500/5 border-amber-500/20 text-amber-200 hover:bg-amber-500/10 h-10 text-xs font-semibold"
                                             >
                                                 <Edit className="size-3.5 mr-2" />
-                                                Edit
+                                                {tCommon('edit')}
                                             </Button>
                                             <Button
                                                 onClick={() => setItemToDelete(item)}
@@ -456,7 +447,7 @@ export default function InventoryPage() {
                                                 className="flex-1 bg-red-500/5 border-red-500/20 text-red-400 hover:bg-red-500/10 h-10 text-xs font-semibold"
                                             >
                                                 <Trash2 className="size-3.5 mr-2" />
-                                                Delete
+                                                {tCommon('delete')}
                                             </Button>
                                         </div>
                                     </div>
@@ -466,7 +457,7 @@ export default function InventoryPage() {
                             {/* Pagination Controls */}
                             <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 py-4 border-t border-amber-500/10">
                                 <div className="text-sm text-amber-200/40">
-                                    Showing <span className="text-amber-50 font-medium">{(pagination.currentPage - 1) * pagination.pageSize + 1} – {Math.min(pagination.currentPage * pagination.pageSize, pagination.total)}</span> of <span className="text-amber-50 font-medium">{pagination.total}</span>
+                                    {tCommon('page')} <span className="text-amber-50 font-medium">{pagination.currentPage}</span> {tCommon('of')} <span className="text-amber-50 font-medium">{pagination.totalPages}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Button
@@ -476,7 +467,7 @@ export default function InventoryPage() {
                                         onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
                                         className="border-amber-500/20 text-amber-200 hover:bg-amber-500/10"
                                     >
-                                        Previous
+                                        {tCommon('previous')}
                                     </Button>
                                     <div className="flex items-center gap-1">
                                         {[...Array(pagination.totalPages)].map((_, i) => {
@@ -518,7 +509,7 @@ export default function InventoryPage() {
                                         onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
                                         className="border-amber-500/20 text-amber-200 hover:bg-amber-500/10"
                                     >
-                                        Next
+                                        {tCommon('next')}
                                     </Button>
                                 </div>
                             </div>
@@ -533,22 +524,22 @@ export default function InventoryPage() {
                     <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2 text-amber-400">
                             <AlertTriangle className="size-5" />
-                            Confirm Deletion
+                            {t('confirmDeletion')}
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-amber-200/60">
-                            Are you sure you want to delete <span className="text-amber-100 font-semibold">{itemToDelete?.name}</span>? This action cannot be undone.
+                            {t('deleteDescription', { name: itemToDelete?.name || '' })}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="mt-4">
                         <AlertDialogCancel className="bg-slate-800 border-amber-500/20 text-amber-200 hover:bg-slate-700 hover:text-amber-50">
-                            Cancel
+                            {tCommon('cancel')}
                         </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
                             disabled={isDeleting}
                             className="bg-red-500 hover:bg-red-600 text-white border-none shadow-lg shadow-red-500/20"
                         >
-                            {isDeleting ? "Deleting..." : "Delete Item"}
+                            {isDeleting ? t('deleting') : tCommon('delete')}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
