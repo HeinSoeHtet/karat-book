@@ -26,7 +26,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import { format } from 'date-fns';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/components/ui/utils';
 import { Calendar as CalendarIcon } from 'lucide-react';
@@ -193,6 +192,10 @@ function CreateInvoiceContent() {
     const copyFromInvoice = (invoice: Invoice) => {
         if (invoiceType === 'buy' && invoice.type === 'buy') {
             toast.error(t('cannotImportBuy'));
+            return;
+        }
+        if (invoiceType === 'buy' && invoice.status === 'returned') {
+            toast.error(t('cannotImportReturned'));
             return;
         }
 
@@ -1049,10 +1052,14 @@ function CreateInvoiceContent() {
 
                                             <Button
                                                 onClick={() => copyFromInvoice(foundInvoice)}
-                                                disabled={invoiceType === 'buy' && foundInvoice.type === 'buy'}
+                                                disabled={invoiceType === 'buy' && (foundInvoice.type === 'buy' || foundInvoice.status === 'returned')}
                                                 className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white h-11 rounded-xl shadow-lg shadow-emerald-900/20 font-medium disabled:from-slate-600 disabled:to-slate-700 disabled:cursor-not-allowed"
                                             >
-                                                {invoiceType === 'buy' && foundInvoice.type === 'buy' ? t('cannotImportBuy') : t('apply')}
+                                                {invoiceType === 'buy' && foundInvoice.type === 'buy'
+                                                    ? t('cannotImportBuy')
+                                                    : (invoiceType === 'buy' && foundInvoice.status === 'returned')
+                                                        ? t('cannotImportReturned')
+                                                        : t('apply')}
                                             </Button>
                                         </div>
                                     ) : historySearchTerm && !isSearchingHistory && (

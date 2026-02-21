@@ -47,7 +47,8 @@ import {
     X,
     CheckCircle2,
     Clock,
-    AlertCircle
+    AlertCircle,
+    ArrowLeft
 } from 'lucide-react';
 
 
@@ -507,7 +508,7 @@ export default function InvoicePage() {
                                                         <Calendar className="size-3" />
                                                         {formatIntl.dateTime(invoice.date, { month: 'short', day: 'numeric', year: 'numeric' })}
                                                         <span className="mx-1">•</span>
-                                                        <span className={`capitalize ${['active', 'paid', 'redeemed'].includes(invoice.status) ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                                        <span className={`capitalize ${['active', 'paid', 'redeemed'].includes(invoice.status) ? 'text-emerald-400' : invoice.status === 'returned' ? 'text-red-400' : 'text-amber-400'}`}>
                                                             {t(invoice.status)}
                                                         </span>
                                                     </div>
@@ -654,6 +655,12 @@ export default function InvoicePage() {
                                                                         <div className="flex items-center gap-2">
                                                                             <Clock className="size-3 text-amber-400" />
                                                                             {t('partiallyPaid')}
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                    <SelectItem value="returned" className="text-amber-50">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <ArrowLeft className="size-3 text-red-400" />
+                                                                            {t('returned')}
                                                                         </div>
                                                                     </SelectItem>
                                                                 </>

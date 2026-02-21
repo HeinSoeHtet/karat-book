@@ -29,7 +29,7 @@ export const invoices = sqliteTable('invoices', {
     customerAddress: text('customer_address'),
     total: real('total').notNull(),
     type: text('type').notNull(), // sales, pawn
-    status: text('status').notNull().default('paid'), // sales/buy: paid, unpaid, partially_paid, cancelled | pawn: active, overdue, expired, redeemed
+    status: text('status').notNull().default('paid'), // sales/buy: paid, unpaid, partially_paid, cancelled, returned | pawn: active, overdue, expired, redeemed
     dueDate: integer('due_date', { mode: 'timestamp' }),
     notes: text('notes'),
     createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
