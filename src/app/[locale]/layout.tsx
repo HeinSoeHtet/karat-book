@@ -25,6 +25,8 @@ export const metadata: Metadata = {
 	description: SITE_CONFIG.description,
 };
 
+import { LocaleSync } from "@/components/LocaleSync";
+
 export default async function RootLayout({
 	children,
 	params,
@@ -51,6 +53,7 @@ export default async function RootLayout({
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				<NextIntlClientProvider messages={messages} locale={locale}>
 					<SettingsProvider>
+						<LocaleSync locale={locale} />
 						{children}
 					</SettingsProvider>
 					<Toaster position="top-right" />
