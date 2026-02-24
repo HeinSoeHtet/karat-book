@@ -245,8 +245,8 @@ function CreateInvoiceContent() {
                 toast.error(t('outOfStock'));
                 return;
             }
-            if (invoiceType === 'buy') {
-                // For 'buy', add to pawnItems list which allows custom editing
+            if (invoiceType === 'buy' || invoiceType === 'pawn') {
+                // For 'buy' and 'pawn', add to pawnItems list which allows custom editing
                 setPawnItems([...pawnItems, {
                     name: product.name,
                     quantity: 1,
@@ -511,7 +511,7 @@ function CreateInvoiceContent() {
                             </div>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                                    {invoiceType === 'buy' && (
+                                    {(invoiceType === 'buy' || invoiceType === 'pawn') && (
                                         <>
                                             <Button
                                                 onClick={() => setShowHistoryDialog(true)}
