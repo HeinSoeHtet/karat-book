@@ -105,14 +105,21 @@ export async function createInvoiceAction(data: CreateInvoiceData) {
         if (data.type === 'sales' || (data.type === 'buy' && !data.skipStockUpdate)) {
             for (const item of data.items) {
                 if (item.productId) {
-                    await db.update(items)
-                        .set({
-                            stock: data.type === 'sales'
-                                ? sql`${items.stock} - ${item.quantity}`
-                                : sql`${items.stock} + ${item.quantity}`,
-                            updatedAt: new Date(),
-                        })
-                        .where(eq(items.id, item.productId));
+                    // Verify the item exists in the inventory before attempting to update stock
+                    const existingItem = await db.query.items.findFirst({
+                        where: eq(items.id, item.productId)
+                    });
+
+                    if (existingItem) {
+                        await db.update(items)
+                            .set({
+                                stock: data.type === 'sales'
+                                    ? sql`${items.stock} - ${item.quantity}`
+                                    : sql`${items.stock} + ${item.quantity}`,
+                                updatedAt: new Date(),
+                            })
+                            .where(eq(items.id, item.productId));
+                    }
                 }
             }
         }

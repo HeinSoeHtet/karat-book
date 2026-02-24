@@ -168,6 +168,10 @@ function CreateInvoiceContent() {
     const updatePawnItemName = (index: number, name: string) => {
         const updated = [...pawnItems];
         updated[index].name = name;
+        // If the name is manually changed, it's no longer linked to the inventory item
+        if (updated[index].productId) {
+            delete updated[index].productId;
+        }
         setPawnItems(updated);
     };
 
