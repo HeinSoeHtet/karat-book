@@ -52,6 +52,18 @@ export default function CreateInvoicePage() {
 function CreateInvoiceContent() {
     const t = useTranslations('invoice_create');
     const formatIntl = useFormatter();
+
+    const formatWithCommas = (value: string | number) => {
+        if (value === undefined || value === null) return '';
+        const sValue = value.toString();
+        const cleanValue = sValue.replace(/,/g, '');
+        if (cleanValue === '') return '';
+        if (isNaN(Number(cleanValue))) return sValue;
+        const parts = cleanValue.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return parts.join('.');
+    };
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const invoiceType = (searchParams.get('type') as 'sales' | 'pawn' | 'buy') || 'sales';
@@ -571,15 +583,19 @@ function CreateInvoiceContent() {
                                                             </td>
                                                             <td className="py-3 px-4 text-left">
                                                                 <Input
-                                                                    type="number"
-                                                                    step="0.01"
-                                                                    value={item.price || ''}
-                                                                    onChange={(e) => updatePawnItemPrice(index, e.target.value === '' ? 0 : parseFloat(e.target.value))}
+                                                                    type="text"
+                                                                    value={formatWithCommas(item.price)}
+                                                                    onChange={(e) => {
+                                                                        const val = e.target.value.replace(/,/g, '');
+                                                                        if (val === '' || !isNaN(Number(val)) || val === '.') {
+                                                                            updatePawnItemPrice(index, val === '' ? 0 : parseFloat(val));
+                                                                        }
+                                                                    }}
                                                                     className="w-28 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9"
                                                                 />
                                                             </td>
                                                             <td className="py-3 px-4 text-left text-amber-50 font-medium">
-                                                                {lineTotal.toFixed(0)}
+                                                                {formatIntl.number(lineTotal)}
                                                             </td>
                                                             <td className="py-3 px-4 text-left">
                                                                 <Button
@@ -601,7 +617,7 @@ function CreateInvoiceContent() {
                                                         {t('subtotal')}:
                                                     </td>
                                                     <td className="py-2 px-4 text-left text-amber-50 font-medium">
-                                                        {calculatePawnTotal().total.toFixed(0)}
+                                                        {formatIntl.number(calculatePawnTotal().total)}
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -610,7 +626,7 @@ function CreateInvoiceContent() {
                                                         {t('total')}:
                                                     </td>
                                                     <td className="py-3 px-4 text-left text-amber-400 font-bold text-lg">
-                                                        {calculatePawnTotal().total.toFixed(0)}
+                                                        {formatIntl.number(calculatePawnTotal().total)}
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -703,24 +719,32 @@ function CreateInvoiceContent() {
                                                         </td>
                                                         <td className="py-3 px-4 text-left">
                                                             <Input
-                                                                type="number"
-                                                                step="0.01"
-                                                                value={item.price || ''}
-                                                                onChange={(e) => updateInvoiceItemPrice(index, e.target.value === '' ? 0 : parseFloat(e.target.value))}
+                                                                type="text"
+                                                                value={formatWithCommas(item.price)}
+                                                                onChange={(e) => {
+                                                                    const val = e.target.value.replace(/,/g, '');
+                                                                    if (val === '' || !isNaN(Number(val)) || val === '.') {
+                                                                        updateInvoiceItemPrice(index, val === '' ? 0 : parseFloat(val));
+                                                                    }
+                                                                }}
                                                                 className="w-24 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
                                                             />
                                                         </td>
                                                         <td className="py-3 px-4 text-left">
                                                             <Input
-                                                                type="number"
-                                                                step="0.01"
-                                                                value={item.discount || ''}
-                                                                onChange={(e) => updateInvoiceItemDiscount(index, e.target.value === '' ? 0 : parseFloat(e.target.value))}
+                                                                type="text"
+                                                                value={formatWithCommas(item.discount)}
+                                                                onChange={(e) => {
+                                                                    const val = e.target.value.replace(/,/g, '');
+                                                                    if (val === '' || !isNaN(Number(val)) || val === '.') {
+                                                                        updateInvoiceItemDiscount(index, val === '' ? 0 : parseFloat(val));
+                                                                    }
+                                                                }}
                                                                 className="w-24 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
                                                             />
                                                         </td>
                                                         <td className="py-3 px-4 text-left text-amber-50 font-medium">
-                                                            {lineTotal.toFixed(0)}
+                                                            {formatIntl.number(lineTotal)}
                                                         </td>
                                                         <td className="py-3 px-4 text-left">
                                                             <Button
@@ -742,7 +766,7 @@ function CreateInvoiceContent() {
                                                     {t('subtotal')}:
                                                 </td>
                                                 <td className="py-2 px-4 text-left text-amber-50 font-medium">
-                                                    {calculateInvoiceTotal().subtotal.toFixed(0)}
+                                                    {formatIntl.number(calculateInvoiceTotal().subtotal)}
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -751,7 +775,7 @@ function CreateInvoiceContent() {
                                                     {t('totalDiscount')}:
                                                 </td>
                                                 <td className="py-2 px-4 text-left text-amber-50 font-medium">
-                                                    {calculateInvoiceTotal().totalDiscount.toFixed(0)}
+                                                    {formatIntl.number(calculateInvoiceTotal().totalDiscount)}
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -760,7 +784,7 @@ function CreateInvoiceContent() {
                                                     {t('totalAmount')}:
                                                 </td>
                                                 <td className="py-3 px-4 text-left text-amber-400 font-bold text-lg">
-                                                    {calculateInvoiceTotal().total.toFixed(0)}
+                                                    {formatIntl.number(calculateInvoiceTotal().total)}
                                                 </td>
                                                 <td></td>
                                             </tr>

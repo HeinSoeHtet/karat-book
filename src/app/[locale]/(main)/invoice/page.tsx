@@ -83,9 +83,9 @@ export default function InvoicePage() {
                 ${invoice.type === 'sales' ? `<td style="padding: 12px 16px; text-align: center; color: #000; font-size: 12px;">${item.returnType === 'making-charges' ? t('makingCharges') : t('percentage')}</td>` : ''}
                 <td style="padding: 12px 16px; text-align: center; color: #000;">${item.weight || '-'}</td>
                 <td style="padding: 12px 16px; text-align: center; color: #000;">${item.quantity}</td>
-                <td style="padding: 12px 16px; text-align: right; color: #000;">${item.price.toFixed(0)}</td>
-                ${invoice.type !== 'buy' ? `<td style="padding: 12px 16px; text-align: right; color: #000;">${(item.discount || 0) > 0 ? `-${(item.discount || 0).toFixed(0)}` : '0'}</td>` : ''}
-                <td style="padding: 12px 16px; text-align: right; font-weight: 600; color: #000;">${item.total.toFixed(0)}</td>
+                <td style="padding: 12px 16px; text-align: right; color: #000;">${formatIntl.number(item.price)}</td>
+                ${invoice.type !== 'buy' ? `<td style="padding: 12px 16px; text-align: right; color: #000;">${(item.discount || 0) > 0 ? `-${formatIntl.number(item.discount || 0)}` : '0'}</td>` : ''}
+                <td style="padding: 12px 16px; text-align: right; font-weight: 600; color: #000;">${formatIntl.number(item.total)}</td>
             </tr>
         `).join('');
 
@@ -164,17 +164,17 @@ export default function InvoicePage() {
                         <tfoot style="background: #f8f8f8; border-top: 2px solid #ddd;">
                             <tr>
                                 <td colspan="${invoice.type === 'sales' ? 6 : (invoice.type === 'pawn' ? 5 : 4)}" style="padding: 10px 16px; text-align: right; color: #666; font-size: 14px;">${t('subtotal')}:</td>
-                                <td style="padding: 10px 16px; text-align: right; font-weight: 600; color: #000;">${subtotal.toFixed(0)}</td>
+                                <td style="padding: 10px 16px; text-align: right; font-weight: 600; color: #000;">${formatIntl.number(subtotal)}</td>
                             </tr>
                             ${(totalDiscount > 0 && invoice.type !== 'buy') ? `
                             <tr>
                                 <td colspan="${invoice.type === 'sales' ? 6 : 5}" style="padding: 10px 16px; text-align: right; color: #666; font-size: 14px;">${t('totalDiscount')}:</td>
-                                <td style="padding: 10px 16px; text-align: right; font-weight: 600; color: #000;">-${totalDiscount.toFixed(0)}</td>
+                                <td style="padding: 10px 16px; text-align: right; font-weight: 600; color: #000;">-${formatIntl.number(totalDiscount)}</td>
                             </tr>
                             ` : ''}
                             <tr>
                                 <td colspan="${invoice.type === 'sales' ? 6 : (invoice.type === 'pawn' ? 5 : 4)}" style="padding: 16px; text-align: right; font-size: 18px; font-weight: bold; text-transform: uppercase; color: #000;">${t('totalAmount')}</td>
-                                <td style="padding: 16px; text-align: right; font-size: 24px; font-weight: bold; color: #000;">${invoice.total.toFixed(0)}</td>
+                                <td style="padding: 16px; text-align: right; font-size: 24px; font-weight: bold; color: #000;">${formatIntl.number(invoice.total)}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -513,7 +513,7 @@ export default function InvoicePage() {
                                                         </span>
                                                     </div>
                                                     <div className="text-sm font-bold text-amber-400">
-                                                        {invoice.total.toFixed(0)}
+                                                        {formatIntl.number(invoice.total)}
                                                     </div>
                                                 </div>
                                             </CardContent>
@@ -749,9 +749,9 @@ export default function InvoicePage() {
                                                         )}
                                                         <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-xs sm:text-sm">{item.weight || '-'}</td>
                                                         <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-xs sm:text-sm">{item.quantity}</td>
-                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 text-xs sm:text-sm">{item.price.toFixed(0)}</td>
-                                                        {selectedInvoice.type !== 'buy' && <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-red-400 text-xs sm:text-sm">-{(item.discount || 0).toFixed(0)}</td>}
-                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 font-bold text-xs sm:text-sm">{item.total.toFixed(0)}</td>
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 text-xs sm:text-sm">{formatIntl.number(item.price)}</td>
+                                                        {selectedInvoice.type !== 'buy' && <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-red-400 text-xs sm:text-sm">-{formatIntl.number(item.discount || 0)}</td>}
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 font-bold text-xs sm:text-sm">{formatIntl.number(item.total)}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -759,18 +759,18 @@ export default function InvoicePage() {
                                                 <tr>
                                                     <td colSpan={selectedInvoice.type === 'sales' ? 6 : (selectedInvoice.type === 'pawn' ? 5 : 4)} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">{t('subtotal')}:</td>
                                                     <td className="py-2 px-3 sm:px-4 text-right text-amber-50 text-xs font-bold">
-                                                        {selectedInvoice.items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(0)}
+                                                        {formatIntl.number(selectedInvoice.items.reduce((sum, item) => sum + (item.price * item.quantity), 0))}
                                                     </td>
                                                 </tr>
                                                 {selectedInvoice.type !== 'buy' && selectedInvoice.items.some(item => (item.discount || 0) > 0) && (
                                                     <tr>
                                                         <td colSpan={selectedInvoice.type === 'sales' ? 6 : 5} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">{t('totalDiscount')}:</td>
-                                                        <td className="py-2 px-3 sm:px-4 text-right text-red-400 text-xs font-bold">-{selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0).toFixed(0)}</td>
+                                                        <td className="py-2 px-3 sm:px-4 text-right text-red-400 text-xs font-bold">-{formatIntl.number(selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0))}</td>
                                                     </tr>
                                                 )}
                                                 <tr>
                                                     <td colSpan={selectedInvoice.type === 'sales' ? 6 : (selectedInvoice.type === 'pawn' ? 5 : 4)} className="py-3 px-3 sm:px-4 text-right text-sm sm:text-xl font-bold text-amber-50">{tCommon('total')}:</td>
-                                                    <td className="py-3 px-3 sm:px-4 text-right text-amber-400 text-lg sm:text-2xl font-black">{selectedInvoice.total.toFixed(0)}</td>
+                                                    <td className="py-3 px-3 sm:px-4 text-right text-amber-400 text-lg sm:text-2xl font-black">{formatIntl.number(selectedInvoice.total)}</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
