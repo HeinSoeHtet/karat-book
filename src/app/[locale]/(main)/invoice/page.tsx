@@ -507,10 +507,14 @@ export default function InvoicePage() {
                                                     <div className="text-xs text-amber-200/50 flex items-center gap-1">
                                                         <Calendar className="size-3" />
                                                         {formatIntl.dateTime(invoice.date, { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                        <span className="mx-1">•</span>
-                                                        <span className={`capitalize ${['active', 'paid', 'redeemed'].includes(invoice.status) ? 'text-emerald-400' : invoice.status === 'returned' ? 'text-red-400' : 'text-amber-400'}`}>
-                                                            {t(invoice.status)}
-                                                        </span>
+                                                        {invoice.type !== 'buy' && (
+                                                            <>
+                                                                <span className="mx-1">•</span>
+                                                                <span className={`capitalize ${['active', 'paid', 'redeemed'].includes(invoice.status) ? 'text-emerald-400' : invoice.status === 'returned' ? 'text-red-400' : 'text-amber-400'}`}>
+                                                                    {t(invoice.status)}
+                                                                </span>
+                                                            </>
+                                                        )}
                                                     </div>
                                                     <div className="text-sm font-bold text-amber-400">
                                                         {formatIntl.number(invoice.total)}
@@ -607,70 +611,72 @@ export default function InvoicePage() {
                                                     {t(selectedInvoice.type)}
                                                 </Badge>
 
-                                                {(selectedInvoice.type === 'pawn' || selectedInvoice.type === 'sales') ? (
-                                                    <Select
-                                                        value={selectedInvoice.status}
-                                                        onValueChange={handleStatusChange}
-                                                    >
-                                                        <SelectTrigger className="w-full sm:w-[140px] h-9 sm:h-8 bg-slate-900/50 border-amber-500/20 text-xs text-amber-50">
-                                                            <SelectValue placeholder={tCommon('status')} />
-                                                        </SelectTrigger>
-                                                        <SelectContent className="bg-slate-900 border-amber-500/20">
-                                                            {selectedInvoice.type === 'pawn' ? (
-                                                                <>
-                                                                    <SelectItem value="active" className="text-amber-50">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <Clock className="size-3 text-amber-400" />
-                                                                            {t('active')}
-                                                                        </div>
-                                                                    </SelectItem>
-                                                                    <SelectItem value="overdue" className="text-amber-50">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <AlertCircle className="size-3 text-red-400" />
-                                                                            {t('overdue')}
-                                                                        </div>
-                                                                    </SelectItem>
-                                                                    <SelectItem value="expired" className="text-amber-50">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <X className="size-3 text-slate-400" />
-                                                                            {t('expired')}
-                                                                        </div>
-                                                                    </SelectItem>
-                                                                    <SelectItem value="redeemed" className="text-amber-50">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <CheckCircle2 className="size-3 text-emerald-400" />
-                                                                            {t('redeemed')}
-                                                                        </div>
-                                                                    </SelectItem>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <SelectItem value="paid" className="text-amber-50">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <CheckCircle2 className="size-3 text-emerald-400" />
-                                                                            {t('paid')}
-                                                                        </div>
-                                                                    </SelectItem>
-                                                                    <SelectItem value="partially_paid" className="text-amber-50">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <Clock className="size-3 text-amber-400" />
-                                                                            {t('partiallyPaid')}
-                                                                        </div>
-                                                                    </SelectItem>
-                                                                    <SelectItem value="returned" className="text-amber-50">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <ArrowLeft className="size-3 text-red-400" />
-                                                                            {t('returned')}
-                                                                        </div>
-                                                                    </SelectItem>
-                                                                </>
-                                                            )}
-                                                        </SelectContent>
-                                                    </Select>
-                                                ) : (
-                                                    <Badge variant="outline" className="border-amber-500/20 text-amber-200/60 text-[10px] uppercase">
-                                                        {t(selectedInvoice.status)}
-                                                    </Badge>
+                                                {selectedInvoice.type !== 'buy' && (
+                                                    (selectedInvoice.type === 'pawn' || selectedInvoice.type === 'sales') ? (
+                                                        <Select
+                                                            value={selectedInvoice.status}
+                                                            onValueChange={handleStatusChange}
+                                                        >
+                                                            <SelectTrigger className="w-full sm:w-[140px] h-9 sm:h-8 bg-slate-900/50 border-amber-500/20 text-xs text-amber-50">
+                                                                <SelectValue placeholder={tCommon('status')} />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="bg-slate-900 border-amber-500/20">
+                                                                {selectedInvoice.type === 'pawn' ? (
+                                                                    <>
+                                                                        <SelectItem value="active" className="text-amber-50">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <Clock className="size-3 text-amber-400" />
+                                                                                {t('active')}
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                        <SelectItem value="overdue" className="text-amber-50">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <AlertCircle className="size-3 text-red-400" />
+                                                                                {t('overdue')}
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                        <SelectItem value="expired" className="text-amber-50">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <X className="size-3 text-slate-400" />
+                                                                                {t('expired')}
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                        <SelectItem value="redeemed" className="text-amber-50">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <CheckCircle2 className="size-3 text-emerald-400" />
+                                                                                {t('redeemed')}
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <SelectItem value="paid" className="text-amber-50">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <CheckCircle2 className="size-3 text-emerald-400" />
+                                                                                {t('paid')}
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                        <SelectItem value="partially_paid" className="text-amber-50">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <Clock className="size-3 text-amber-400" />
+                                                                                {t('partiallyPaid')}
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                        <SelectItem value="returned" className="text-amber-50">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <ArrowLeft className="size-3 text-red-400" />
+                                                                                {t('returned')}
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                    </>
+                                                                )}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    ) : (
+                                                        <Badge variant="outline" className="border-amber-500/20 text-amber-200/60 text-[10px] uppercase">
+                                                            {t(selectedInvoice.status)}
+                                                        </Badge>
+                                                    )
                                                 )}
                                             </div>
                                         </div>
