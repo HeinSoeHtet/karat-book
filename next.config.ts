@@ -8,15 +8,6 @@ const nextConfig: NextConfig = {
 	turbopack: {
 		root: "/home/hein/personal/karat-book",
 	},
-	async redirects() {
-		return [
-			{
-				source: "/",
-				destination: "/invoice",
-				permanent: false,
-			},
-		];
-	},
 };
 
 const wrappedConfig = withBundleAnalyzer({
