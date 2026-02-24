@@ -319,5 +319,34 @@
         "noItemsFound": "No items found",
         "searchPlaceholder": "Search...",
         "apply": "Apply"
+    },
+    "price_calculator": {
+        "title": "Price Calculator",
+        "description": "Quick gold price calculation based on weight and quality.",
+        "weight": "Weight (g)",
+        "goldPrice": "Gold Price",
+        "materialQuality": "Material Quality",
+        "type": "Type",
+        "buy": "Buy",
+        "sell": "Sell",
+        "calculate": "Calculate",
+        "result": "Result",
+        "goldPricePerQuality": "Gold Price (Quality)",
+        "totalWeightValue": "Total Weight Value",
+        "deductionPrice": "Deduction Value",
+        "finalPrice": "Final Price",
+        "makingCharges": "Making Charges",
+        "yway": "Yway",
+        "pe": "Pe",
+        "qualityOptions": {
+            "p15": "15 Pe",
+            "p14_2": "14 Pe 2 Pyar",
+            "p13": "13 Pe",
+            "p12": "12 Pe",
+            "p11": "11 Pe",
+            "p10": "10 Pe",
+            "p9": "9 Pe",
+            "p8": "8 Pe"
+        }
     }
 }

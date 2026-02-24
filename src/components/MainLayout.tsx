@@ -5,6 +5,7 @@ import { Link, usePathname } from '@/i18n/routing';
 import { Receipt, TrendingUp, Diamond, Warehouse, Newspaper, Menu, X, Settings } from 'lucide-react';
 import { useState } from 'react';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { PriceCalculator } from './PriceCalculator';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
     const t = useTranslations('common');
@@ -71,13 +72,15 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                     );
                                 })}
                             </nav>
-                            <div className="ml-4 pl-4 border-l border-amber-500/20">
+                            <div className="ml-4 pl-4 border-l border-amber-500/20 flex items-center gap-2">
+                                <PriceCalculator />
                                 <LanguageSwitcher />
                             </div>
                         </div>
 
                         {/* Mobile Menu Button */}
                         <div className="flex items-center gap-2 md:hidden">
+                            <PriceCalculator />
                             <LanguageSwitcher />
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
