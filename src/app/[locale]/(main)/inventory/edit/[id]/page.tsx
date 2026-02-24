@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MultiSelect } from '@/components/ui/multi-select';
-import { Package, ArrowLeft, Image as ImageIcon, Boxes, Award, Upload, X, Loader2, Camera } from 'lucide-react';
+import { Package, ArrowLeft, Image as ImageIcon, Boxes, Award, Upload, X, Loader2, Camera, Diamond } from 'lucide-react';
 import { CameraModal } from '@/components/inventory/CameraModal';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -37,6 +37,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         category: string;
         description: string;
         material: string;
+        weight: number | string;
         stock: number | string;
         image: string;
     }
@@ -46,6 +47,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         category: 'rings',
         description: '',
         material: '',
+        weight: '',
         stock: 0,
         image: '',
     });
@@ -109,7 +111,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!formData.name || !formData.category || selectedMaterials.length === 0) {
+        if (!formData.name || !formData.category || selectedMaterials.length === 0 || formData.weight === '') {
             toast.error(t('fillRequired'));
             return;
         }
@@ -131,6 +133,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             submitFormData.append('material', selectedMaterials.join(', '));
             const finalStockValue = formData.stock === '' ? 0 : parseInt(formData.stock.toString());
             submitFormData.append('stock', finalStockValue.toString());
+            submitFormData.append('weight', formData.weight.toString());
 
             if (selectedFile) {
                 submitFormData.append('image', selectedFile);
@@ -266,8 +269,27 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                                 </Select>
                             </div>
 
+                            {/* Weight */}
+                            <div className="md:col-span-1">
+                                <Label htmlFor="weight" className="text-amber-200/70 flex items-center gap-2 mb-2">
+                                    <Diamond className="size-4" />
+                                    {t('weight')} <span className="text-red-400">*</span>
+                                </Label>
+                                <Input
+                                    id="weight"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    value={formData.weight}
+                                    onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                                    placeholder="2.5"
+                                    className="bg-slate-900/50 border-amber-500/30 text-amber-50 placeholder:text-amber-200/30 h-11"
+                                    required
+                                />
+                            </div>
+
                             {/* Stock */}
-                            <div className="md:col-span-2">
+                            <div className="md:col-span-1">
                                 <Label htmlFor="stock" className="text-amber-200/70 flex items-center gap-2 mb-2">
                                     <Boxes className="size-4" />
                                     {t('stockQuantity')} <span className="text-red-400">*</span>

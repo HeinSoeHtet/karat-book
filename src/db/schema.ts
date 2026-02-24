@@ -15,6 +15,7 @@ export const items = sqliteTable('items', {
     category: text('category').notNull(),
     description: text('description'),
     material: text('material').notNull(),
+    weight: real('weight').notNull().default(0),
     stock: integer('stock').notNull().default(0),
     image: text('image').notNull(),
     createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),

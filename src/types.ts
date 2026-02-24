@@ -4,6 +4,7 @@ export interface Item {
   category: 'rings' | 'necklaces' | 'bracelets' | 'earrings' | 'watches';
   description?: string;
   material: string;
+  weight: number;
   stock: number;
   image: string;
 }

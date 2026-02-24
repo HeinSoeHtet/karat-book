@@ -252,7 +252,7 @@ function CreateInvoiceContent() {
                     quantity: 1,
                     price: 0,
                     productId: product.id,
-                    weight: 0
+                    weight: product.weight
                 }]);
             } else {
                 const price = 0; // Or get from product if available
@@ -264,7 +264,7 @@ function CreateInvoiceContent() {
                     returnType: 'percentage',
                     price,
                     discount: 0,
-                    weight: 0
+                    weight: product.weight
                 }]);
             }
         }
@@ -327,13 +327,28 @@ function CreateInvoiceContent() {
 
         // Validate items
         if (invoiceType === 'sales') {
-            const hasInvalidItems = selectedItems.some(item => !item.weight || item.weight <= 0 || !item.quantity || item.quantity <= 0 || !item.price || item.price <= 0);
+            const hasInvalidItems = selectedItems.some(item =>
+                !item.weight ||
+                item.weight <= 0 ||
+                !item.quantity ||
+                item.quantity <= 0 ||
+                !item.price ||
+                item.price <= 0
+            );
             if (hasInvalidItems) {
                 toast.error(t('fillAllItemFields'));
                 return;
             }
         } else {
-            const hasInvalidItems = pawnItems.some(item => !item.name || !item.weight || item.weight <= 0 || !item.quantity || item.quantity <= 0 || !item.price || item.price <= 0);
+            const hasInvalidItems = pawnItems.some(item =>
+                !item.name?.trim() ||
+                !item.weight ||
+                item.weight <= 0 ||
+                !item.quantity ||
+                item.quantity <= 0 ||
+                !item.price ||
+                item.price <= 0
+            );
             if (hasInvalidItems) {
                 toast.error(t('fillAllItemFields'));
                 return;
@@ -562,23 +577,28 @@ function CreateInvoiceContent() {
                                                                     onChange={(e) => updatePawnItemName(index, e.target.value)}
                                                                     placeholder={t('itemPlaceholder')}
                                                                     className="w-full min-w-[200px] px-3 py-2 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 placeholder-amber-200/40 h-9"
+                                                                    required
                                                                 />
                                                             </td>
                                                             <td className="py-3 px-4 text-left">
                                                                 <Input
                                                                     type="number"
                                                                     step="0.01"
+                                                                    min="0.01"
                                                                     value={item.weight || ''}
                                                                     onChange={(e) => updatePawnItemWeight(index, e.target.value === '' ? 0 : parseFloat(e.target.value))}
                                                                     className="w-20 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9"
+                                                                    required
                                                                 />
                                                             </td>
                                                             <td className="py-3 px-4 text-left">
                                                                 <Input
                                                                     type="number"
+                                                                    min="1"
                                                                     value={item.quantity || ''}
                                                                     onChange={(e) => updatePawnItemQuantity(index, e.target.value === '' ? 0 : parseInt(e.target.value))}
                                                                     className="w-20 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9"
+                                                                    required
                                                                 />
                                                             </td>
                                                             <td className="py-3 px-4 text-left">
@@ -592,6 +612,7 @@ function CreateInvoiceContent() {
                                                                         }
                                                                     }}
                                                                     className="w-28 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9"
+                                                                    required
                                                                 />
                                                             </td>
                                                             <td className="py-3 px-4 text-left text-amber-50 font-medium">
@@ -704,17 +725,21 @@ function CreateInvoiceContent() {
                                                             <Input
                                                                 type="number"
                                                                 step="0.01"
+                                                                min="0.01"
                                                                 value={item.weight || ''}
                                                                 onChange={(e) => updateInvoiceItemWeight(index, e.target.value === '' ? 0 : parseFloat(e.target.value))}
                                                                 className="w-20 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
+                                                                required
                                                             />
                                                         </td>
                                                         <td className="py-3 px-4 text-left">
                                                             <Input
                                                                 type="number"
+                                                                min="1"
                                                                 value={item.quantity || ''}
                                                                 onChange={(e) => updateInvoiceItemQuantity(index, e.target.value === '' ? 0 : parseInt(e.target.value))}
                                                                 className="w-16 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
+                                                                required
                                                             />
                                                         </td>
                                                         <td className="py-3 px-4 text-left">
@@ -728,6 +753,7 @@ function CreateInvoiceContent() {
                                                                     }
                                                                 }}
                                                                 className="w-24 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
+                                                                required
                                                             />
                                                         </td>
                                                         <td className="py-3 px-4 text-left">

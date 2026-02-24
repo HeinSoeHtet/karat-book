@@ -325,6 +325,7 @@ export default function InventoryPage() {
                                         <TableRow className="bg-slate-900/50 border-amber-500/20 hover:bg-slate-900/50">
                                             <TableHead className="text-amber-200/70">{t('item')}</TableHead>
                                             <TableHead className="text-amber-200/70">{t('category')}</TableHead>
+                                            <TableHead className="text-amber-200/70">{t('weight')}</TableHead>
                                             <TableHead className="text-amber-200/70">{t('material')}</TableHead>
                                             <TableHead className="text-amber-200/70">{t('stock')}</TableHead>
                                             <TableHead className="text-right text-amber-200/70">{t('actions')}</TableHead>
@@ -355,6 +356,7 @@ export default function InventoryPage() {
                                                         {item.category}
                                                     </Badge>
                                                 </TableCell>
+                                                <TableCell className="text-amber-100 text-sm">{item.weight} g</TableCell>
                                                 <TableCell className="text-amber-100 text-sm">{item.material}</TableCell>
                                                 <TableCell>
                                                     <Badge
@@ -417,7 +419,7 @@ export default function InventoryPage() {
                                             <div className="flex-1 min-w-0 flex flex-col justify-center">
                                                 <div className="font-bold text-amber-50 text-base mb-1 line-clamp-1">{item.name}</div>
                                                 <div className="text-[10px] text-amber-200/40 line-clamp-1 uppercase tracking-wider mb-2 font-medium">
-                                                    {item.category} • {item.material}
+                                                    {item.category} • {item.weight}g • {item.material}
                                                 </div>
                                                 <Badge
                                                     className={`w-fit py-0.5 text-[10px] uppercase tracking-wider font-bold ${item.stock === 0

@@ -55,6 +55,7 @@ export async function createItemAction(formData: FormData) {
             category: (formData.get('category') as string) || '',
             description: (formData.get('description') as string) || null,
             material: formData.get('material') as string,
+            weight: Number(formData.get('weight')),
             stock: Number(formData.get('stock')),
             image: imageUrl,
         };
@@ -82,6 +83,7 @@ export async function updateItemAction(id: string, formData: FormData) {
             category: (formData.get('category') as string) || '',
             description: (formData.get('description') as string) || null,
             material: formData.get('material') as string,
+            weight: Number(formData.get('weight')),
             stock: Number(formData.get('stock')),
             updatedAt: new Date(),
         };
