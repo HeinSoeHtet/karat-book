@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -831,34 +831,42 @@ export default function InvoicePage() {
 
             {/* Invoice Type Selection Dialog */}
             {showInvoiceTypeDialog && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <Card className="bg-slate-800/95 backdrop-blur-md border-amber-500/20 w-full max-w-2xl">
-                        <CardHeader className="border-b border-amber-500/20 text-center">
-                            <div className="text-2xl font-bold text-amber-50 mb-2 font-serif tracking-wide">{t('selectionTitle')}</div>
-                            <p className="text-amber-200/60 uppercase tracking-widest text-xs font-bold">{t('selectionSubtitle')}</p>
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 sm:p-6">
+                    <Card className="bg-slate-800/95 backdrop-blur-md border-amber-500/20 w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
+                        <CardHeader className="border-b border-amber-500/10 text-center py-4 sm:py-6 shrink-0 relative">
+                            <Button
+                                onClick={() => setShowInvoiceTypeDialog(false)}
+                                variant="ghost"
+                                size="icon"
+                                className="absolute right-2 top-2 text-amber-200/40 hover:text-amber-200 hover:bg-amber-500/10 sm:hidden"
+                            >
+                                <X className="size-5" />
+                            </Button>
+                            <div className="text-xl sm:text-2xl font-bold text-amber-50 mb-1 font-serif tracking-wide">{t('selectionTitle')}</div>
+                            <p className="text-amber-200/60 uppercase tracking-widest text-[10px] sm:text-xs font-bold">{t('selectionSubtitle')}</p>
                         </CardHeader>
-                        <CardContent className="p-4 sm:p-8">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                        <CardContent className="p-4 sm:p-8 overflow-y-auto custom-scrollbar">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
                                 {/* Sales Invoice */}
                                 <div
                                     onClick={() => {
                                         setShowInvoiceTypeDialog(false);
                                         router.push(`/${currentLocale}/invoice/create?type=sales`);
                                     }}
-                                    className="group cursor-pointer"
+                                    className="group cursor-pointer h-full"
                                 >
-                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-emerald-500/60 transition-all hover:scale-[1.02] sm:hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/20 h-full">
-                                        <CardContent className="p-4 sm:p-8 text-center flex flex-col items-center">
-                                            <div className="mb-3 sm:mb-6">
+                                    <Card className="bg-slate-900/50 border border-amber-500/20 hover:border-emerald-500/60 transition-all hover:bg-emerald-500/5 active:scale-95 sm:hover:scale-105 h-full">
+                                        <CardContent className="p-4 sm:p-6 text-center flex flex-col items-center">
+                                            <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
-                                                    <div className="absolute inset-0 bg-emerald-500/20 rounded-2xl blur-md group-hover:bg-emerald-500/40 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-emerald-500/30 p-4 sm:p-6 rounded-2xl">
-                                                        <ShoppingCart className="size-8 sm:size-12 text-emerald-400" />
+                                                    <div className="absolute inset-0 bg-emerald-500/10 rounded-2xl blur-md group-hover:bg-emerald-500/20 transition-colors"></div>
+                                                    <div className="relative bg-slate-900 border border-emerald-500/20 p-3 sm:p-4 rounded-2xl">
+                                                        <ShoppingCart className="size-6 sm:size-8 text-emerald-400" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-xl sm:text-2xl font-bold text-amber-50 mb-1 sm:mb-3">{t('sales')}</h3>
-                                            <p className="text-amber-200/70 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+                                            <h3 className="text-lg sm:text-xl font-bold text-amber-50 mb-1">{t('sales')}</h3>
+                                            <p className="text-amber-200/50 text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none">
                                                 {t('salesDescription')}
                                             </p>
                                         </CardContent>
@@ -871,20 +879,20 @@ export default function InvoicePage() {
                                         setShowInvoiceTypeDialog(false);
                                         router.push(`/${currentLocale}/invoice/create?type=pawn`);
                                     }}
-                                    className="group cursor-pointer"
+                                    className="group cursor-pointer h-full"
                                 >
-                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-amber-500/60 transition-all hover:scale-[1.02] sm:hover:scale-105 hover:shadow-xl hover:shadow-amber-500/20 h-full">
-                                        <CardContent className="p-4 sm:p-8 text-center flex flex-col items-center">
-                                            <div className="mb-3 sm:mb-6">
+                                    <Card className="bg-slate-900/50 border border-amber-500/20 hover:border-amber-500/60 transition-all hover:bg-amber-500/5 active:scale-95 sm:hover:scale-105 h-full">
+                                        <CardContent className="p-4 sm:p-6 text-center flex flex-col items-center">
+                                            <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
-                                                    <div className="absolute inset-0 bg-amber-500/20 rounded-2xl blur-md group-hover:bg-amber-500/40 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-amber-500/30 p-4 sm:p-6 rounded-2xl">
-                                                        <HandCoins className="size-8 sm:size-12 text-amber-400" />
+                                                    <div className="absolute inset-0 bg-amber-500/10 rounded-2xl blur-md group-hover:bg-amber-500/20 transition-colors"></div>
+                                                    <div className="relative bg-slate-900 border border-amber-500/20 p-3 sm:p-4 rounded-2xl">
+                                                        <HandCoins className="size-6 sm:size-8 text-amber-400" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-xl sm:text-2xl font-bold text-amber-50 mb-1 sm:mb-3">{t('pawn')}</h3>
-                                            <p className="text-amber-200/70 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+                                            <h3 className="text-lg sm:text-xl font-bold text-amber-50 mb-1">{t('pawn')}</h3>
+                                            <p className="text-amber-200/50 text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none">
                                                 {t('pawnDescription')}
                                             </p>
                                         </CardContent>
@@ -897,37 +905,36 @@ export default function InvoicePage() {
                                         setShowInvoiceTypeDialog(false);
                                         router.push(`/${currentLocale}/invoice/create?type=buy`);
                                     }}
-                                    className="group cursor-pointer"
+                                    className="group cursor-pointer h-full"
                                 >
-                                    <Card className="bg-slate-900/50 border-2 border-amber-500/20 hover:border-blue-500/60 transition-all hover:scale-[1.02] sm:hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20 h-full">
-                                        <CardContent className="p-4 sm:p-8 text-center flex flex-col items-center">
-                                            <div className="mb-3 sm:mb-6">
+                                    <Card className="bg-slate-900/50 border border-amber-500/20 hover:border-blue-500/60 transition-all hover:bg-blue-500/5 active:scale-95 sm:hover:scale-105 h-full">
+                                        <CardContent className="p-4 sm:p-6 text-center flex flex-col items-center">
+                                            <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
-                                                    <div className="absolute inset-0 bg-blue-500/20 rounded-2xl blur-md group-hover:bg-blue-500/40 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-blue-500/30 p-4 sm:p-6 rounded-2xl">
-                                                        <Diamond className="size-8 sm:size-12 text-blue-400" />
+                                                    <div className="absolute inset-0 bg-blue-500/10 rounded-2xl blur-md group-hover:bg-blue-500/20 transition-colors"></div>
+                                                    <div className="relative bg-slate-900 border border-blue-500/20 p-3 sm:p-4 rounded-2xl">
+                                                        <Diamond className="size-6 sm:size-8 text-blue-400" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-xl sm:text-2xl font-bold text-amber-50 mb-1 sm:mb-3">{t('buy')}</h3>
-                                            <p className="text-amber-200/70 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+                                            <h3 className="text-lg sm:text-xl font-bold text-amber-50 mb-1">{t('buy')}</h3>
+                                            <p className="text-amber-200/50 text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none">
                                                 {t('buyDescription')}
                                             </p>
                                         </CardContent>
                                     </Card>
                                 </div>
                             </div>
-
-                            <div className="mt-8 text-center">
-                                <Button
-                                    onClick={() => setShowInvoiceTypeDialog(false)}
-                                    variant="ghost"
-                                    className="text-amber-200/40 hover:text-amber-200/70 hover:bg-amber-500/5 px-8 h-10 sm:h-11"
-                                >
-                                    {tCommon('cancel')}
-                                </Button>
-                            </div>
                         </CardContent>
+                        <CardFooter className="flex justify-center border-t border-amber-500/10 pt-4 pb-6">
+                            <Button
+                                onClick={() => setShowInvoiceTypeDialog(false)}
+                                variant="ghost"
+                                className="text-amber-200/40 hover:text-amber-200/70 hover:bg-amber-500/5 px-8 h-10 sm:h-11 rounded-xl"
+                            >
+                                {tCommon('cancel')}
+                            </Button>
+                        </CardFooter>
                     </Card>
                 </div>
             )}
