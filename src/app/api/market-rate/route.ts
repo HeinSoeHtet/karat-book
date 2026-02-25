@@ -14,12 +14,6 @@ interface MarketRateRequestBody {
 export async function POST(request: NextRequest) {
     try {
         const context = await getCloudflareContext();
-        const apiSecret = context.env.MARKET_RATE_API_SECRET;
-        const authHeader = request.headers.get('Authorization');
-
-        if (!apiSecret || authHeader !== apiSecret) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
 
         const body = await request.json() as MarketRateRequestBody;
         const { usdt_mmk, gold_usd, timestamp } = body;
