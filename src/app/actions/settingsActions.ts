@@ -80,7 +80,7 @@ export async function getMaterialsAction() {
         return { success: true, data };
     } catch (error) {
         console.error('Error fetching materials:', error);
-        return { success: false, error: 'Failed to fetch materials' };
+        return { success: false, error: 'Failed to fetch material quality' };
     }
 }
 
@@ -96,7 +96,7 @@ export async function createMaterialAction(name: string) {
         return { success: true };
     } catch (error) {
         console.error('Error creating material:', error);
-        return { success: false, error: 'Failed to create material. It might already exist.' };
+        return { success: false, error: 'Failed to create material quality. It might already exist.' };
     }
 }
 
@@ -111,7 +111,7 @@ export async function updateMaterialAction(id: string, name: string) {
         return { success: true };
     } catch (error) {
         console.error('Error updating material:', error);
-        return { success: false, error: 'Failed to update material' };
+        return { success: false, error: 'Failed to update material quality' };
     }
 }
 
@@ -126,6 +126,6 @@ export async function deleteMaterialAction(id: string) {
         return { success: true };
     } catch (error) {
         console.error('Error deleting material:', error);
-        return { success: false, error: 'Failed to delete material' };
+        return { success: false, error: 'Failed to delete material quality' };
     }
 }
