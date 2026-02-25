@@ -181,7 +181,7 @@
         "selectionTitle": "Select Invoice Type",
         "selectionSubtitle": "Choose your transaction flow",
         "salesDescription": "Direct customer purchase with automated inventory management.",
-        "pawnDescription": "Loan-based transaction with collateral and maturity tracking.",
+        "pawnDescription": "Loan-based transaction with collateral tracking.",
         "buyDescription": "Purchase from customer. Support for reuse of old invoice data.",
         "confirmStatusChange": "Confirm Status Change",
         "confirmStatusDescription": "Are you sure you want to change the status of this invoice to {status}? This action will be recorded in the system.",
