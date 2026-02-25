@@ -238,29 +238,35 @@ export function PriceCalculator() {
                                     {t("makingCharges")}
                                 </Label>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-1.5">
+                                    <div className="space-y-1.5 relative group/yway">
                                         <Input
                                             type="number"
-                                            placeholder={t("yway")}
+                                            placeholder="0"
                                             value={yway}
                                             min={0}
                                             max={7}
                                             step="1"
                                             onChange={handleFieldChange(setYway, 7)}
-                                            className="bg-slate-950/40 border-amber-500/10 focus:border-amber-500/40 focus:ring-amber-500/20 h-11 rounded-xl transition-all"
+                                            className="bg-slate-950/40 border-amber-500/10 focus:border-amber-500/40 focus:ring-amber-500/20 h-11 rounded-xl transition-all pr-12"
                                         />
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-amber-200/40 pointer-events-none group-focus-within/yway:text-amber-500/60 transition-colors">
+                                            {t("yway")}
+                                        </div>
                                     </div>
-                                    <div className="space-y-1.5">
+                                    <div className="space-y-1.5 relative group/pe">
                                         <Input
                                             type="number"
-                                            placeholder={t("pe")}
+                                            placeholder="0"
                                             value={pe}
                                             min={0}
                                             max={15}
                                             step="1"
                                             onChange={handleFieldChange(setPe, 15)}
-                                            className="bg-slate-950/40 border-amber-500/10 focus:border-amber-500/40 focus:ring-amber-500/20 h-11 rounded-xl transition-all"
+                                            className="bg-slate-950/40 border-amber-500/10 focus:border-amber-500/40 focus:ring-amber-500/20 h-11 rounded-xl transition-all pr-12"
                                         />
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-amber-200/40 pointer-events-none group-focus-within/pe:text-amber-500/60 transition-colors">
+                                            {t("pe")}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
