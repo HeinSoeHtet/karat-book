@@ -16,7 +16,13 @@ export async function POST(request: NextRequest) {
         const context = await getCloudflareContext();
 
         const body = await request.json() as MarketRateRequestBody;
-        const { usdt_mmk, gold_usd, timestamp } = body;
+        const { usdt_mmk, gold_usd } = body;
+        let { timestamp } = body;
+
+        // Handle 12 AM to 0 AM conversion as requested
+        if (timestamp === '12 AM') {
+            timestamp = '0 AM';
+        }
 
         // Validation
         if (!timestamp || gold_usd === undefined || usdt_mmk === undefined) {
