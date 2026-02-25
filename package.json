@@ -11,7 +11,10 @@
 		"upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"analyze": "ANALYZE=true next build --webpack",
-		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
+		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate:local": "wrangler d1 migrations apply karat-book-db --local",
+		"db:migrate:remote": "wrangler d1 migrations apply karat-book-db --remote"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.2",
