@@ -47,7 +47,7 @@
 			"binding": "BUCKET",
 			"bucket_name": "karat-book-inventory"
 		}
-	]
+	],
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
@@ -65,5 +65,7 @@
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
 	 */
-	// "vars": {  "MY_VARIABLE": "production_value" }
+	"vars": {
+		"NEXT_PUBLIC_APP_URL": "https://shwehtoothar.com"
+	}
 }

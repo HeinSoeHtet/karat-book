@@ -2,13 +2,73 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb } from '@/db';
 import { dailyMarketRate } from '@/db/schema';
-import { eq, and, gte, lte } from 'drizzle-orm';
+import { eq, and, gte, lte, desc } from 'drizzle-orm';
 import { HourlyRateEntry } from '@/types';
+
+export const runtime = 'experimental-edge';
 
 interface MarketRateRequestBody {
     usdt_mmk: number;
     gold_usd: number;
     timestamp: string;
+}
+
+export async function GET(request: NextRequest) {
+    try {
+        const { env, ctx } = await getCloudflareContext();
+        const cache = typeof caches !== 'undefined' ? (caches as any).default : null;
+        const cacheKey = request.url;
+
+        // Try to get from cache if it exists
+        if (cache) {
+            const cachedResponse = await cache.match(cacheKey);
+            if (cachedResponse) return cachedResponse;
+        }
+
+        const db = getDb(env.DB);
+
+        // Fetch latest 'gold' record
+        const goldRate = await db.select()
+            .from(dailyMarketRate)
+            .where(eq(dailyMarketRate.type, 'gold'))
+            .orderBy(desc(dailyMarketRate.createdAt))
+            .limit(1);
+
+        // Fetch latest 'exchange_rate' record
+        const exchangeRate = await db.select()
+            .from(dailyMarketRate)
+            .where(eq(dailyMarketRate.type, 'exchange_rate'))
+            .orderBy(desc(dailyMarketRate.createdAt))
+            .limit(1);
+
+        const rates = [...goldRate, ...exchangeRate];
+
+        const responseData = {
+            success: true,
+            data: rates.map(r => ({
+                id: r.id,
+                type: r.type,
+                hourlyRate: JSON.parse(r.hourlyRate),
+                updatedAt: r.updatedAt,
+                createdAt: r.createdAt
+            }))
+        };
+
+        const response = NextResponse.json(responseData);
+
+        // Cache for 1 hour on the edge, but tell browsers to revalidate every time
+        response.headers.set('Cache-Control', 'public, no-cache, s-maxage=3600');
+
+        // Store in Cloudflare cache if available
+        if (cache) {
+            ctx.waitUntil(cache.put(cacheKey, response.clone()));
+        }
+
+        return response;
+    } catch (error) {
+        console.error('Market rate fetch error:', error);
+        return NextResponse.json({ error: 'Failed to fetch market rates' }, { status: 500 });
+    }
 }
 
 export async function POST(request: NextRequest) {
@@ -77,6 +137,13 @@ export async function POST(request: NextRequest) {
 
         await processType('gold', gold_usd);
         await processType('exchange_rate', usdt_mmk);
+
+        // Clear Cloudflare cache for the GET request if available
+        const { ctx } = await getCloudflareContext();
+        if (typeof caches !== 'undefined') {
+            const cache = (caches as any).default;
+            ctx.waitUntil(cache.delete(request.url));
+        }
 
         return NextResponse.json({
             success: true,
