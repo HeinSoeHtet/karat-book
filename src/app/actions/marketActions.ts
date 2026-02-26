@@ -11,21 +11,25 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
         // we can fetch from the relative path if executed on the server correctly.
 
         const { env }: { env: any } = await getCloudflareContext();
-        const baseUrl = env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        let baseUrl = (env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, '');
 
-        // Debug logging for environment (safe for production)
-        console.log(`[MarketAction] Fetching from: ${baseUrl}/api/market-rate`);
         // Check for required secrets
         if (!env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET) {
-            throw new Error('Cloudflare Access Service Token secrets (CF_ACCESS_CLIENT_ID/SECRET) are missing from the Worker environment. Please add them in the Cloudflare Dashboard.');
+            throw new Error('Cloudflare Access Service Token secrets (CF_ACCESS_CLIENT_ID/SECRET) are missing from the Worker environment.');
         }
+
+        console.log(`[MarketAction] Fetching from: ${baseUrl}/api/market-rate (ID length: ${env.CF_ACCESS_CLIENT_ID.length})`);
+        // Check for required secrets
+        // if (!env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET) {
+        //     throw new Error('Cloudflare Access Service Token secrets (CF_ACCESS_CLIENT_ID/SECRET) are missing from the Worker environment. Please add them in the Cloudflare Dashboard.');
+        // }
 
         const response = await fetch(`${baseUrl}/api/market-rate`, {
             method: 'GET',
             cache: 'no-store', // We let the API handle its own caching on the Edge
             headers: {
-                'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID || '',
-                'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET || '',
+                'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID.trim(),
+                'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET.trim(),
             }
         });
 
@@ -38,8 +42,9 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
             const body = await response.text();
-            console.error('Expected JSON but received:', body.substring(0, 500));
-            throw new Error('API returned non-JSON response (likely Cloudflare Access block)');
+            const pageTitle = body.match(/<title>(.*?)<\/title>/)?.[1] || 'Unknown Title';
+            console.error(`Received non-JSON response. Page Title: "${pageTitle}". Body snippet:`, body.substring(0, 300));
+            throw new Error(`API returned HTML instead of JSON. Page Title: "${pageTitle}". Check your Zero Trust Service Token policy.`);
         }
 
         const result = (await response.json()) as { success: boolean, data?: any[], error?: string };
