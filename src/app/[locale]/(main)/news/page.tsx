@@ -207,7 +207,7 @@ export default function NewsPage() {
                                                     {item.time}
                                                 </div>
                                                 <div className="text-amber-50 font-semibold">
-                                                    {formatIntl.number(item.price, { maximumFractionDigits: 2 })}
+                                                    {formatIntl.number(item.price, { maximumFractionDigits: 2 })} USD
                                                 </div>
                                             </div>
                                             <div className={`flex items-center gap-1 text-xs font-medium ${item.change > 0 ? 'text-emerald-400' :
