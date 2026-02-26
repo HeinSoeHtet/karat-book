@@ -15,10 +15,9 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
 
         // Debug logging for environment (safe for production)
         console.log(`[MarketAction] Fetching from: ${baseUrl}/api/market-rate`);
+        // Check for required secrets
         if (!env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET) {
-            console.warn('[MarketAction] Warning: Cloudflare Access Service Token secrets appear to be missing from environment.');
-        } else {
-            console.log(`[MarketAction] Service Token ID present (starts with: ${env.CF_ACCESS_CLIENT_ID.substring(0, 5)}...)`);
+            throw new Error('Cloudflare Access Service Token secrets (CF_ACCESS_CLIENT_ID/SECRET) are missing from the Worker environment. Please add them in the Cloudflare Dashboard.');
         }
 
         const response = await fetch(`${baseUrl}/api/market-rate`, {
