@@ -13,6 +13,14 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
         const { env }: { env: any } = await getCloudflareContext();
         const baseUrl = env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
+        // Debug logging for environment (safe for production)
+        console.log(`[MarketAction] Fetching from: ${baseUrl}/api/market-rate`);
+        if (!env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET) {
+            console.warn('[MarketAction] Warning: Cloudflare Access Service Token secrets appear to be missing from environment.');
+        } else {
+            console.log(`[MarketAction] Service Token ID present (starts with: ${env.CF_ACCESS_CLIENT_ID.substring(0, 5)}...)`);
+        }
+
         const response = await fetch(`${baseUrl}/api/market-rate`, {
             method: 'GET',
             cache: 'no-store', // We let the API handle its own caching on the Edge
