@@ -14,13 +14,13 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
         let baseUrl = (env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, '');
         const isLocalhost = baseUrl.includes('localhost');
 
-        // Only enforce Cloudflare Access secrets if we are NOT on localhost
-        if (!isLocalhost && (!env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET)) {
-            throw new Error('Cloudflare Access Service Token secrets (CF_ACCESS_CLIENT_ID/SECRET) are missing from the Worker environment.');
-        }
+        const isInternalLoopback = !isLocalhost && baseUrl.includes('shwehtoothar.com');
 
-        const apiUrl = `${baseUrl}/api/market-rate?t=${Date.now()}`;
-        console.log(`[MarketAction] Fetching from: ${apiUrl}`);
+        const apiUrl = isInternalLoopback
+            ? `/api/market-rate?t=${Date.now()}`
+            : `${baseUrl}/api/market-rate?t=${Date.now()}`;
+
+        console.log(`[MarketAction] Fetching from: ${apiUrl} (Internal: ${isInternalLoopback})`);
 
         const response = await fetch(apiUrl, {
             method: 'GET',
