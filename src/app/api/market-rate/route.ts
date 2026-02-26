@@ -16,13 +16,19 @@ interface MarketRateRequestBody {
 export async function GET(request: NextRequest) {
     try {
         const { env, ctx } = await getCloudflareContext();
-        const cache = typeof caches !== 'undefined' ? (caches as any).default : null;
+        const cache = (typeof globalThis !== 'undefined' && (globalThis as any).caches)
+            ? (globalThis as any).caches.default
+            : null;
         const cacheKey = request.url;
 
         // Try to get from cache if it exists
         if (cache) {
-            const cachedResponse = await cache.match(cacheKey);
-            if (cachedResponse) return cachedResponse;
+            try {
+                const cachedResponse = await cache.match(cacheKey);
+                if (cachedResponse) return cachedResponse;
+            } catch (e) {
+                console.warn('Cache match failed:', e);
+            }
         }
 
         const db = getDb(env.DB);
@@ -61,7 +67,11 @@ export async function GET(request: NextRequest) {
 
         // Store in Cloudflare cache if available
         if (cache) {
-            ctx.waitUntil(cache.put(cacheKey, response.clone()));
+            try {
+                ctx.waitUntil(cache.put(cacheKey, response.clone()));
+            } catch (e) {
+                console.warn('Cache put failed:', e);
+            }
         }
 
         return response;
@@ -140,9 +150,21 @@ export async function POST(request: NextRequest) {
 
         // Clear Cloudflare cache for the GET request if available
         const { ctx } = await getCloudflareContext();
-        if (typeof caches !== 'undefined') {
-            const cache = (caches as any).default;
-            ctx.waitUntil(cache.delete(request.url));
+        const cache = (typeof globalThis !== 'undefined' && (globalThis as any).caches)
+            ? (globalThis as any).caches.default
+            : null;
+
+        if (cache) {
+            try {
+                // Delete the current URL and the base URL (without query params) to be safe
+                const baseUrl = request.url.split('?')[0];
+                ctx.waitUntil(Promise.all([
+                    cache.delete(request.url),
+                    cache.delete(baseUrl)
+                ]));
+            } catch (e) {
+                console.warn('Cache delete failed:', e);
+            }
         }
 
         return NextResponse.json({

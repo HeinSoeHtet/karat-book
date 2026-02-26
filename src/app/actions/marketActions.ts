@@ -12,9 +12,10 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
 
         const { env }: { env: any } = await getCloudflareContext();
         let baseUrl = (env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, '');
+        const isLocalhost = baseUrl.includes('localhost');
 
-        // Check for required secrets
-        if (!env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET) {
+        // Only enforce Cloudflare Access secrets if we are NOT on localhost
+        if (!isLocalhost && (!env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET)) {
             throw new Error('Cloudflare Access Service Token secrets (CF_ACCESS_CLIENT_ID/SECRET) are missing from the Worker environment.');
         }
 
@@ -25,8 +26,10 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
             method: 'GET',
             cache: 'no-store', // We let the API handle its own caching on the Edge
             headers: {
-                'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID.trim(),
-                'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET.trim(),
+                ...(!isLocalhost ? {
+                    'CF-Access-Client-Id': (env.CF_ACCESS_CLIENT_ID || '').trim(),
+                    'CF-Access-Client-Secret': (env.CF_ACCESS_CLIENT_SECRET || '').trim(),
+                } : {}),
                 'User-Agent': 'Cloudflare-Worker-Internal',
                 'Accept': 'application/json',
             }
