@@ -18,18 +18,17 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
             throw new Error('Cloudflare Access Service Token secrets (CF_ACCESS_CLIENT_ID/SECRET) are missing from the Worker environment.');
         }
 
-        console.log(`[MarketAction] Fetching from: ${baseUrl}/api/market-rate (ID length: ${env.CF_ACCESS_CLIENT_ID.length})`);
-        // Check for required secrets
-        // if (!env.CF_ACCESS_CLIENT_ID || !env.CF_ACCESS_CLIENT_SECRET) {
-        //     throw new Error('Cloudflare Access Service Token secrets (CF_ACCESS_CLIENT_ID/SECRET) are missing from the Worker environment. Please add them in the Cloudflare Dashboard.');
-        // }
+        const apiUrl = `${baseUrl}/api/market-rate?t=${Date.now()}`;
+        console.log(`[MarketAction] Fetching from: ${apiUrl}`);
 
-        const response = await fetch(`${baseUrl}/api/market-rate`, {
+        const response = await fetch(apiUrl, {
             method: 'GET',
             cache: 'no-store', // We let the API handle its own caching on the Edge
             headers: {
                 'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID.trim(),
                 'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET.trim(),
+                'User-Agent': 'Cloudflare-Worker-Internal',
+                'Accept': 'application/json',
             }
         });
 
