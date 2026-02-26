@@ -23,7 +23,16 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to fetch from API: ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`API Error (${response.status}):`, errorText.substring(0, 200));
+            throw new Error(`Failed to fetch from API: ${response.status} ${response.statusText}`);
+        }
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const body = await response.text();
+            console.error('Expected JSON but received:', body.substring(0, 500));
+            throw new Error('API returned non-JSON response (likely Cloudflare Access block)');
         }
 
         const result = (await response.json()) as { success: boolean, data?: any[], error?: string };
