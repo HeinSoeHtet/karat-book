@@ -15,7 +15,11 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
 
         const response = await fetch(`${baseUrl}/api/market-rate`, {
             method: 'GET',
-            cache: 'no-store' // We let the API handle its own caching on the Edge
+            cache: 'no-store', // We let the API handle its own caching on the Edge
+            headers: {
+                'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID || '',
+                'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET || '',
+            }
         });
 
         if (!response.ok) {
