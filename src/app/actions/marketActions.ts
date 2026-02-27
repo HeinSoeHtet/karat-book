@@ -5,31 +5,21 @@ import { DailyMarketRate } from "@/types";
 
 export async function getDailyMarketRatesAction(): Promise<{ success: boolean; data?: DailyMarketRate[]; error?: string }> {
     try {
-        // Fetch from our internal API which has edge caching
-        // Using an absolute URL isn't strictly necessary for internal fetch in Next.js 15
-        // but since we are running in various environments (local vs Cloudflare), 
-        // we can fetch from the relative path if executed on the server correctly.
-
         const { env }: { env: any } = await getCloudflareContext();
-        let baseUrl = (env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, '');
-        const isLocalhost = baseUrl.includes('localhost');
 
-        const isInternalLoopback = !isLocalhost && baseUrl.includes('shwehtoothar.com');
+        // Use external API URL from environment variable or default placeholder
+        const apiBaseUrl = env.MARKET_RATE_API_URL.replace(/\/$/, "");
+        const apiUrl = `${apiBaseUrl}/api/market-rate?t=${Date.now()}`;
 
-        const apiUrl = isInternalLoopback
-            ? `/api/market-rate?t=${Date.now()}`
-            : `${baseUrl}/api/market-rate?t=${Date.now()}`;
+        console.log(`[MarketAction] Fetching from external service: ${apiUrl}`);
 
-        console.log(`[MarketAction] Fetching from: ${apiUrl} (Internal: ${isInternalLoopback})`);
-
+        // Always send Service Token for external API access
         const response = await fetch(apiUrl, {
             method: 'GET',
-            cache: 'no-store', // We let the API handle its own caching on the Edge
+            cache: 'no-store',
             headers: {
-                ...(!isLocalhost ? {
-                    'CF-Access-Client-Id': (env.CF_ACCESS_CLIENT_ID || '').trim(),
-                    'CF-Access-Client-Secret': (env.CF_ACCESS_CLIENT_SECRET || '').trim(),
-                } : {}),
+                'CF-Access-Client-Id': (env.CF_ACCESS_CLIENT_ID || '').trim(),
+                'CF-Access-Client-Secret': (env.CF_ACCESS_CLIENT_SECRET || '').trim(),
                 'User-Agent': 'Cloudflare-Worker-Internal',
                 'Accept': 'application/json',
             }
@@ -44,9 +34,8 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
             const body = await response.text();
-            const pageTitle = body.match(/<title>(.*?)<\/title>/)?.[1] || 'Unknown Title';
-            console.error(`Received non-JSON response. Page Title: "${pageTitle}". Body snippet:`, body.substring(0, 300));
-            throw new Error(`API returned HTML instead of JSON. Page Title: "${pageTitle}". Check your Zero Trust Service Token policy.`);
+            console.error(`Received non-JSON response. Body snippet:`, body.substring(0, 300));
+            throw new Error(`API returned non-JSON response. Check your Zero Trust Service Token policy.`);
         }
 
         const result = (await response.json()) as { success: boolean, data?: any[], error?: string };

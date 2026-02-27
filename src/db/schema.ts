@@ -1,13 +1,6 @@
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 import { sql, relations } from 'drizzle-orm';
 
-export const dailyMarketRate = sqliteTable('daily_market_rate', {
-    id: integer('id').primaryKey({ autoIncrement: true }),
-    type: text('type').notNull(), // 'gold' | 'exchange_rate'
-    hourlyRate: text('hourly_rate').notNull(), // JSON array
-    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
-    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
-});
 
 export const items = sqliteTable('items', {
     id: text('id').primaryKey(),
