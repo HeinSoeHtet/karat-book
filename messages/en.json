@@ -351,5 +351,8 @@
             "p9": "9 Pe",
             "p8": "8 Pe"
         }
+    },
+    "camera": {
+        "connecting": "Connecting..."
     }
 }

@@ -36,29 +36,31 @@ export function DateRangePicker({
                         id={id}
                         variant={"outline"}
                         className={cn(
-                            "w-full justify-between text-left font-normal bg-slate-900/50 border-amber-500/20 text-amber-50 hover:bg-amber-500/10 h-10",
-                            !date && "text-amber-200/40"
+                            "w-full justify-between text-left font-bold bg-muted/50 border-border text-foreground hover:bg-muted transition-all h-10 rounded-xl",
+                            !date && "text-foreground/40 font-medium "
                         )}
                     >
                         <div className="flex items-center">
-                            <CalendarIcon className="mr-2 h-4 w-4 text-amber-400" />
+                            <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
                             {date?.from ? (
                                 date.to ? (
-                                    <>
+                                    <span className="text-xs sm:text-sm tracking-tight">
                                         {format(date.from, "LLL dd, y")} -{" "}
                                         {format(date.to, "LLL dd, y")}
-                                    </>
+                                    </span>
                                 ) : (
-                                    format(date.from, "LLL dd, y")
+                                    <span className="text-xs sm:text-sm tracking-tight">
+                                        {format(date.from, "LLL dd, y")}
+                                    </span>
                                 )
                             ) : (
-                                <span>{placeholder}</span>
+                                <span className="text-xs sm:text-sm tracking-tight">{placeholder}</span>
                             )}
                         </div>
                         <ChevronDown className="h-4 w-4 opacity-50" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 border-amber-500/20" align="start">
+                <PopoverContent className="w-auto p-0 border-border bg-card shadow-2xl rounded-2xl overflow-hidden" align="start">
                     <Calendar
                         initialFocus
                         mode="range"

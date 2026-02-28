@@ -88,26 +88,26 @@ export default function NewsPage() {
         return (
             <div className="max-w-6xl mx-auto space-y-6 sm:space-y-10 animate-pulse">
                 <div className="mb-6 sm:mb-10">
-                    <div className="h-10 w-64 bg-amber-500/10 rounded-lg mb-4"></div>
-                    <div className="h-6 w-96 bg-amber-500/5 rounded-lg"></div>
+                    <div className="h-10 w-64 bg-primary/10 rounded-lg mb-4"></div>
+                    <div className="h-6 w-96 bg-primary/5 rounded-lg"></div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     {[1, 2].map((i) => (
-                        <div key={i} className="bg-slate-800/20 border border-amber-500/5 rounded-2xl p-6 space-y-6">
+                        <div key={i} className="bg-muted/20 border border-primary/5 rounded-2xl p-6 space-y-6">
                             <div className="flex items-center justify-between">
-                                <div className="h-6 w-48 bg-amber-500/10 rounded"></div>
+                                <div className="h-6 w-48 bg-primary/10 rounded"></div>
                             </div>
-                            <div className="h-4 w-32 bg-amber-500/5 rounded"></div>
+                            <div className="h-4 w-32 bg-primary/5 rounded"></div>
 
                             {/* Summary Box Skeleton */}
-                            <div className="p-5 bg-slate-900/40 rounded-xl border border-amber-500/5 h-24"></div>
+                            <div className="p-5 bg-card/40 rounded-xl border border-primary/5 h-24"></div>
 
                             {/* List Skeleton */}
                             <div className="space-y-3">
-                                <div className="h-4 w-40 bg-amber-500/5 rounded mb-4"></div>
+                                <div className="h-4 w-40 bg-primary/5 rounded mb-4"></div>
                                 {[1, 2, 3, 4].map((j) => (
-                                    <div key={j} className="h-12 bg-slate-900/20 rounded-lg border border-amber-500/5"></div>
+                                    <div key={j} className="h-12 bg-card/20 rounded-lg border border-primary/5"></div>
                                 ))}
                             </div>
                         </div>
@@ -120,41 +120,41 @@ export default function NewsPage() {
     return (
         <div className="max-w-6xl mx-auto">
             <div className="mb-6 sm:mb-10">
-                <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
-                    <Newspaper className="size-6 sm:size-8 text-amber-400" />
+                <h2 className="text-2xl sm:text-4xl font-bold text-foreground mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+                    <Newspaper className="size-6 sm:size-8 text-primary" />
                     {tCommon('news')}
                 </h2>
-                <p className="text-amber-200/60 text-xs sm:text-lg">{tNews('subtitle')}</p>
+                <p className="text-muted-foreground text-xs sm:text-lg">{tNews('subtitle')}</p>
             </div>
 
             {/* Gold Prices Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* World Gold Price - Hourly */}
-                <Card className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/30 backdrop-blur-sm overflow-hidden">
+                <Card className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 dark:from-amber-500/20 dark:to-amber-600/10 border-amber-500/30 backdrop-blur-sm overflow-hidden shadow-sm">
                     <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-transparent"></div>
                     <CardHeader className="relative">
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-amber-50 flex items-center gap-2">
-                                <Coins className="size-6 text-amber-400" />
+                            <CardTitle className="text-foreground flex items-center gap-2">
+                                <Coins className="size-6 text-amber-500" />
                                 {tNews('worldGoldPrice')}
                             </CardTitle>
                         </div>
-                        <p className="text-xs text-amber-200/50 mt-2">
+                        <p className="text-xs text-muted-foreground mt-2">
                             {tNews('lastUpdated')}: {formatIntl.dateTime(lastUpdated, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' })}
                         </p>
                     </CardHeader>
                     <CardContent className="relative space-y-4">
                         {/* Current Price Summary */}
-                        <div className="p-5 bg-slate-900/50 rounded-xl border border-amber-500/30">
+                        <div className="p-5 bg-card/50 dark:bg-slate-900/50 rounded-xl border border-amber-500/30 shadow-inner">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
-                                    <div className="text-sm text-amber-200/70 mb-1">{tNews('currentPrice')}</div>
-                                    <div className="text-3xl font-bold text-amber-50">
+                                    <div className="text-sm text-muted-foreground mb-1">{tNews('currentPrice')}</div>
+                                    <div className="text-3xl font-bold text-foreground">
                                         {formatIntl.number(currentWorldPrice.price, { maximumFractionDigits: 2 })} USD
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className={`flex items-center gap-1 text-lg font-semibold ${totalDayChange >= 0 ? 'text-emerald-400' : 'text-red-400'
+                                    <div className={`flex items-center gap-1 text-lg font-semibold ${totalDayChange >= 0 ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
                                         }`}>
                                         {totalDayChange >= 0 ? (
                                             <ArrowUp className="size-5" />
@@ -163,7 +163,7 @@ export default function NewsPage() {
                                         )}
                                         {formatIntl.number(Math.abs(totalDayChange), { maximumFractionDigits: 2 })}
                                     </div>
-                                    <div className={`text-sm ${totalDayChangePercent >= 0 ? 'text-emerald-400/70' : 'text-red-400/70'
+                                    <div className={`text-sm ${totalDayChangePercent >= 0 ? 'text-emerald-500/70' : 'text-rose-500/70'
                                         }`}>
                                         {totalDayChangePercent >= 0 ? '+' : ''}{formatIntl.number(totalDayChangePercent, { maximumFractionDigits: 2 })}% {tNews('today')}
                                     </div>
@@ -173,34 +173,34 @@ export default function NewsPage() {
 
                         {/* Hourly Prices */}
                         <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-sm text-amber-200/70 mb-3">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 font-medium">
                                 <Clock className="size-4" />
                                 <span>{tNews('hourlyPriceMovement')}</span>
                             </div>
-                            <div className="max-h-64 overflow-y-auto space-y-2">
+                            <div className="max-h-64 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                                 {displayGoldPrices.length > 0 ? (
                                     displayGoldPrices.map((item, index) => (
                                         <div
                                             key={item.time}
                                             className={`flex items-center justify-between p-3 rounded-lg border transition-all ${index === 0
-                                                ? 'bg-amber-500/20 border-amber-500/40'
-                                                : 'bg-slate-900/20 border-amber-500/10 hover:bg-slate-900/30'
+                                                ? 'bg-amber-500/10 dark:bg-amber-500/20 border-amber-500/40 shadow-sm'
+                                                : 'bg-card/30 dark:bg-slate-900/20 border-border hover:bg-card/50 dark:hover:bg-slate-900/30'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className={`px-2.5 py-1 rounded-md text-xs font-medium ${index === 0
-                                                    ? 'bg-amber-500/30 text-amber-200'
-                                                    : 'bg-slate-800/50 text-amber-200/60'
+                                                <div className={`px-2.5 py-1 rounded-md text-xs font-semibold ${index === 0
+                                                    ? 'bg-amber-500/20 text-amber-700 dark:text-amber-200'
+                                                    : 'bg-muted text-muted-foreground'
                                                     }`}>
                                                     {item.time}
                                                 </div>
-                                                <div className="text-amber-50 font-semibold">
+                                                <div className="text-foreground font-semibold">
                                                     {formatIntl.number(item.price, { maximumFractionDigits: 2 })} USD
                                                 </div>
                                             </div>
-                                            <div className={`flex items-center gap-1 text-xs font-medium ${item.change > 0 ? 'text-emerald-400' :
-                                                item.change < 0 ? 'text-red-400' :
-                                                    'text-amber-200/50'
+                                            <div className={`flex items-center gap-1 text-xs font-bold ${item.change > 0 ? 'text-emerald-500 dark:text-emerald-400' :
+                                                item.change < 0 ? 'text-rose-500 dark:text-rose-400' :
+                                                    'text-muted-foreground/50'
                                                 }`}>
                                                 {item.change > 0 && <ArrowUp className="size-3" />}
                                                 {item.change < 0 && <ArrowDown className="size-3" />}
@@ -209,7 +209,7 @@ export default function NewsPage() {
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="text-center py-8 text-amber-200/40 border border-dashed border-amber-500/20 rounded-xl">
+                                    <div className="text-center py-8 text-muted-foreground/40 border border-dashed border-border rounded-xl">
                                         {tNews('noGoldData')}
                                     </div>
                                 )}
@@ -219,31 +219,31 @@ export default function NewsPage() {
                 </Card>
 
                 {/* USD to MMK Exchange Rate - Hourly */}
-                <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/30 backdrop-blur-sm overflow-hidden">
+                <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 dark:from-blue-500/20 dark:to-blue-600/10 border-blue-500/30 backdrop-blur-sm overflow-hidden shadow-sm">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-400/5 to-transparent"></div>
                     <CardHeader className="relative">
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-amber-50 flex items-center gap-2">
-                                <Coins className="size-6 text-blue-400" />
+                            <CardTitle className="text-foreground flex items-center gap-2">
+                                <Coins className="size-6 text-blue-500" />
                                 {tNews('usdToMmk')}
                             </CardTitle>
                         </div>
-                        <p className="text-xs text-amber-200/50 mt-2">
+                        <p className="text-xs text-muted-foreground mt-2">
                             {tNews('lastUpdated')}: {formatIntl.dateTime(lastUpdated, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' })}
                         </p>
                     </CardHeader>
                     <CardContent className="relative space-y-4">
                         {/* Current Rate Summary */}
-                        <div className="p-5 bg-slate-900/50 rounded-xl border border-blue-500/30">
+                        <div className="p-5 bg-card/50 dark:bg-slate-900/50 rounded-xl border border-blue-500/30 shadow-inner">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
-                                    <div className="text-sm text-amber-200/70 mb-1">{tNews('currentRate')}</div>
-                                    <div className="text-3xl font-bold text-amber-50">
+                                    <div className="text-sm text-muted-foreground mb-1">{tNews('currentRate')}</div>
+                                    <div className="text-3xl font-bold text-foreground">
                                         {formatIntl.number(currentExchangeRate.rate, { maximumFractionDigits: 2 })} MMK
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className={`flex items-center gap-1 text-lg font-semibold ${totalRateChange >= 0 ? 'text-emerald-400' : 'text-red-400'
+                                    <div className={`flex items-center gap-1 text-lg font-semibold ${totalRateChange >= 0 ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
                                         }`}>
                                         {totalRateChange >= 0 ? (
                                             <ArrowUp className="size-5" />
@@ -252,7 +252,7 @@ export default function NewsPage() {
                                         )}
                                         {formatIntl.number(Math.abs(totalRateChange), { maximumFractionDigits: 2 })}
                                     </div>
-                                    <div className={`text-sm ${totalRateChangePercent >= 0 ? 'text-emerald-400/70' : 'text-red-400/70'
+                                    <div className={`text-sm ${totalRateChangePercent >= 0 ? 'text-emerald-500/70' : 'text-rose-500/70'
                                         }`}>
                                         {totalRateChangePercent >= 0 ? '+' : ''}{formatIntl.number(totalRateChangePercent, { maximumFractionDigits: 2 })}% {tNews('today')}
                                     </div>
@@ -262,34 +262,34 @@ export default function NewsPage() {
 
                         {/* Hourly Exchange Rates */}
                         <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-sm text-amber-200/70 mb-3">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 font-medium">
                                 <Clock className="size-4" />
                                 <span>{tNews('hourlyRateMovement')}</span>
                             </div>
-                            <div className="max-h-64 overflow-y-auto space-y-2">
+                            <div className="max-h-64 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                                 {displayExchangeRates.length > 0 ? (
                                     displayExchangeRates.map((item, index) => (
                                         <div
                                             key={item.time}
                                             className={`flex items-center justify-between p-3 rounded-lg border transition-all ${index === 0
-                                                ? 'bg-blue-500/20 border-blue-500/40'
-                                                : 'bg-slate-900/20 border-blue-500/10 hover:bg-slate-900/30'
+                                                ? 'bg-blue-500/10 dark:bg-blue-500/20 border-blue-500/40 shadow-sm'
+                                                : 'bg-card/30 dark:bg-slate-900/20 border-border hover:bg-card/50 dark:hover:bg-slate-900/30'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className={`px-2.5 py-1 rounded-md text-xs font-medium ${index === 0
-                                                    ? 'bg-blue-500/30 text-blue-200'
-                                                    : 'bg-slate-800/50 text-amber-200/60'
+                                                <div className={`px-2.5 py-1 rounded-md text-xs font-semibold ${index === 0
+                                                    ? 'bg-blue-500/20 text-blue-700 dark:text-blue-200'
+                                                    : 'bg-muted text-muted-foreground'
                                                     }`}>
                                                     {item.time}
                                                 </div>
-                                                <div className="text-amber-50 font-semibold">
+                                                <div className="text-foreground font-semibold">
                                                     {formatIntl.number(item.rate, { maximumFractionDigits: 2 })} MMK
                                                 </div>
                                             </div>
-                                            <div className={`flex items-center gap-1 text-xs font-medium ${item.change > 0 ? 'text-emerald-400' :
-                                                item.change < 0 ? 'text-red-400' :
-                                                    'text-amber-200/50'
+                                            <div className={`flex items-center gap-1 text-xs font-bold ${item.change > 0 ? 'text-emerald-500 dark:text-emerald-400' :
+                                                item.change < 0 ? 'text-rose-500 dark:text-rose-400' :
+                                                    'text-muted-foreground/50'
                                                 }`}>
                                                 {item.change > 0 && <ArrowUp className="size-3" />}
                                                 {item.change < 0 && <ArrowDown className="size-3" />}
@@ -298,7 +298,7 @@ export default function NewsPage() {
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="text-center py-8 text-blue-200/40 border border-dashed border-blue-500/20 rounded-xl">
+                                    <div className="text-center py-8 text-muted-foreground/40 border border-dashed border-border rounded-xl">
                                         {tNews('noRateData')}
                                     </div>
                                 )}

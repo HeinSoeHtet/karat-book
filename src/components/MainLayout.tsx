@@ -6,6 +6,7 @@ import { Receipt, TrendingUp, Diamond, Warehouse, Newspaper, Menu, X, Settings }
 import { useState } from 'react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { PriceCalculator } from './PriceCalculator';
+import { ThemeToggle } from './ThemeToggle';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
     const t = useTranslations('common');
@@ -25,23 +26,23 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
             {/* Header */}
-            <header className="bg-slate-950/50 backdrop-blur-xl border-b border-amber-500/20 sticky top-0 z-50">
+            <header className="bg-card/50 backdrop-blur-xl border-b border-border sticky top-0 z-50">
                 <div className="px-4 sm:px-8 py-5">
                     <div className="flex items-center justify-between max-w-7xl mx-auto">
-                        <Link href="/" className="flex items-center gap-3 sm:gap-4">
+                        <Link href="/" className="flex items-center gap-3 sm:gap-4 group">
                             <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl blur-sm opacity-75"></div>
-                                <div className="relative bg-gradient-to-br from-amber-400 to-amber-600 p-2.5 sm:p-3 rounded-xl">
-                                    <Diamond className="size-6 sm:size-7 text-slate-900" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl blur-sm opacity-75 group-hover:opacity-100 transition-opacity"></div>
+                                <div className="relative bg-gradient-to-br from-amber-400 to-amber-600 p-2.5 sm:p-3 rounded-xl shadow-lg shadow-amber-500/20">
+                                    <Diamond className="size-6 sm:size-7 text-slate-950" />
                                 </div>
                             </div>
                             <div>
-                                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent">
+                                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-200 dark:to-amber-400 bg-clip-text text-transparent">
                                     {t('title')}
                                 </h1>
-                                <p className="text-xs sm:text-sm text-amber-200/60 flex items-center gap-1">
+                                <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
                                     {t('tagline')}
                                 </p>
                             </div>
@@ -49,7 +50,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
                         {/* Desktop Navigation */}
                         <div className="hidden md:flex items-center gap-4">
-                            <nav className="flex gap-3">
+                            <nav className="flex gap-1.5">
                                 {navItems.map((item) => {
                                     const Icon = item.icon;
                                     const isActive = pathname === item.path || (pathname === '/' && item.path === '/news');
@@ -59,32 +60,34 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                             key={item.path}
                                             href={item.path}
                                             className={`
-                        flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all relative group
+                        flex items-center gap-2 px-4 py-2 rounded-xl transition-all relative group
                         ${isActive
-                                                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 shadow-lg shadow-amber-500/30'
-                                                    : 'text-amber-100/80 hover:text-amber-100 hover:bg-slate-800/50'
+                                                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                                                 }
                       `}
                                         >
-                                            <Icon className="size-5" />
+                                            <Icon className="size-4.5" />
                                             <span className="font-medium">{item.label}</span>
                                         </Link>
                                     );
                                 })}
                             </nav>
-                            <div className="ml-4 pl-4 border-l border-amber-500/20 flex items-center gap-2">
+                            <div className="ml-4 pl-4 border-l border-border flex items-center gap-2">
                                 <PriceCalculator />
                                 <LanguageSwitcher />
+                                <ThemeToggle />
                             </div>
                         </div>
 
                         {/* Mobile Menu Button */}
                         <div className="flex items-center gap-2 md:hidden">
+                            <ThemeToggle />
                             <PriceCalculator />
                             <LanguageSwitcher />
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                className="p-2 rounded-lg text-amber-100 hover:bg-slate-800/50 transition-colors"
+                                className="p-2 rounded-lg text-foreground hover:bg-muted transition-colors border border-border"
                                 aria-label="Toggle menu"
                             >
                                 {isMobileMenuOpen ? (
@@ -98,8 +101,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
                     {/* Mobile Navigation */}
                     {isMobileMenuOpen && (
-                        <nav className="md:hidden mt-4 pt-4 border-t border-amber-500/20">
-                            <div className="flex flex-col gap-2">
+                        <nav className="md:hidden mt-4 pt-4 border-t border-border animate-in slide-in-from-top-4 duration-200">
+                            <div className="flex flex-col gap-1">
                                 {navItems.map((item) => {
                                     const Icon = item.icon;
                                     const isActive = pathname === item.path || (pathname === '/' && item.path === '/news');
@@ -112,8 +115,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                             className={`
                         flex items-center gap-3 px-4 py-3 rounded-xl transition-all
                         ${isActive
-                                                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 shadow-lg shadow-amber-500/30'
-                                                    : 'text-amber-100/80 hover:text-amber-100 hover:bg-slate-800/50'
+                                                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 font-semibold'
+                                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                                                 }
                       `}
                                         >
@@ -129,7 +132,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             </header>
 
             {/* Main Content */}
-            <main className="p-4 sm:p-8">
+            <main className="p-4 sm:p-8 max-w-7xl mx-auto w-full">
                 {children}
             </main>
         </div>

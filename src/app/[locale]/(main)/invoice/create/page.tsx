@@ -41,7 +41,7 @@ export default function CreateInvoicePage() {
     return (
         <Suspense fallback={
             <div className="flex items-center justify-center min-h-[400px]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
         }>
             <CreateInvoiceContent />
@@ -374,18 +374,16 @@ function CreateInvoiceContent() {
             if (invoiceType === 'sales') {
                 const { total } = calculateInvoiceTotal();
                 invoiceData.total = total;
-                invoiceData.items = selectedItems.map(item => {
-                    return {
-                        productId: item.productId,
-                        name: item.name,
-                        category: item.category,
-                        quantity: item.quantity,
-                        price: item.price,
-                        discount: item.discount,
-                        returnType: item.returnType,
-                        weight: item.weight,
-                    };
-                });
+                invoiceData.items = selectedItems.map(item => ({
+                    productId: item.productId,
+                    name: item.name,
+                    category: item.category,
+                    quantity: item.quantity,
+                    price: item.price,
+                    discount: item.discount,
+                    returnType: item.returnType,
+                    weight: item.weight,
+                }));
             } else {
                 const { total } = calculatePawnTotal();
                 invoiceData.total = total;
@@ -424,19 +422,20 @@ function CreateInvoiceContent() {
         <div className="max-w-7xl mx-auto">
             <div className="mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center flex-wrap gap-2 sm:gap-3">
-                        <Receipt className="size-6 sm:size-8 text-amber-400" />
+                    <h2 className="text-2xl sm:text-4xl font-bold text-foreground mb-2 sm:mb-3 flex items-center flex-wrap gap-2 sm:gap-3">
+                        <Receipt className="size-6 sm:size-8 text-primary" />
                         {t('title')}
-                        <Badge className={invoiceType === 'buy'
-                            ? 'bg-blue-500/20 text-blue-300 border-blue-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
-                            : invoiceType === 'pawn'
-                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
-                                : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-1.5'
-                        }>
+                        <Badge className={cn("text-white border-none py-1 sm:py-1.5 px-3 sm:px-4 text-xs font-bold uppercase tracking-widest",
+                            invoiceType === 'buy'
+                                ? 'bg-blue-600 dark:bg-blue-500/20 dark:text-blue-300'
+                                : invoiceType === 'pawn'
+                                    ? 'bg-amber-600 dark:bg-amber-500/20 dark:text-amber-300'
+                                    : 'bg-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300'
+                        )}>
                             {invoiceType === 'buy' ? t('buy') : invoiceType === 'pawn' ? t('pawn') : t('sales')}
                         </Badge>
                     </h2>
-                    <p className="text-amber-200/60 text-sm sm:text-lg">
+                    <p className="text-muted-foreground text-xs sm:text-lg">
                         {invoiceType === 'buy'
                             ? t('buyDescription')
                             : invoiceType === 'pawn'
@@ -449,7 +448,7 @@ function CreateInvoiceContent() {
                 <Button
                     onClick={() => router.push('/invoice')}
                     variant="outline"
-                    className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 w-full sm:w-auto"
+                    className="border-border text-foreground hover:bg-muted w-full sm:w-auto font-bold"
                 >
                     <ArrowLeft className="size-5 mr-2" />
                     {t('backToInvoices')}
@@ -458,55 +457,55 @@ function CreateInvoiceContent() {
 
             <div className="space-y-6">
                 {/* Customer Info */}
-                <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
+                <Card className="bg-card/50 backdrop-blur-sm border-border">
                     <CardHeader>
-                        <div className="text-lg font-semibold text-amber-50 flex items-center gap-2">
-                            <User className="size-5 text-amber-400" />
+                        <div className="text-lg font-bold text-foreground flex items-center gap-2">
+                            <User className="size-5 text-primary" />
                             {t('customerInfo')}
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <Label className="text-sm text-amber-200/60 mb-1.5 block">{t('name')} *</Label>
+                                <Label className="text-xs font-bold text-muted-foreground mb-1.5 block">{t('name')} *</Label>
                                 <Input
                                     type="text"
                                     value={customerName}
                                     onChange={(e) => setCustomerName(e.target.value)}
                                     placeholder={t('namePlaceholder')}
-                                    className="w-full pl-4 pr-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20"
+                                    className="w-full pl-4 pr-4 py-3 bg-muted/50 border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
                                 />
                             </div>
                             <div>
-                                <Label className="text-sm text-amber-200/60 mb-1.5 block">{t('phone')}</Label>
+                                <Label className="text-xs font-bold text-muted-foreground mb-1.5 block">{t('phone')}</Label>
                                 <Input
                                     type="tel"
                                     value={customerPhone}
                                     onChange={(e) => setCustomerPhone(e.target.value.replace(/[^0-9]/g, ''))}
                                     placeholder={t('phonePlaceholder')}
-                                    className="w-full pl-4 pr-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20"
+                                    className="w-full pl-4 pr-4 py-3 bg-muted/50 border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
                                 />
                             </div>
                         </div>
                         <div>
-                            <Label className="text-sm text-amber-200/60 mb-1.5 block">{t('address')}</Label>
+                            <Label className="text-xs font-bold text-muted-foreground mb-1.5 block">{t('address')}</Label>
                             <Input
                                 type="text"
                                 value={customerAddress}
                                 onChange={(e) => setCustomerAddress(e.target.value)}
                                 placeholder={t('addressPlaceholder')}
-                                className="w-full pl-4 pr-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20"
+                                className="w-full pl-4 pr-4 py-3 bg-muted/50 border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
                             />
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Invoice Items */}
-                <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
+                <Card className="bg-card/50 backdrop-blur-sm border-border">
                     <CardHeader className="p-4 sm:p-6">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div className="text-base sm:text-lg font-semibold text-amber-50 flex items-center gap-2">
-                                <ShoppingCart className="size-5 text-amber-400" />
+                            <div className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
+                                <ShoppingCart className="size-5 text-primary" />
                                 {t('invoiceItems')}
                             </div>
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -516,17 +515,17 @@ function CreateInvoiceContent() {
                                             <Button
                                                 onClick={() => setShowHistoryDialog(true)}
                                                 variant="outline"
-                                                className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-10 text-sm px-3"
+                                                className="border-border text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary h-10 text-xs px-3 font-bold transition-all"
                                             >
-                                                <Search className="size-4 mr-2" />
+                                                <Search className="size-4 mr-2 text-primary" />
                                                 {t('oldInvoice')}
                                             </Button>
                                             <Button
                                                 onClick={() => setShowItemDialog(true)}
                                                 variant="outline"
-                                                className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-10 text-sm px-3"
+                                                className="border-border text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary h-10 text-xs px-3 font-bold transition-all"
                                             >
-                                                <Diamond className="size-4 mr-2" />
+                                                <Diamond className="size-4 mr-2 text-primary" />
                                                 {t('pickInventoryItem')}
                                             </Button>
                                         </>
@@ -539,7 +538,7 @@ function CreateInvoiceContent() {
                                                 addPawnItem();
                                             }
                                         }}
-                                        className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-10 text-sm px-4"
+                                        className="bg-primary hover:brightness-95 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] text-primary-foreground h-10 text-xs px-4 font-bold shadow-lg shadow-primary/20 transition-all duration-200"
                                     >
                                         <Plus className="size-4 mr-2" />
                                         {invoiceType === 'sales' ? t('addItem') : t('addCustomItem')}
@@ -553,30 +552,30 @@ function CreateInvoiceContent() {
                         {(invoiceType === 'pawn' || invoiceType === 'buy') ? (
                             pawnItems.length > 0 ? (
                                 <>
-                                    <div className="border border-amber-500/20 rounded-xl overflow-hidden overflow-x-auto">
+                                    <div className="border border-border rounded-xl overflow-hidden overflow-x-auto bg-muted/30">
                                         <table className="w-full">
-                                            <thead className="bg-slate-900/50">
+                                            <thead className="bg-muted/50">
                                                 <tr>
-                                                    <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('itemName')} *</th>
-                                                    <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('weight')} *</th>
-                                                    <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('qty')} *</th>
-                                                    <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('price')} *</th>
-                                                    <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('total')}</th>
-                                                    <th className="text-left py-3 px-4 text-amber-200/70 font-medium"></th>
+                                                    <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('itemName')} *</th>
+                                                    <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('weight')} *</th>
+                                                    <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('qty')} *</th>
+                                                    <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('price')} *</th>
+                                                    <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('total')}</th>
+                                                    <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {pawnItems.map((item, index) => {
                                                     const lineTotal = item.price * item.quantity;
                                                     return (
-                                                        <tr key={index} className="border-t border-amber-500/10">
+                                                        <tr key={index} className="border-t border-border transition-colors hover:bg-muted/20">
                                                             <td className="py-3 px-4">
                                                                 <Input
                                                                     type="text"
                                                                     value={item.name}
                                                                     onChange={(e) => updatePawnItemName(index, e.target.value)}
                                                                     placeholder={t('itemPlaceholder')}
-                                                                    className="w-full min-w-[200px] px-3 py-2 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 placeholder-amber-200/40 h-9"
+                                                                    className="w-full min-w-[200px] px-3 py-2 bg-card border-border rounded-lg text-foreground placeholder:text-foreground/40 h-9 font-medium"
                                                                     required
                                                                 />
                                                             </td>
@@ -587,7 +586,7 @@ function CreateInvoiceContent() {
                                                                     min="0.01"
                                                                     value={item.weight || ''}
                                                                     onChange={(e) => updatePawnItemWeight(index, e.target.value === '' ? 0 : parseFloat(e.target.value))}
-                                                                    className="w-20 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9"
+                                                                    className="w-20 px-2 py-1 bg-card border-border rounded-lg text-foreground h-9 font-bold text-center"
                                                                     required
                                                                 />
                                                             </td>
@@ -597,7 +596,7 @@ function CreateInvoiceContent() {
                                                                     min="1"
                                                                     value={item.quantity || ''}
                                                                     onChange={(e) => updatePawnItemQuantity(index, e.target.value === '' ? 0 : parseInt(e.target.value))}
-                                                                    className="w-20 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9"
+                                                                    className="w-16 px-2 py-1 bg-card border-border rounded-lg text-foreground h-9 font-bold text-center"
                                                                     required
                                                                 />
                                                             </td>
@@ -611,11 +610,11 @@ function CreateInvoiceContent() {
                                                                             updatePawnItemPrice(index, val === '' ? 0 : parseFloat(val));
                                                                         }
                                                                     }}
-                                                                    className="w-28 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9"
+                                                                    className="w-28 px-2 py-1 bg-card border-border rounded-lg text-foreground h-9 font-bold text-center"
                                                                     required
                                                                 />
                                                             </td>
-                                                            <td className="py-3 px-4 text-left text-amber-50 font-medium">
+                                                            <td className="py-3 px-4 text-left text-foreground font-bold">
                                                                 {formatIntl.number(lineTotal)}
                                                             </td>
                                                             <td className="py-3 px-4 text-left">
@@ -623,7 +622,7 @@ function CreateInvoiceContent() {
                                                                     onClick={() => removePawnItem(index)}
                                                                     variant="outline"
                                                                     size="sm"
-                                                                    className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                                                                    className="border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 font-bold"
                                                                 >
                                                                     <Trash2 className="size-4" />
                                                                 </Button>
@@ -632,21 +631,21 @@ function CreateInvoiceContent() {
                                                     );
                                                 })}
                                             </tbody>
-                                            <tfoot className="bg-slate-900/50 border-t-2 border-amber-500/30">
+                                            <tfoot className="bg-muted/50 border-t-2 border-border">
                                                 <tr>
-                                                    <td colSpan={4} className="py-2 px-4 text-right text-amber-200/70">
+                                                    <td colSpan={4} className="py-2 px-4 text-right text-muted-foreground text-xs font-bold uppercase tracking-wider">
                                                         {t('subtotal')}:
                                                     </td>
-                                                    <td className="py-2 px-4 text-left text-amber-50 font-medium">
+                                                    <td className="py-2 px-4 text-left text-foreground font-bold">
                                                         {formatIntl.number(calculatePawnTotal().total)}
                                                     </td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colSpan={4} className="py-3 px-4 text-right text-amber-200/70 font-semibold text-lg">
+                                                    <td colSpan={4} className="py-3 px-4 text-right text-foreground font-bold text-xl">
                                                         {t('total')}:
                                                     </td>
-                                                    <td className="py-3 px-4 text-left text-amber-400 font-bold text-lg">
+                                                    <td className="py-3 px-4 text-left text-primary font-bold text-2xl drop-shadow-sm">
                                                         {formatIntl.number(calculatePawnTotal().total)}
                                                     </td>
                                                     <td></td>
@@ -656,16 +655,16 @@ function CreateInvoiceContent() {
                                     </div>
                                     {invoiceType === 'buy' && (
                                         <div className="mt-4 flex justify-end">
-                                            <div className="flex items-center space-x-2 bg-slate-900/40 px-4 py-2 rounded-xl border border-blue-500/20 shadow-lg">
+                                            <div className="flex items-center space-x-2 bg-muted/50 px-4 py-2 rounded-xl border border-blue-500/20 shadow-lg">
                                                 <Checkbox
                                                     id="shouldUpdateInventory"
                                                     checked={shouldUpdateInventory}
                                                     onCheckedChange={(checked) => setShouldUpdateInventory(!!checked)}
-                                                    className="border-blue-500/50 data-[state=checked]:bg-blue-500 data-[state=checked]:text-white h-5 w-5"
+                                                    className="border-blue-500/50 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white h-5 w-5"
                                                 />
                                                 <Label
                                                     htmlFor="shouldUpdateInventory"
-                                                    className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-200 cursor-pointer"
+                                                    className="text-xs font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-700 dark:text-blue-300 cursor-pointer"
                                                 >
                                                     {t('refillStock')}
                                                 </Label>
@@ -674,37 +673,37 @@ function CreateInvoiceContent() {
                                     )}
                                 </>
                             ) : (
-                                <div className="border border-amber-500/20 rounded-xl p-12 text-center">
-                                    <ShoppingCart className="size-12 text-amber-400/40 mx-auto mb-4" />
-                                    <p className="text-amber-200/60">{t('noItems')}</p>
+                                <div className="border border-border rounded-xl p-12 text-center bg-muted/20">
+                                    <ShoppingCart className="size-12 text-muted/20 mx-auto mb-4" />
+                                    <p className="text-muted-foreground font-medium text-xs">{t('noItems')}</p>
                                 </div>
                             )
                         ) : (
                             /* Sales Invoice Items Table */
                             selectedItems.length > 0 ? (
-                                <div className="border border-amber-500/20 rounded-xl overflow-hidden overflow-x-auto">
+                                <div className="border border-border rounded-xl overflow-hidden overflow-x-auto bg-muted/30">
                                     <table className="w-full">
-                                        <thead className="bg-slate-900/50">
+                                        <thead className="bg-muted/50">
                                             <tr>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('itemName')}</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('returnType')}</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('weight')} *</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('qty')} *</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('price')} *</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('discount')}</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium">{t('total')}</th>
-                                                <th className="text-left py-3 px-4 text-amber-200/70 font-medium"></th>
+                                                <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('itemName')}</th>
+                                                <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('returnType')}</th>
+                                                <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('weight')} *</th>
+                                                <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('qty')} *</th>
+                                                <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('price')} *</th>
+                                                <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('discount')}</th>
+                                                <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider">{t('total')}</th>
+                                                <th className="text-left py-3 px-4 text-muted-foreground text-xs font-bold uppercase tracking-wider"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {selectedItems.map((item, index) => {
                                                 const lineTotal = (item.price * item.quantity) - item.discount;
                                                 return (
-                                                    <tr key={index} className="border-t border-amber-500/10">
+                                                    <tr key={index} className="border-t border-border transition-colors hover:bg-muted/20">
                                                         <td className="py-3 px-4">
                                                             <div className="flex flex-col">
-                                                                <span className="text-amber-50 text-sm">{item.name}</span>
-                                                                <span className="text-xs text-amber-200/50">{item.category}</span>
+                                                                <span className="text-foreground text-sm font-bold">{item.name}</span>
+                                                                <span className="text-xs text-muted-foreground font-medium">{item.category}</span>
                                                             </div>
                                                         </td>
                                                         <td className="py-3 px-4">
@@ -712,12 +711,12 @@ function CreateInvoiceContent() {
                                                                 value={item.returnType}
                                                                 onValueChange={(value) => updateInvoiceItemReturnType(index, value as 'making-charges' | 'percentage')}
                                                             >
-                                                                <SelectTrigger className="w-[160px] bg-slate-900/50 border-amber-500/20 text-amber-50 h-9">
+                                                                <SelectTrigger className="w-[160px] bg-card border-border text-foreground h-9 font-medium">
                                                                     <SelectValue />
                                                                 </SelectTrigger>
-                                                                <SelectContent className="bg-slate-900 border-amber-500/20">
-                                                                    <SelectItem value="making-charges" className="text-amber-50">{t('makingCharges')}</SelectItem>
-                                                                    <SelectItem value="percentage" className="text-amber-50">{t('percentage')}</SelectItem>
+                                                                <SelectContent className="bg-card border-border">
+                                                                    <SelectItem value="making-charges" className="text-foreground">{t('makingCharges')}</SelectItem>
+                                                                    <SelectItem value="percentage" className="text-foreground">{t('percentage')}</SelectItem>
                                                                 </SelectContent>
                                                             </Select>
                                                         </td>
@@ -728,7 +727,7 @@ function CreateInvoiceContent() {
                                                                 min="0.01"
                                                                 value={item.weight || ''}
                                                                 onChange={(e) => updateInvoiceItemWeight(index, e.target.value === '' ? 0 : parseFloat(e.target.value))}
-                                                                className="w-20 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
+                                                                className="w-20 px-2 py-1 bg-card border-border rounded-lg text-foreground h-9 font-bold text-center"
                                                                 required
                                                             />
                                                         </td>
@@ -738,7 +737,7 @@ function CreateInvoiceContent() {
                                                                 min="1"
                                                                 value={item.quantity || ''}
                                                                 onChange={(e) => updateInvoiceItemQuantity(index, e.target.value === '' ? 0 : parseInt(e.target.value))}
-                                                                className="w-16 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
+                                                                className="w-16 px-2 py-1 bg-card border-border rounded-lg text-foreground h-9 font-bold text-center"
                                                                 required
                                                             />
                                                         </td>
@@ -752,7 +751,7 @@ function CreateInvoiceContent() {
                                                                         updateInvoiceItemPrice(index, val === '' ? 0 : parseFloat(val));
                                                                     }
                                                                 }}
-                                                                className="w-24 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
+                                                                className="w-24 px-2 py-1 bg-card border-border rounded-lg text-foreground h-9 font-bold text-center"
                                                                 required
                                                             />
                                                         </td>
@@ -766,10 +765,10 @@ function CreateInvoiceContent() {
                                                                         updateInvoiceItemDiscount(index, val === '' ? 0 : parseFloat(val));
                                                                     }
                                                                 }}
-                                                                className="w-24 px-2 py-1 bg-slate-900/50 border-amber-500/20 rounded-lg text-amber-50 h-9 text-left"
+                                                                className="w-24 px-2 py-1 bg-card border-border rounded-lg text-foreground h-9 font-bold text-center"
                                                             />
                                                         </td>
-                                                        <td className="py-3 px-4 text-left text-amber-50 font-medium">
+                                                        <td className="py-3 px-4 text-left text-foreground font-bold">
                                                             {formatIntl.number(lineTotal)}
                                                         </td>
                                                         <td className="py-3 px-4 text-left">
@@ -777,7 +776,7 @@ function CreateInvoiceContent() {
                                                                 onClick={() => removeItemFromInvoice(index)}
                                                                 variant="outline"
                                                                 size="sm"
-                                                                className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                                                                className="border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 font-bold"
                                                             >
                                                                 <Trash2 className="size-4" />
                                                             </Button>
@@ -786,30 +785,30 @@ function CreateInvoiceContent() {
                                                 );
                                             })}
                                         </tbody>
-                                        <tfoot className="bg-slate-900/50 border-t-2 border-amber-500/30">
+                                        <tfoot className="bg-muted/50 border-t-2 border-border">
                                             <tr>
-                                                <td colSpan={6} className="py-2 px-4 text-right text-amber-200/70">
+                                                <td colSpan={6} className="py-2 px-4 text-right text-muted-foreground text-xs font-bold uppercase tracking-wider">
                                                     {t('subtotal')}:
                                                 </td>
-                                                <td className="py-2 px-4 text-left text-amber-50 font-medium">
+                                                <td className="py-2 px-4 text-left text-foreground font-bold">
                                                     {formatIntl.number(calculateInvoiceTotal().subtotal)}
                                                 </td>
                                                 <td></td>
                                             </tr>
                                             <tr>
-                                                <td colSpan={6} className="py-2 px-4 text-right text-amber-200/70">
+                                                <td colSpan={6} className="py-2 px-4 text-right text-muted-foreground text-xs font-bold uppercase tracking-wider">
                                                     {t('totalDiscount')}:
                                                 </td>
-                                                <td className="py-2 px-4 text-left text-amber-50 font-medium">
+                                                <td className="py-2 px-4 text-left text-rose-600 dark:text-rose-400 font-bold">
                                                     {formatIntl.number(calculateInvoiceTotal().totalDiscount)}
                                                 </td>
                                                 <td></td>
                                             </tr>
                                             <tr>
-                                                <td colSpan={6} className="py-3 px-4 text-right text-amber-200/70 font-semibold text-lg">
+                                                <td colSpan={6} className="py-3 px-4 text-right text-foreground font-bold text-xl">
                                                     {t('totalAmount')}:
                                                 </td>
-                                                <td className="py-3 px-4 text-left text-amber-400 font-bold text-lg">
+                                                <td className="py-3 px-4 text-left text-primary font-bold text-2xl drop-shadow-sm">
                                                     {formatIntl.number(calculateInvoiceTotal().total)}
                                                 </td>
                                                 <td></td>
@@ -818,52 +817,52 @@ function CreateInvoiceContent() {
                                     </table>
                                 </div>
                             ) : (
-                                <div className="border border-amber-500/20 rounded-xl p-12 text-center">
-                                    <ShoppingCart className="size-12 text-amber-400/40 mx-auto mb-4" />
-                                    <p className="text-amber-200/60">{t('noItems')}</p>
+                                <div className="border border-border rounded-xl p-12 text-center bg-muted/20">
+                                    <ShoppingCart className="size-12 text-muted/20 mx-auto mb-4" />
+                                    <p className="text-muted-foreground font-medium text-xs">{t('noItems')}</p>
                                 </div>
                             )
                         )}
 
-                        <Separator className="bg-amber-500/10 my-6" />
+                        <Separator className="bg-border my-6" />
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {(invoiceType === 'pawn') && (
                                 <div className="space-y-1.5">
-                                    <Label className="text-sm text-amber-200/60 ml-1">{t('pickDueDate')} *</Label>
+                                    <Label className="text-xs font-bold text-muted-foreground mb-1.5 ml-1 block">{t('pickDueDate')} *</Label>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-full pl-4 pr-4 py-6 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 hover:bg-slate-900/80 hover:text-amber-50 text-left font-normal flex items-center justify-between",
-                                                    !dueDate && "text-amber-200/40"
+                                                    "w-full pl-4 pr-4 py-6 bg-muted/50 border-border rounded-xl text-foreground hover:bg-muted hover:text-foreground text-left font-bold flex items-center justify-between",
+                                                    !dueDate && "text-muted-foreground/50"
                                                 )}
                                             >
                                                 {dueDate ? formatIntl.dateTime(dueDate, { year: 'numeric', month: 'long', day: 'numeric' }) : <span>{t('pickDueDate')}</span>}
-                                                <CalendarIcon className="size-5 text-amber-400/60" />
+                                                <CalendarIcon className="size-5 text-primary" />
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0 bg-slate-900 border-amber-500/20" align="start">
+                                        <PopoverContent className="w-auto p-0 bg-card border-border" align="start">
                                             <CalendarComponent
                                                 mode="single"
                                                 selected={dueDate}
                                                 onSelect={setDueDate}
                                                 initialFocus
-                                                className="bg-slate-900 text-amber-50"
+                                                className="bg-card text-foreground"
                                             />
                                         </PopoverContent>
                                     </Popover>
                                 </div>
                             )}
                             <div className={invoiceType === 'pawn' ? '' : 'col-span-2'}>
-                                <Label className="text-sm text-amber-200/60 mb-1.5 ml-1 block">{t('notes')}</Label>
+                                <Label className="text-xs font-bold text-muted-foreground mb-1.5 ml-1 block">{t('notes')}</Label>
                                 <Textarea
                                     value={notes || ''}
                                     onChange={(e) => setNotes(e.target.value)}
                                     placeholder={t('notesPlaceholder')}
                                     rows={invoiceType === 'pawn' ? 2 : 3}
-                                    className="w-full px-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20 resize-none"
+                                    className="w-full px-4 py-3 bg-muted/50 border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none font-medium"
                                 />
                             </div>
                         </div>
@@ -872,13 +871,13 @@ function CreateInvoiceContent() {
 
 
                 {/* Actions */}
-                <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
+                <Card className="bg-card/50 backdrop-blur-sm border-border">
                     <CardContent className="p-4 sm:p-6">
                         <div className="flex flex-col sm:flex-row gap-3">
                             <Button
                                 onClick={handleCreateInvoice}
                                 disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-12 sm:h-14 text-base sm:text-lg"
+                                className="flex-1 bg-primary hover:brightness-95 hover:shadow-2xl hover:shadow-primary/30 hover:scale-[1.02] text-primary-foreground h-12 sm:h-14 text-base sm:text-lg font-bold shadow-xl shadow-primary/20 transition-all duration-200"
                             >
                                 <Receipt className="size-5 mr-2" />
                                 {isSubmitting ? t('creating') : t('createInvoice')}
@@ -886,9 +885,9 @@ function CreateInvoiceContent() {
                             <Button
                                 onClick={() => router.push('/invoice')}
                                 variant="outline"
-                                className="flex-1 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-12 sm:h-14 text-base sm:text-lg"
+                                className="flex-1 border-border text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary h-12 sm:h-14 text-base sm:text-lg font-bold transition-all active:scale-[0.98]"
                             >
-                                <X className="size-5 mr-2" />
+                                <X className="size-5 mr-2 text-rose-500" />
                                 {t('cancel')}
                             </Button>
                         </div>
@@ -897,238 +896,235 @@ function CreateInvoiceContent() {
             </div>
 
             {/* Add Item Dialog */}
-            {
-                showItemDialog && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                        <Card className="bg-slate-800/95 backdrop-blur-md border-amber-500/20 w-full max-w-4xl max-h-[90vh] flex flex-col">
-                            <CardHeader className="p-4 sm:p-6 border-b border-amber-500/20">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="text-lg sm:text-xl font-bold text-amber-50 flex items-center gap-2">
-                                        <ShoppingCart className="size-5 text-amber-400" />
-                                        {t('selectItem')}
-                                    </h3>
-                                    <Button
-                                        onClick={() => {
-                                            setShowItemDialog(false);
-                                            setCategoryFilter('all');
-                                            setMaterialFilters([]);
-                                            setSearchTerm('');
-                                        }}
-                                        variant="outline"
-                                        size="sm"
-                                        className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-8 w-8 p-0"
-                                    >
-                                        <X className="size-4" />
-                                    </Button>
-                                </div>
-                            </CardHeader>
+            {showItemDialog && (
+                <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <Card className="bg-card/95 backdrop-blur-md border-border w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl">
+                        <CardHeader className="p-4 sm:p-6 border-b border-border">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                                    <ShoppingCart className="size-5 text-primary" />
+                                    {t('selectItem')}
+                                </h3>
+                                <Button
+                                    onClick={() => {
+                                        setShowItemDialog(false);
+                                        setCategoryFilter('all');
+                                        setMaterialFilters([]);
+                                        setSearchTerm('');
+                                    }}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-muted-foreground hover:text-foreground h-8 w-8 p-0"
+                                >
+                                    <X className="size-5" />
+                                </Button>
+                            </div>
+                        </CardHeader>
 
-                            <CardContent className="pt-6 flex-1 overflow-auto">
-                                {/* Filters */}
-                                <div className="mb-6 space-y-4">
-                                    <div className="relative">
-                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-amber-400/60" />
-                                        <Input
-                                            type="text"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                            placeholder={t('searchItems')}
-                                            className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50 placeholder-amber-200/40 focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/20"
+                        <CardContent className="pt-6 flex-1 overflow-auto">
+                            {/* Filters */}
+                            <div className="mb-6 space-y-4">
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary" />
+                                    <Input
+                                        type="text"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        placeholder={t('searchItems')}
+                                        className="w-full pl-10 pr-4 py-3 bg-muted/50 border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 font-medium"
+                                    />
+                                </div>
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                                        <SelectTrigger className="flex-1 bg-muted/50 border-border text-foreground h-11 font-bold">
+                                            <SelectValue placeholder={t('selectCategory')} />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-card border-border">
+                                            <SelectItem value="all" className="text-foreground font-medium">{t('allCategories')}</SelectItem>
+                                            {dbCategories.map((cat) => (
+                                                <SelectItem key={cat.id} value={cat.id} className="text-foreground font-medium">
+                                                    {cat.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+
+                                    <div className="w-full sm:w-[280px]">
+                                        <MultiSelect
+                                            options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
+                                            selected={materialFilters}
+                                            onChange={setMaterialFilters}
+                                            placeholder={t('selectMaterials')}
+                                            className="bg-muted/50 border-border text-foreground font-bold"
                                         />
                                     </div>
-                                    <div className="flex gap-4">
-                                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                                            <SelectTrigger className="flex-1 bg-slate-900/50 border-amber-500/20 text-amber-50 h-11">
-                                                <SelectValue placeholder={t('selectCategory')} />
-                                            </SelectTrigger>
-                                            <SelectContent className="bg-slate-900 border-amber-500/20">
-                                                <SelectItem value="all" className="text-amber-50">{t('allCategories')}</SelectItem>
-                                                {dbCategories.map((cat) => (
-                                                    <SelectItem key={cat.id} value={cat.id} className="text-amber-50">
-                                                        {cat.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
 
-                                        <div className="w-[280px]">
-                                            <MultiSelect
-                                                options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
-                                                selected={materialFilters}
-                                                onChange={setMaterialFilters}
-                                                placeholder={t('selectMaterials')}
-                                                className="bg-slate-900/50 border-amber-500/20 text-amber-50"
-                                            />
-                                        </div>
-
-                                        <Button
-                                            onClick={fetchFilteredItems}
-                                            disabled={isSearchingItems}
-                                            className="bg-amber-500 hover:bg-amber-600 text-slate-900 flex items-center gap-2 h-11"
-                                        >
-                                            <Search className="size-4" />
-                                            {t('search')}
-                                        </Button>
-                                    </div>
-                                </div>
-
-                                <Separator className="bg-amber-500/10 mb-6" />
-
-                                {/* Item List */}
-                                {isSearchingItems ? (
-                                    <div className="space-y-4">
-                                        {[1, 2, 3].map(i => (
-                                            <Skeleton key={i} className="h-20 w-full bg-slate-800/50 rounded-xl" />
-                                        ))}
-                                    </div>
-                                ) : dbItems.length > 0 ? (
-                                    <div className="grid grid-cols-1 gap-3">
-                                        {dbItems.map((item) => (
-                                            <div
-                                                key={item.id}
-                                                className="p-4 bg-slate-900/40 border border-amber-500/10 rounded-xl hover:border-amber-500/30 transition-all flex items-center justify-between group"
-                                            >
-                                                <div className="flex flex-col">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-amber-50 font-medium">{item.name}</span>
-                                                        <span className="text-[10px] bg-amber-500/10 text-amber-400 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">{item.id}</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-4 text-sm text-amber-200/50 mt-1">
-                                                        <span>{item.category}</span>
-                                                        <span>•</span>
-                                                        <span>{item.material}</span>
-                                                        <span>•</span>
-                                                        <span className={item.stock <= 2 ? 'text-red-400/80' : ''}>
-                                                            {item.stock} {t('units')}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <Button
-                                                    onClick={() => addItemToInvoice(item.id)}
-                                                    disabled={invoiceType === 'sales' && item.stock <= 0}
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className={cn(
-                                                        "border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-opacity",
-                                                        invoiceType === 'sales' && item.stock <= 0 ? "opacity-50 cursor-not-allowed" : "opacity-0 group-hover:opacity-100"
-                                                    )}
-                                                >
-                                                    {invoiceType === 'sales' && item.stock <= 0 ? t('outOfStock') : t('add')}
-                                                </Button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : hasSearchedItems ? (
-                                    <div className="text-center py-12">
-                                        <p className="text-amber-200/60">{t('noItemsFound')}</p>
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-12">
-                                        <p className="text-amber-200/40">{t('search')}</p>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </div>
-                )
-            }
-
-            {/* Old Invoice History Dialog */}
-            {
-                showHistoryDialog && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                        <Card className="bg-slate-800/95 backdrop-blur-md border-amber-500/20 w-full max-w-2xl">
-                            <CardHeader className="p-4 sm:p-6 border-b border-amber-500/20">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="text-lg sm:text-xl font-bold text-amber-50 flex items-center gap-2">
-                                        <Search className="size-5 text-amber-400" />
-                                        {t('oldInvoice')}
-                                    </h3>
                                     <Button
-                                        onClick={() => {
-                                            setShowHistoryDialog(false);
-                                            setFoundInvoice(null);
-                                            setHistorySearchTerm('');
-                                        }}
-                                        variant="outline"
-                                        size="sm"
-                                        className="border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-8 w-8 p-0"
+                                        onClick={fetchFilteredItems}
+                                        disabled={isSearchingItems}
+                                        className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 h-11 font-black uppercase tracking-widest px-6"
                                     >
-                                        <X className="size-4" />
+                                        <Search className="size-4" />
+                                        {t('search')}
                                     </Button>
                                 </div>
-                            </CardHeader>
-                            <CardContent className="pt-6">
-                                <div className="space-y-6">
-                                    <div className="flex gap-3">
-                                        <div className="relative flex-1">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-amber-400/60" />
-                                            <Input
-                                                type="text"
-                                                value={historySearchTerm}
-                                                onChange={(e) => setHistorySearchTerm(e.target.value)}
-                                                placeholder={t('searchPlaceholder')}
-                                                onKeyDown={(e) => e.key === 'Enter' && handleSearchHistory()}
-                                                className="w-full pl-10 pr-4 h-11 bg-slate-900/50 border border-amber-500/20 rounded-xl text-amber-50"
-                                            />
-                                        </div>
-                                        <Button
-                                            onClick={handleSearchHistory}
-                                            disabled={isSearchingHistory}
-                                            className="bg-amber-500 hover:bg-amber-600 text-slate-900 h-11 px-6 font-medium"
+                            </div>
+
+                            <Separator className="bg-border mb-6" />
+
+                            {/* Item List */}
+                            {isSearchingItems ? (
+                                <div className="space-y-4">
+                                    {[1, 2, 3].map(i => (
+                                        <Skeleton key={i} className="h-20 w-full bg-muted/50 rounded-xl" />
+                                    ))}
+                                </div>
+                            ) : dbItems.length > 0 ? (
+                                <div className="grid grid-cols-1 gap-3">
+                                    {dbItems.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            className="p-4 bg-muted/30 border border-border rounded-xl hover:border-primary/30 transition-all flex items-center justify-between group"
                                         >
-                                            {isSearchingHistory ? t('search') : t('search')}
-                                        </Button>
-                                    </div>
-
-                                    {foundInvoice ? (
-                                        <div className="p-5 bg-slate-900/60 border border-amber-500/20 rounded-2xl animate-in fade-in slide-in-from-top-4 duration-300">
-                                            <div className="flex items-center justify-between mb-4 pb-4 border-b border-amber-500/10">
-                                                <div>
-                                                    <h4 className="text-lg font-bold text-amber-50">{foundInvoice.customerName}</h4>
-                                                    <p className="text-sm text-amber-400/80 font-mono mt-0.5">
-                                                        {foundInvoice.invoiceNumber} • {t(foundInvoice.type)}
-                                                    </p>
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-foreground font-bold">{item.name}</span>
+                                                    <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-lg font-bold">{item.id}</span>
                                                 </div>
-                                                <div className="text-right text-sm text-amber-200/50">
-                                                    {formatIntl.dateTime(new Date(foundInvoice.createdAt || new Date()), { year: 'numeric', month: 'long', day: 'numeric' })}
+                                                <div className="flex items-center gap-4 text-xs text-muted-foreground font-medium mt-1">
+                                                    <span>{item.category}</span>
+                                                    <span>•</span>
+                                                    <span>{item.material}</span>
+                                                    <span>•</span>
+                                                    <span className={item.stock <= 2 ? 'text-rose-500' : ''}>
+                                                        {item.stock} {t('units')}
+                                                    </span>
                                                 </div>
                                             </div>
-
-                                            <div className="space-y-1 max-h-48 overflow-y-auto pr-2 mb-6">
-                                                {foundInvoice.items?.map((item, idx) => (
-                                                    <div key={idx} className="flex justify-between text-sm py-1.5 border-b border-amber-500/5 last:border-0 hover:bg-amber-500/5 px-2 rounded-lg transition-colors">
-                                                        <span className="text-amber-50/90">{item.name}</span>
-                                                        <span className="text-amber-200/60">x{item.quantity}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-
                                             <Button
-                                                onClick={() => copyFromInvoice(foundInvoice)}
-                                                disabled={invoiceType === 'buy' && (foundInvoice.type === 'buy' || foundInvoice.status === 'returned')}
-                                                className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white h-11 rounded-xl shadow-lg shadow-emerald-900/20 font-medium disabled:from-slate-600 disabled:to-slate-700 disabled:cursor-not-allowed"
+                                                onClick={() => addItemToInvoice(item.id)}
+                                                disabled={invoiceType === 'sales' && item.stock <= 0}
+                                                variant="outline"
+                                                size="sm"
+                                                className={cn(
+                                                    "border-primary/20 text-primary hover:bg-primary/10 transition-all font-bold",
+                                                    invoiceType === 'sales' && item.stock <= 0 ? "opacity-50 cursor-not-allowed" : "opacity-0 group-hover:opacity-100"
+                                                )}
                                             >
-                                                {invoiceType === 'buy' && foundInvoice.type === 'buy'
-                                                    ? t('cannotImportBuy')
-                                                    : (invoiceType === 'buy' && foundInvoice.status === 'returned')
-                                                        ? t('cannotImportReturned')
-                                                        : t('apply')}
+                                                {invoiceType === 'sales' && item.stock <= 0 ? t('outOfStock') : t('add')}
                                             </Button>
                                         </div>
-                                    ) : historySearchTerm && !isSearchingHistory && (
-                                        <div className="text-center py-10 px-4 bg-slate-900/30 rounded-2xl border border-dashed border-amber-500/10">
-                                            <p className="text-amber-200/40 text-sm">
-                                                Enter an invoice number to find and copy customer data
-                                            </p>
-                                        </div>
-                                    )}
+                                    ))}
                                 </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                )
-            }
-        </div >
+                            ) : hasSearchedItems ? (
+                                <div className="text-center py-12">
+                                    <p className="text-muted-foreground font-medium text-xs">{t('noItemsFound')}</p>
+                                </div>
+                            ) : (
+                                <div className="text-center py-12">
+                                    <ShoppingCart className="size-12 text-muted/20 mx-auto mb-4" />
+                                    <p className="text-muted-foreground/60 font-bold uppercase tracking-widest text-xs">{t('search')}</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Old Invoice History Dialog */}
+            {showHistoryDialog && (
+                <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <Card className="bg-card/95 backdrop-blur-md border-border w-full max-w-2xl shadow-2xl">
+                        <CardHeader className="p-4 sm:p-6 border-b border-border">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                                    <Search className="size-5 text-primary" />
+                                    {t('oldInvoice')}
+                                </h3>
+                                <Button
+                                    onClick={() => {
+                                        setShowHistoryDialog(false);
+                                        setFoundInvoice(null);
+                                        setHistorySearchTerm('');
+                                    }}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-muted-foreground hover:text-foreground h-8 w-8 p-0"
+                                >
+                                    <X className="size-5" />
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="pt-6">
+                            <div className="space-y-6">
+                                <div className="flex gap-3">
+                                    <div className="relative flex-1">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary" />
+                                        <Input
+                                            type="text"
+                                            value={historySearchTerm}
+                                            onChange={(e) => setHistorySearchTerm(e.target.value)}
+                                            placeholder={t('searchPlaceholder')}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSearchHistory()}
+                                            className="w-full pl-10 pr-4 h-11 bg-muted/50 border-border rounded-xl text-foreground placeholder:text-foreground/40 font-medium"
+                                        />
+                                    </div>
+                                    <Button
+                                        onClick={handleSearchHistory}
+                                        disabled={isSearchingHistory}
+                                        className="bg-primary hover:bg-primary/90 text-primary-foreground h-11 px-6 font-bold shadow-lg shadow-primary/20"
+                                    >
+                                        {t('search')}
+                                    </Button>
+                                </div>
+
+                                {foundInvoice ? (
+                                    <div className="p-5 bg-muted/30 border border-border rounded-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+                                        <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
+                                            <div>
+                                                <h4 className="text-lg font-bold text-foreground">{foundInvoice.customerName}</h4>
+                                                <p className="text-xs text-muted-foreground font-medium mt-0.5">
+                                                    {foundInvoice.invoiceNumber} • {t(foundInvoice.type)}
+                                                </p>
+                                            </div>
+                                            <div className="text-right text-xs text-muted-foreground font-medium">
+                                                {formatIntl.dateTime(new Date(foundInvoice.createdAt || new Date()), { year: 'numeric', month: 'long', day: 'numeric' })}
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-1 max-h-48 overflow-y-auto pr-2 mb-6">
+                                            {foundInvoice.items?.map((item, idx) => (
+                                                <div key={idx} className="flex justify-between text-sm py-2 border-b border-border/10 last:border-0 hover:bg-muted/50 px-2 rounded-lg transition-colors">
+                                                    <span className="text-foreground font-medium">{item.name}</span>
+                                                    <span className="text-foreground/70 font-bold">x{item.quantity}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <Button
+                                            onClick={() => copyFromInvoice(foundInvoice!)}
+                                            disabled={invoiceType === 'buy' && (foundInvoice.type === 'buy' || foundInvoice.status === 'returned')}
+                                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 rounded-xl shadow-xl shadow-primary/20 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {invoiceType === 'buy' && foundInvoice.type === 'buy'
+                                                ? t('cannotImportBuy')
+                                                : (invoiceType === 'buy' && foundInvoice.status === 'returned')
+                                                    ? t('cannotImportReturned')
+                                                    : t('apply')}
+                                        </Button>
+                                    </div>
+                                ) : historySearchTerm && !isSearchingHistory && (
+                                    <div className="text-center py-10 px-4 bg-muted/20 rounded-2xl border border-dashed border-border">
+                                        <p className="text-muted-foreground font-medium text-xs">
+                                            {t('noItemsFound')}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+        </div>
     );
 }

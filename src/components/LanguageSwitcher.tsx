@@ -25,17 +25,17 @@ export function LanguageSwitcher() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-amber-100 hover:bg-slate-800/50">
+                <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted transition-all">
                     <Languages className="size-5" />
                     <span className="sr-only">{t('language')}</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-slate-900 border-amber-500/20 text-amber-100">
+            <DropdownMenuContent align="end" className="bg-card border-border text-foreground shadow-2xl rounded-xl p-1">
                 {routing.locales.map((cur) => (
                     <DropdownMenuItem
                         key={cur}
                         onClick={() => onLocaleChange(cur)}
-                        className={`flex items-center gap-2 cursor-pointer ${locale === cur ? 'bg-amber-500/10 text-amber-500' : 'hover:bg-slate-800'}`}
+                        className={`flex items-center gap-2 cursor-pointer font-bold text-xs rounded-lg transition-all px-3 py-2 ${locale === cur ? 'bg-primary text-primary-foreground shadow-md' : 'hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary'}`}
                     >
                         <span>{cur === 'en' ? 'English' : 'မြန်မာ'}</span>
                     </DropdownMenuItem>

@@ -9,15 +9,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:brightness-95 hover:shadow-md hover:scale-[1.01] active:scale-[0.98] transition-all duration-200",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-white hover:brightness-90 hover:shadow-md focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 transition-all active:scale-[0.98]",
         outline:
-          "border text-foreground hover:bg-amber-500/10 hover:text-amber-50 dark:border-input",
+          "border border-border text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary dark:border-input transition-all active:scale-[0.98]",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground hover:bg-muted-foreground/10 hover:shadow-md transition-all active:scale-[0.98]",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 transition-all active:scale-[0.98]",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -37,9 +37,9 @@ const buttonVariants = cva(
 const Button = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button"> &
-    VariantProps<typeof buttonVariants> & {
-      asChild?: boolean;
-    }
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  }
 >(({ className, variant, size, asChild = false, ...props }, ref) => {
   const Comp = asChild ? Slot : "button";
 

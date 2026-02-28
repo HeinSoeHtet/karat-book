@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Camera, RefreshCw, Check, ShieldCheck, Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface CameraModalProps {
     isOpen: boolean;
@@ -12,6 +13,7 @@ interface CameraModalProps {
 }
 
 export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
+    const t = useTranslations('camera');
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);
@@ -173,10 +175,10 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-            <DialogContent className="sm:max-w-md w-full max-w-[95vw] h-auto bg-slate-900 border-amber-500/20 text-amber-50 overflow-hidden shadow-2xl p-0 sm:p-6 rounded-2xl flex flex-col gap-2 sm:gap-4">
+            <DialogContent className="sm:max-w-md w-full max-w-[95vw] h-auto bg-card border-border text-foreground overflow-hidden shadow-2xl p-0 sm:p-6 rounded-2xl flex flex-col gap-2 sm:gap-4">
                 <DialogHeader className="p-3 sm:p-4 sm:pb-4 flex-row items-center justify-between space-y-0 shrink-0">
-                    <DialogTitle className="flex items-center gap-2 text-base sm:text-xl text-amber-50">
-                        <Camera className="size-4 sm:size-6 text-amber-400" />
+                    <DialogTitle className="flex items-center gap-2 text-base sm:text-xl text-foreground font-bold">
+                        <Camera className="size-4 sm:size-6 text-primary" />
                         Capture Photo
                     </DialogTitle>
                 </DialogHeader>
@@ -185,18 +187,18 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
                     {/* Permission Request Landing */}
                     {permissionState === 'prompt' && !stream && !error && (
                         <div className="text-center p-8 space-y-6 animate-in fade-in zoom-in-95 duration-300 z-30">
-                            <div className="bg-amber-500/10 p-6 rounded-full inline-block">
-                                <ShieldCheck className="size-16 text-amber-400" />
+                            <div className="bg-primary/10 p-6 rounded-full inline-block">
+                                <ShieldCheck className="size-16 text-primary" />
                             </div>
                             <div className="space-y-2">
-                                <h3 className="text-lg font-bold text-amber-50">Camera Permission</h3>
-                                <p className="text-sm text-amber-200/60 leading-relaxed">
+                                <h3 className="text-lg font-bold text-foreground">Camera Permission</h3>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
                                     We need access to your camera to take a photo of the item.
                                 </p>
                             </div>
                             <Button
                                 onClick={startCamera}
-                                className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold h-12 rounded-xl text-md shadow-lg shadow-amber-500/20"
+                                className="w-full bg-primary hover:brightness-95 text-primary-foreground font-bold h-12 rounded-xl text-md shadow-lg shadow-primary/20"
                             >
                                 Grant Access
                             </Button>
@@ -206,19 +208,19 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
                     {/* Denied / Error State */}
                     {(permissionState === 'denied' || error) && (
                         <div className="text-center p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300 z-30">
-                            <div className="bg-red-500/10 p-6 rounded-full inline-block">
-                                <Lock className="size-16 text-red-400" />
+                            <div className="bg-destructive/10 p-6 rounded-full inline-block">
+                                <Lock className="size-16 text-destructive" />
                             </div>
                             <div className="space-y-2">
-                                <h3 className="text-lg font-bold text-red-200">Access Restricted</h3>
-                                <p className="text-xs text-amber-200/60 leading-relaxed max-w-[240px] mx-auto">
+                                <h3 className="text-lg font-bold text-destructive">Access Restricted</h3>
+                                <p className="text-xs text-muted-foreground leading-relaxed max-w-[240px] mx-auto font-medium">
                                     {error || "Access was denied. Please allow camera access in settings."}
                                 </p>
                             </div>
                             <Button
                                 variant="outline"
                                 onClick={startCamera}
-                                className="w-full border-amber-500/30 text-amber-200 hover:bg-amber-500/10 h-11"
+                                className="w-full border-border text-foreground hover:bg-primary/10 hover:border-primary/30 h-11 transition-all"
                             >
                                 Try Again
                             </Button>
@@ -232,9 +234,9 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
                         ) : permissionState === 'granted' && !error && (
                             <>
                                 {!isCameraReady && (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4 bg-slate-950 z-20">
-                                        <div className="size-10 border-2 border-amber-500/10 border-t-amber-500 rounded-full animate-spin"></div>
-                                        <p className="text-xs text-amber-200/40 uppercase tracking-widest font-bold">Connecting...</p>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4 bg-muted z-20">
+                                        <div className="size-10 border-2 border-primary/10 border-t-primary rounded-full animate-spin"></div>
+                                        <p className="text-xs text-muted-foreground font-bold ">{t('connecting')}</p>
                                     </div>
                                 )}
                                 <video
@@ -263,13 +265,13 @@ export function CameraModal({ isOpen, onClose, onCapture }: CameraModalProps) {
                             <Button
                                 variant="outline"
                                 onClick={() => { setCapturedImage(null); startCamera(); }}
-                                className="flex-1 bg-white/5 border-white/10 text-white h-12 sm:h-14 rounded-xl sm:rounded-2xl hover:bg-white/10 text-xs sm:text-base"
+                                className="flex-1 bg-muted/50 border-border text-foreground h-12 sm:h-14 rounded-xl sm:rounded-2xl hover:bg-muted font-bold transition-all text-xs sm:text-base"
                             >
                                 <RefreshCw className="size-4 sm:size-5 mr-1.5 sm:mr-2" /> Retake
                             </Button>
                             <Button
                                 onClick={confirmPhoto}
-                                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold h-12 sm:h-14 rounded-xl sm:rounded-2xl shadow-xl shadow-amber-500/20 text-xs sm:text-base"
+                                className="flex-1 bg-primary hover:brightness-95 text-primary-foreground font-bold h-12 sm:h-14 rounded-xl sm:rounded-2xl shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] text-xs sm:text-base"
                             >
                                 <Check className="size-4 sm:size-5 mr-1.5 sm:mr-2" /> Use Photo
                             </Button>

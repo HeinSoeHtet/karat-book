@@ -147,22 +147,22 @@ export default function NewItemPage() {
                 <Button
                     variant="ghost"
                     onClick={handleCancel}
-                    className="text-amber-200/70 hover:text-amber-50 hover:bg-slate-800/50 mb-4 px-2"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted/50 mb-4 px-2 font-bold"
                 >
                     <ArrowLeft className="size-4 mr-2" />
                     {t('previous')}
                 </Button>
-                <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
-                    <Package className="size-6 sm:size-8 text-amber-400" />
+                <h2 className="text-2xl sm:text-4xl font-bold text-foreground mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+                    <Package className="size-6 sm:size-8 text-primary" />
                     {t('title')}
                 </h2>
-                <p className="text-amber-200/60 text-xs sm:text-lg">{t('description')}</p>
+                <p className="text-muted-foreground text-xs sm:text-lg font-medium">{t('description')}</p>
             </div>
 
             {/* Form Card */}
-            <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
-                <CardHeader className="p-4 sm:p-6">
-                    <CardTitle className="text-lg sm:text-xl text-amber-50 flex items-center gap-2">
+            <Card className="bg-card/50 backdrop-blur-sm border-border shadow-sm">
+                <CardHeader className="p-4 sm:p-6 border-b border-border">
+                    <CardTitle className="text-lg sm:text-xl text-foreground flex items-center gap-2 font-bold">
                         {t('itemInformation')}
                     </CardTitle>
                 </CardHeader>
@@ -171,35 +171,35 @@ export default function NewItemPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Item Name */}
                             <div className="md:col-span-2">
-                                <Label htmlFor="name" className="text-amber-200/70 flex items-center gap-2 mb-2">
-                                    {t('itemName')} <span className="text-red-400">*</span>
+                                <Label htmlFor="name" className="text-xs font-bold text-muted-foreground ml-1 flex items-center gap-2 mb-2">
+                                    {t('itemName')} <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
                                     id="name"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     placeholder={t('itemNamePlaceholder')}
-                                    className="bg-slate-900/50 border-amber-500/30 text-amber-50 placeholder:text-amber-200/30 h-11"
+                                    className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/40 h-11 transition-all focus:bg-card"
                                     required
                                 />
                             </div>
 
                             {/* Category */}
                             <div className="md:col-span-2">
-                                <Label htmlFor="category" className="text-amber-200/70 flex items-center gap-2 mb-2">
-                                    {t('category')} <span className="text-red-400">*</span>
+                                <Label htmlFor="category" className="text-xs font-bold text-muted-foreground ml-1 flex items-center gap-2 mb-2">
+                                    {t('category')} <span className="text-red-500">*</span>
                                 </Label>
                                 <Select
                                     value={formData.category}
                                     onValueChange={(value) => setFormData({ ...formData, category: value })}
                                     disabled={isOptionsLoading}
                                 >
-                                    <SelectTrigger className="bg-slate-900 border-amber-500/20 text-amber-50 h-11">
+                                    <SelectTrigger className="bg-muted/50 border-border text-foreground h-11 transition-all focus:bg-card">
                                         <SelectValue placeholder={isOptionsLoading ? t('loading') : t('selectCategory')} />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-slate-900 border-amber-500/20 text-amber-50">
+                                    <SelectContent className="bg-card border-border">
                                         {dbCategories.map((option) => (
-                                            <SelectItem key={option.id} value={option.id}>
+                                            <SelectItem key={option.id} value={option.id} className="text-foreground cursor-pointer">
                                                 {option.name}
                                             </SelectItem>
                                         ))}
@@ -209,9 +209,9 @@ export default function NewItemPage() {
 
                             {/* Weight */}
                             <div className="md:col-span-1">
-                                <Label htmlFor="weight" className="text-amber-200/70 flex items-center gap-2 mb-2">
-                                    <Diamond className="size-4" />
-                                    {t('weight')} <span className="text-red-400">*</span>
+                                <Label htmlFor="weight" className="text-xs font-bold text-muted-foreground ml-1 flex items-center gap-2 mb-2">
+                                    <Diamond className="size-4 text-primary" />
+                                    {t('weight')} <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
                                     id="weight"
@@ -221,16 +221,16 @@ export default function NewItemPage() {
                                     value={formData.weight}
                                     onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
                                     placeholder="2.5"
-                                    className="bg-slate-900/50 border-amber-500/30 text-amber-50 placeholder:text-amber-200/30 h-11"
+                                    className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/40 h-11 transition-all focus:bg-card"
                                     required
                                 />
                             </div>
 
                             {/* Stock */}
                             <div className="md:col-span-1">
-                                <Label htmlFor="stock" className="text-amber-200/70 flex items-center gap-2 mb-2">
-                                    <Boxes className="size-4" />
-                                    {t('stockQuantity')} <span className="text-red-400">*</span>
+                                <Label htmlFor="stock" className="text-xs font-bold text-muted-foreground ml-1 flex items-center gap-2 mb-2">
+                                    <Boxes className="size-4 text-primary" />
+                                    {t('stockQuantity')} <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
                                     id="stock"
@@ -239,7 +239,7 @@ export default function NewItemPage() {
                                     value={formData.stock}
                                     onChange={(e) => setFormData({ ...formData, stock: e.target.value === '' ? '' : parseInt(e.target.value) })}
                                     placeholder="10"
-                                    className="bg-slate-900/50 border-amber-500/30 text-amber-50 placeholder:text-amber-200/30 h-11"
+                                    className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/40 h-11 transition-all focus:bg-card"
                                     required
                                 />
                             </div>
@@ -247,9 +247,9 @@ export default function NewItemPage() {
 
                             {/* Materials */}
                             <div className="md:col-span-2">
-                                <Label className="text-amber-200/70 flex items-center gap-2 mb-2">
-                                    <Award className="size-4" />
-                                    {t('materials')} <span className="text-red-400">*</span>
+                                <Label className="text-xs font-bold text-muted-foreground ml-1 flex items-center gap-2 mb-2">
+                                    <Award className="size-4 text-primary" />
+                                    {t('materials')} <span className="text-red-500">*</span>
                                 </Label>
                                 <MultiSelect
                                     options={dbMaterials.map(m => ({ label: m.name, value: m.id }))}
@@ -260,7 +260,7 @@ export default function NewItemPage() {
 
                             {/* Description */}
                             <div className="md:col-span-2">
-                                <Label htmlFor="description" className="text-amber-200/70 flex items-center gap-2 mb-2">
+                                <Label htmlFor="description" className="text-xs font-bold text-muted-foreground ml-1 flex items-center gap-2 mb-2">
                                     {t('descriptionLabel')}
                                 </Label>
                                 <Textarea
@@ -268,20 +268,20 @@ export default function NewItemPage() {
                                     value={formData.description || ''}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     placeholder={t('descriptionPlaceholder')}
-                                    className="bg-slate-900/50 border-amber-500/30 text-amber-50 placeholder:text-amber-200/30 min-h-[120px] resize-none"
+                                    className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/40 min-h-[120px] resize-none transition-all focus:bg-card"
                                 />
                             </div>
 
                             {/* Image Input */}
                             <div className="md:col-span-2">
-                                <Label className="text-amber-200/70 flex items-center gap-2 mb-2">
-                                    <ImageIcon className="size-4" />
+                                <Label className="text-xs font-bold text-muted-foreground ml-1 flex items-center gap-2 mb-2">
+                                    <ImageIcon className="size-4 text-primary" />
                                     {t('itemImage')}
                                 </Label>
 
                                 <div
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="mt-2 flex flex-col items-center justify-center border-2 border-dashed border-amber-500/20 rounded-xl p-4 sm:p-8 bg-slate-900/30 hover:bg-slate-900/50 transition-colors cursor-pointer relative"
+                                    className="mt-2 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-4 sm:p-8 bg-muted/20 hover:bg-muted/30 transition-all cursor-pointer relative"
                                 >
                                     <input
                                         type="file"
@@ -294,10 +294,10 @@ export default function NewItemPage() {
                                     {isSubmitting ? (
                                         <div className="text-center space-y-4">
                                             <div className="relative">
-                                                <Skeleton className="size-12 sm:size-16 rounded-full bg-amber-500/10 mx-auto" />
-                                                <Loader2 className="size-6 sm:size-8 text-amber-500 animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                                                <Skeleton className="size-12 sm:size-16 rounded-full bg-primary/10 mx-auto" />
+                                                <Loader2 className="size-6 sm:size-8 text-primary animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                                             </div>
-                                            <p className="text-amber-200/60 text-xs sm:text-sm font-medium animate-pulse">{t('processing')}</p>
+                                            <p className="text-muted-foreground text-xs sm:text-sm font-bold animate-pulse">{t('processing')}</p>
                                         </div>
                                     ) : imagePreview ? (
                                         <div className="relative group w-full">
@@ -330,26 +330,26 @@ export default function NewItemPage() {
                                                         e.stopPropagation();
                                                         fileInputRef.current?.click();
                                                     }}
-                                                    className="w-full sm:w-auto bg-amber-500/10 p-4 sm:p-6 rounded-2xl hover:bg-amber-500/20 transition-all border border-amber-500/10 hover:border-amber-500/30 group"
+                                                    className="w-full sm:w-auto bg-primary/5 p-4 sm:p-6 rounded-2xl hover:bg-primary/10 transition-all border border-primary/10 hover:border-primary/30 group shadow-sm hover:shadow-md"
                                                 >
-                                                    <Upload className="size-6 sm:size-8 text-amber-400 group-hover:scale-110 transition-transform mb-1 sm:mb-2 mx-auto" />
-                                                    <p className="text-amber-50 text-[10px] sm:text-xs font-bold uppercase tracking-widest">{t('uploadFile')}</p>
+                                                    <Upload className="size-6 sm:size-8 text-primary group-hover:scale-110 transition-transform mb-1 sm:mb-2 mx-auto" />
+                                                    <p className="text-foreground text-xs font-bold">{t('uploadFile')}</p>
                                                 </div>
 
-                                                <div className="text-amber-200/20 font-bold hidden sm:block">OR</div>
+                                                <div className="text-muted-foreground/20 font-bold hidden sm:block">OR</div>
 
                                                 <div
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         setIsCameraModalOpen(true);
                                                     }}
-                                                    className="w-full sm:w-auto bg-purple-500/10 p-4 sm:p-6 rounded-2xl hover:bg-purple-500/20 transition-all border border-purple-500/10 hover:border-purple-500/30 group"
+                                                    className="w-full sm:w-auto bg-purple-500/5 p-4 sm:p-6 rounded-2xl hover:bg-purple-500/10 transition-all border border-purple-500/10 hover:border-purple-500/30 group shadow-sm hover:shadow-md"
                                                 >
-                                                    <Camera className="size-6 sm:size-8 text-purple-400 group-hover:scale-110 transition-transform mb-1 sm:mb-2 mx-auto" />
-                                                    <p className="text-amber-50 text-[10px] sm:text-xs font-bold uppercase tracking-widest">{t('directCamera')}</p>
+                                                    <Camera className="size-6 sm:size-8 text-purple-500/60 group-hover:scale-110 transition-transform mb-1 sm:mb-2 mx-auto" />
+                                                    <p className="text-foreground text-xs font-bold">{t('directCamera')}</p>
                                                 </div>
                                             </div>
-                                            <p className="text-amber-200/40 text-[10px] sm:text-sm">{t('imageHint')}</p>
+                                            <p className="text-muted-foreground/40 text-[10px] sm:text-sm font-medium">{t('imageHint')}</p>
                                         </div>
                                     )}
                                 </div>
@@ -363,19 +363,19 @@ export default function NewItemPage() {
                         />
 
                         {/* Form Actions */}
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-amber-500/20">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-border">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={handleCancel}
-                                className="flex-1 bg-slate-900/50 border-amber-500/50 text-amber-50 hover:bg-amber-500/10 hover:border-amber-500/70 hover:text-amber-50 h-10 sm:h-12 text-sm sm:text-base order-2 sm:order-1"
+                                className="flex-1 border-border text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary h-12 text-sm sm:text-base font-bold transition-all active:scale-[0.98] order-2 sm:order-1"
                             >
                                 {t('cancel')}
                             </Button>
                             <Button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold shadow-lg shadow-amber-500/30 h-10 sm:h-12 text-sm sm:text-base order-1 sm:order-2"
+                                className="flex-1 bg-primary hover:brightness-95 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] text-primary-foreground font-bold shadow-lg shadow-primary/20 h-10 sm:h-12 text-sm sm:text-base order-1 sm:order-2 transition-all duration-200"
                             >
                                 {isSubmitting ? (
                                     <>

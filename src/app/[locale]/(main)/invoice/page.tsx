@@ -383,16 +383,16 @@ export default function InvoicePage() {
         <div className="max-w-7xl mx-auto">
             <div className="mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl sm:text-4xl font-bold text-amber-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
-                        <Receipt className="size-6 sm:size-8 text-amber-400" />
+                    <h2 className="text-2xl sm:text-4xl font-bold text-foreground mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+                        <Receipt className="size-6 sm:size-8 text-primary" />
                         {t('title')}
                     </h2>
-                    <p className="text-amber-200/60 text-xs sm:text-lg">{t('subtitle')}</p>
+                    <p className="text-muted-foreground text-xs sm:text-lg">{t('subtitle')}</p>
                 </div>
 
                 <Button
                     onClick={() => setShowInvoiceTypeDialog(true)}
-                    className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold shadow-lg shadow-amber-500/30 w-full sm:w-auto"
+                    className="bg-primary hover:brightness-95 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] text-primary-foreground font-bold shadow-lg shadow-primary/20 w-full sm:w-auto transition-all duration-200"
                 >
                     <Plus className="size-5 mr-2" />
                     {t('createInvoice')}
@@ -400,36 +400,36 @@ export default function InvoicePage() {
             </div>
 
             {/* Filters Top Bar */}
-            <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20 mb-6 sm:mb-8">
+            <Card className="bg-card/50 backdrop-blur-sm border-border mb-6 sm:mb-8">
                 <CardContent className="p-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 items-end">
                         <div className="space-y-1.5">
-                            <Label className="text-[10px] font-bold text-amber-500/60 uppercase tracking-wider ml-1">{t('invoiceId')}</Label>
+                            <Label className="text-xs font-bold text-muted-foreground ml-1">{t('invoiceId')}</Label>
                             <Input
                                 placeholder={t('searchPlaceholder')}
                                 value={idFilter}
                                 onChange={(e) => setIdFilter(e.target.value)}
-                                className="bg-slate-900/50 border-amber-500/20 text-amber-50 h-10 text-sm"
+                                className="bg-muted/50 border-border text-foreground h-10 text-sm"
                             />
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label className="text-[10px] font-bold text-amber-500/60 uppercase tracking-wider ml-1">{t('type')}</Label>
+                            <Label className="text-xs font-bold text-muted-foreground ml-1">{t('type')}</Label>
                             <Select value={invoiceTypeFilter} onValueChange={(value) => setInvoiceTypeFilter(value as 'all' | 'sales' | 'pawn' | 'buy')}>
-                                <SelectTrigger className="bg-slate-900/50 border-amber-500/20 text-amber-50 h-10 text-sm">
+                                <SelectTrigger className="bg-muted/50 border-border text-foreground h-10 text-sm">
                                     <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent className="bg-slate-900 border-amber-500/20">
-                                    <SelectItem value="all" className="text-amber-50">{t('allTypes')}</SelectItem>
-                                    <SelectItem value="sales" className="text-amber-50">{t('sales')}</SelectItem>
-                                    <SelectItem value="pawn" className="text-amber-50">{t('pawn')}</SelectItem>
-                                    <SelectItem value="buy" className="text-amber-50">{t('buy')}</SelectItem>
+                                <SelectContent className="bg-card border-border">
+                                    <SelectItem value="all" className="text-foreground">{t('allTypes')}</SelectItem>
+                                    <SelectItem value="sales" className="text-foreground">{t('sales')}</SelectItem>
+                                    <SelectItem value="pawn" className="text-foreground">{t('pawn')}</SelectItem>
+                                    <SelectItem value="buy" className="text-foreground">{t('buy')}</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="space-y-1.5 sm:col-span-2 lg:col-span-1">
-                            <Label className="text-[10px] font-bold text-amber-500/60 uppercase tracking-wider ml-1">{t('dateRange')}</Label>
+                            <Label className="text-xs font-bold text-muted-foreground ml-1">{t('dateRange')}</Label>
                             <DateRangePicker
                                 id="top-invoice-date-range"
                                 date={dateRange}
@@ -439,7 +439,7 @@ export default function InvoicePage() {
                         </div>
 
                         <div className="space-y-1.5 sm:col-span-2 lg:col-span-1">
-                            <Label className="text-[10px] font-bold text-amber-500/60 uppercase tracking-wider ml-1">{t('dueDate')}</Label>
+                            <Label className="text-xs font-bold text-muted-foreground ml-1">{t('dueDate')}</Label>
                             <DateRangePicker
                                 id="top-due-date-range"
                                 date={dueDateRange}
@@ -451,7 +451,7 @@ export default function InvoicePage() {
                         <div className="flex gap-2">
                             <Button
                                 onClick={handleApplyFilters}
-                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 h-10 text-sm"
+                                className="flex-1 bg-primary hover:brightness-95 hover:shadow-lg hover:scale-[1.02] text-primary-foreground h-10 text-sm font-bold transition-all duration-200"
                             >
                                 <Filter className="size-4 mr-2" />
                                 {tCommon('search')}
@@ -459,9 +459,9 @@ export default function InvoicePage() {
                             <Button
                                 onClick={handleClearFilters}
                                 variant="outline"
-                                className="px-3 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-10"
+                                className="px-4 border-border bg-card text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary h-10 transition-all font-bold"
                             >
-                                <X className="size-4" />
+                                <X className="size-4 text-foreground/40" />
                             </Button>
                         </div>
                     </div>
@@ -474,9 +474,9 @@ export default function InvoicePage() {
                     {/* Invoice Cards */}
                     <div className="space-y-4 flex-1">
                         {isLoading ? (
-                            <div className="flex flex-col items-center justify-center py-20 bg-slate-800/20 border border-amber-500/10 rounded-xl gap-4">
-                                <div className="size-10 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
-                                <p className="text-amber-200/60 font-medium">{t('loading')}</p>
+                            <div className="flex flex-col items-center justify-center py-20 bg-muted/20 border border-border rounded-xl gap-4">
+                                <div className="size-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                                <p className="text-muted-foreground font-medium">{t('loading')}</p>
                             </div>
                         ) : paginatedInvoices.length > 0 ? (
                             <>
@@ -485,38 +485,38 @@ export default function InvoicePage() {
                                         <Card
                                             key={invoice.id}
                                             onClick={() => setSelectedInvoice(invoice)}
-                                            className={`cursor-pointer transition-all hover:border-amber-500/40 ${selectedInvoice?.id === invoice.id
-                                                ? 'bg-slate-700/50 border-amber-500/40'
-                                                : 'bg-slate-800/30 border-amber-500/20'
+                                            className={`cursor-pointer transition-all hover:border-primary/40 ${selectedInvoice?.id === invoice.id
+                                                ? 'bg-primary/5 dark:bg-primary/10 border-primary/40 ring-1 ring-primary/20'
+                                                : 'bg-card/50 border-border'
                                                 }`}
                                         >
                                             <CardContent className="p-4">
                                                 <div className="flex items-start justify-between mb-2">
-                                                    <div className="font-semibold text-amber-50">{invoice.invoiceNumber}</div>
-                                                    <Badge className={`text-[10px] px-2 py-0 h-4 uppercase font-bold tracking-wider ${invoice.type === 'sales'
-                                                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                                                    <div className="font-bold text-foreground">{invoice.invoiceNumber}</div>
+                                                    <Badge className={`text-[10px] px-2 py-0 h-4 uppercase font-bold tracking-widest border-none ${invoice.type === 'sales'
+                                                        ? 'bg-emerald-500 text-white dark:bg-emerald-500/20 dark:text-emerald-400'
                                                         : invoice.type === 'pawn'
-                                                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                                                            : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                                                            ? 'bg-amber-500 text-white dark:bg-amber-500/20 dark:text-amber-400'
+                                                            : 'bg-blue-500 text-white dark:bg-blue-500/20 dark:text-blue-400'
                                                         }`}>
                                                         {t(invoice.type)}
                                                     </Badge>
                                                 </div>
-                                                <div className="text-sm text-amber-200/70 mb-1">{invoice.customerName}</div>
+                                                <div className="text-sm text-foreground/80 mb-1 font-medium">{invoice.customerName}</div>
                                                 <div className="flex items-center justify-between">
-                                                    <div className="text-xs text-amber-200/50 flex items-center gap-1">
+                                                    <div className="text-[10px] text-muted-foreground flex items-center gap-1 font-medium uppercase tracking-wider">
                                                         <Calendar className="size-3" />
                                                         {formatIntl.dateTime(invoice.date, { month: 'short', day: 'numeric', year: 'numeric' })}
                                                         {invoice.type !== 'buy' && (
                                                             <>
                                                                 <span className="mx-1">•</span>
-                                                                <span className={`capitalize ${['active', 'paid', 'redeemed'].includes(invoice.status) ? 'text-emerald-400' : invoice.status === 'returned' ? 'text-red-400' : 'text-amber-400'}`}>
+                                                                <span className={`capitalize ${['active', 'paid', 'redeemed'].includes(invoice.status) ? 'text-emerald-600 dark:text-emerald-400' : invoice.status === 'returned' ? 'text-rose-600 dark:text-rose-400' : 'text-amber-600 dark:text-amber-400'}`}>
                                                                     {t(invoice.status)}
                                                                 </span>
                                                             </>
                                                         )}
                                                     </div>
-                                                    <div className="text-sm font-bold text-amber-400">
+                                                    <div className="text-sm font-bold text-primary">
                                                         {formatIntl.number(invoice.total)}
                                                     </div>
                                                 </div>
@@ -527,8 +527,8 @@ export default function InvoicePage() {
 
                                 {/* Pagination Controls */}
                                 {totalPages > 1 && (
-                                    <div className="flex items-center justify-between px-2 py-4 border-t border-amber-500/10">
-                                        <div className="text-xs text-amber-200/40 font-medium">
+                                    <div className="flex items-center justify-between px-2 py-4 border-t border-border">
+                                        <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
                                             {tCommon('page')} {currentPage} {tCommon('of')} {totalPages}
                                         </div>
                                         <div className="flex gap-2">
@@ -540,7 +540,7 @@ export default function InvoicePage() {
                                                 disabled={currentPage === 1}
                                                 variant="outline"
                                                 size="sm"
-                                                className="h-8 w-8 p-0 border-amber-500/20 bg-slate-800/50 text-amber-50 hover:bg-amber-500/10 disabled:opacity-30"
+                                                className="h-8 w-8 p-0 border-border bg-card text-foreground hover:bg-muted disabled:opacity-30"
                                             >
                                                 <ChevronLeft className="size-4" />
                                             </Button>
@@ -552,7 +552,7 @@ export default function InvoicePage() {
                                                 disabled={currentPage === totalPages}
                                                 variant="outline"
                                                 size="sm"
-                                                className="h-8 w-8 p-0 border-amber-500/20 bg-slate-800/50 text-amber-50 hover:bg-amber-500/10 disabled:opacity-30"
+                                                className="h-8 w-8 p-0 border-border bg-card text-foreground hover:bg-muted disabled:opacity-30"
                                             >
                                                 <ChevronRight className="size-4" />
                                             </Button>
@@ -561,10 +561,10 @@ export default function InvoicePage() {
                                 )}
                             </>
                         ) : (
-                            <div className="text-center py-20 bg-slate-800/20 border border-amber-500/10 rounded-xl">
-                                <Receipt className="size-12 text-amber-500/20 mx-auto mb-4" />
-                                <p className="text-amber-200/60 font-medium">{t('noInvoices')}</p>
-                                <p className="text-amber-200/40 text-sm mt-1">{t('adjustFilters')}</p>
+                            <div className="text-center py-20 bg-muted/20 border border-border rounded-xl">
+                                <Receipt className="size-12 text-muted/20 mx-auto mb-4" />
+                                <p className="text-muted-foreground font-medium">{t('noInvoices')}</p>
+                                <p className="text-muted-foreground/60 text-xs mt-1 lowercase tracking-tight">{t('adjustFilters')}</p>
                             </div>
                         )}
                     </div>
@@ -577,12 +577,12 @@ export default function InvoicePage() {
                             <Button
                                 onClick={() => setSelectedInvoice(null)}
                                 variant="ghost"
-                                className="lg:hidden text-amber-200/60 hover:text-amber-200 mb-2"
+                                className="lg:hidden text-muted-foreground hover:text-foreground mb-2"
                             >
                                 <ChevronLeft className="size-5 mr-1" />
                                 {t('backToInvoices')}
                             </Button>
-                            <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20">
+                            <Card className="bg-card backdrop-blur-sm border-border">
                                 <CardHeader className="p-4 sm:p-6 lg:p-8">
                                     <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
                                         <div className="flex items-center gap-4">
@@ -593,20 +593,20 @@ export default function InvoicePage() {
                                                 </div>
                                             </div>
                                             <div>
-                                                <h3 className="text-lg sm:text-xl font-bold text-amber-50 flex items-center gap-2">
+                                                <h3 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
                                                     {tCommon('title')}
                                                 </h3>
-                                                <p className="text-xs sm:text-sm text-amber-200/60">{tCommon('tagline')}</p>
+                                                <p className="text-xs sm:text-sm text-muted-foreground font-medium">{tCommon('tagline')}</p>
                                             </div>
                                         </div>
                                         <div className="text-left sm:text-right w-full sm:w-auto">
-                                            <div className="text-xl sm:text-2xl font-bold text-amber-400">{selectedInvoice.invoiceNumber}</div>
+                                            <div className="text-xl sm:text-2xl font-black text-primary -tracking-tight">{selectedInvoice.invoiceNumber}</div>
                                             <div className="flex flex-col items-start sm:items-end gap-2 mt-2 sm:mt-1">
-                                                <Badge className={`uppercase text-[10px] sm:text-xs font-bold tracking-wider ${selectedInvoice.type === 'sales'
-                                                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                                                <Badge className={`uppercase text-[10px] sm:text-xs font-bold tracking-widest border-none ${selectedInvoice.type === 'sales'
+                                                    ? 'bg-emerald-500 text-white dark:bg-emerald-500/20 dark:text-emerald-400'
                                                     : selectedInvoice.type === 'pawn'
-                                                        ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                                                        : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                                                        ? 'bg-amber-500 text-white dark:bg-amber-500/20 dark:text-amber-400'
+                                                        : 'bg-blue-500 text-white dark:bg-blue-500/20 dark:text-blue-400'
                                                     }`}>
                                                     {t(selectedInvoice.type)}
                                                 </Badge>
@@ -617,54 +617,54 @@ export default function InvoicePage() {
                                                             value={selectedInvoice.status}
                                                             onValueChange={handleStatusChange}
                                                         >
-                                                            <SelectTrigger className="w-full sm:w-[140px] h-9 sm:h-8 bg-slate-900/50 border-amber-500/20 text-xs text-amber-50">
+                                                            <SelectTrigger className="w-full sm:w-[140px] h-9 sm:h-8 bg-muted border-border text-xs text-foreground font-medium">
                                                                 <SelectValue placeholder={tCommon('status')} />
                                                             </SelectTrigger>
-                                                            <SelectContent className="bg-slate-900 border-amber-500/20">
+                                                            <SelectContent className="bg-card border-border">
                                                                 {selectedInvoice.type === 'pawn' ? (
                                                                     <>
-                                                                        <SelectItem value="active" className="text-amber-50">
+                                                                        <SelectItem value="active" className="text-foreground">
                                                                             <div className="flex items-center gap-2">
-                                                                                <Clock className="size-3 text-amber-400" />
+                                                                                <Clock className="size-3 text-amber-500" />
                                                                                 {t('active')}
                                                                             </div>
                                                                         </SelectItem>
-                                                                        <SelectItem value="overdue" className="text-amber-50">
+                                                                        <SelectItem value="overdue" className="text-foreground">
                                                                             <div className="flex items-center gap-2">
-                                                                                <AlertCircle className="size-3 text-red-400" />
+                                                                                <AlertCircle className="size-3 text-rose-500" />
                                                                                 {t('overdue')}
                                                                             </div>
                                                                         </SelectItem>
-                                                                        <SelectItem value="expired" className="text-amber-50">
+                                                                        <SelectItem value="expired" className="text-foreground">
                                                                             <div className="flex items-center gap-2">
-                                                                                <X className="size-3 text-slate-400" />
+                                                                                <X className="size-3 text-muted-foreground" />
                                                                                 {t('expired')}
                                                                             </div>
                                                                         </SelectItem>
-                                                                        <SelectItem value="redeemed" className="text-amber-50">
+                                                                        <SelectItem value="redeemed" className="text-foreground">
                                                                             <div className="flex items-center gap-2">
-                                                                                <CheckCircle2 className="size-3 text-emerald-400" />
+                                                                                <CheckCircle2 className="size-3 text-emerald-500" />
                                                                                 {t('redeemed')}
                                                                             </div>
                                                                         </SelectItem>
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        <SelectItem value="paid" className="text-amber-50">
+                                                                        <SelectItem value="paid" className="text-foreground">
                                                                             <div className="flex items-center gap-2">
-                                                                                <CheckCircle2 className="size-3 text-emerald-400" />
+                                                                                <CheckCircle2 className="size-3 text-emerald-500" />
                                                                                 {t('paid')}
                                                                             </div>
                                                                         </SelectItem>
-                                                                        <SelectItem value="partially_paid" className="text-amber-50">
+                                                                        <SelectItem value="partially_paid" className="text-foreground">
                                                                             <div className="flex items-center gap-2">
-                                                                                <Clock className="size-3 text-amber-400" />
+                                                                                <Clock className="size-3 text-amber-500" />
                                                                                 {t('partiallyPaid')}
                                                                             </div>
                                                                         </SelectItem>
-                                                                        <SelectItem value="returned" className="text-amber-50">
+                                                                        <SelectItem value="returned" className="text-foreground">
                                                                             <div className="flex items-center gap-2">
-                                                                                <ArrowLeft className="size-3 text-red-400" />
+                                                                                <ArrowLeft className="size-3 text-rose-500" />
                                                                                 {t('returned')}
                                                                             </div>
                                                                         </SelectItem>
@@ -673,7 +673,7 @@ export default function InvoicePage() {
                                                             </SelectContent>
                                                         </Select>
                                                     ) : (
-                                                        <Badge variant="outline" className="border-amber-500/20 text-amber-200/60 text-[10px] uppercase">
+                                                        <Badge variant="outline" className="border-border text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
                                                             {t(selectedInvoice.status)}
                                                         </Badge>
                                                     )
@@ -687,36 +687,36 @@ export default function InvoicePage() {
                                     {/* Top Header Info */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                                         <div className="space-y-3 sm:space-y-4">
-                                            <div className="flex items-center gap-2 text-[10px] font-bold text-amber-500/60 uppercase tracking-widest">
+                                            <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
                                                 <User className="size-3" />
                                                 {t('customerInfo')}
                                             </div>
                                             <div className="space-y-1">
-                                                <div className="text-lg sm:text-xl font-bold text-amber-50">{selectedInvoice.customerName}</div>
-                                                <div className="flex items-center gap-2 text-xs sm:text-sm text-amber-200/60">
+                                                <div className="text-lg sm:text-xl font-bold text-foreground">{selectedInvoice.customerName}</div>
+                                                <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-medium">
                                                     <Phone className="size-3.5" />
                                                     {selectedInvoice.customerPhone || 'N/A'}
                                                 </div>
-                                                <div className="flex items-start gap-2 text-xs sm:text-sm text-amber-200/60">
+                                                <div className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground font-medium">
                                                     <MapPin className="size-3.5 mt-0.5" />
                                                     <span className="max-w-[200px]">{selectedInvoice.customerAddress || 'N/A'}</span>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-col items-start sm:items-end gap-4 sm:gap-6">
+                                        <div className="flex flex-col items-start sm:items-end gap-3 sm:gap-6">
                                             <div className="text-left sm:text-right space-y-1">
-                                                <span className="text-[10px] font-bold text-amber-500/60 uppercase tracking-widest block">{t('issueDate')}</span>
-                                                <div className="flex items-center sm:justify-end gap-2 text-amber-50 text-xs sm:text-base">
-                                                    <Calendar className="size-3.5 sm:size-4 text-amber-400" />
+                                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block">{t('issueDate')}</span>
+                                                <div className="flex items-center sm:justify-end gap-2 text-foreground font-semibold text-xs sm:text-base">
+                                                    <Calendar className="size-3.5 sm:size-4 text-primary" />
                                                     {formatIntl.dateTime(selectedInvoice.date, { month: 'long', day: 'numeric', year: 'numeric' })}
                                                 </div>
                                             </div>
 
                                             {selectedInvoice.dueDate && (
                                                 <div className="text-left sm:text-right space-y-1">
-                                                    <span className="text-[10px] font-bold text-amber-500/60 uppercase tracking-widest block">{t('dueDate')}</span>
-                                                    <div className="flex items-center sm:justify-end gap-2 text-red-400 font-medium text-xs sm:text-base">
+                                                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block">{t('dueDate')}</span>
+                                                    <div className="flex items-center sm:justify-end gap-2 text-rose-600 dark:text-rose-400 font-bold text-xs sm:text-base">
                                                         <Calendar className="size-3.5 sm:size-4" />
                                                         {formatIntl.dateTime(selectedInvoice.dueDate, { month: 'long', day: 'numeric', year: 'numeric' })}
                                                     </div>
@@ -725,70 +725,70 @@ export default function InvoicePage() {
                                         </div>
                                     </div>
 
-                                    <Separator className="bg-amber-500/10" />
+                                    <Separator className="bg-border" />
 
                                     {/* Items Table with Totals in Footer */}
-                                    <div className="border border-amber-500/20 rounded-xl overflow-x-auto">
+                                    <div className="border border-border rounded-xl overflow-x-auto bg-muted/30">
                                         <table className="w-full min-w-[500px]">
-                                            <thead className="bg-slate-900/50">
+                                            <thead className="bg-muted/50">
                                                 <tr>
-                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-left text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('itemDetails')}</th>
-                                                    {selectedInvoice.type === 'sales' && <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('returnType')}</th>}
-                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('weight')}</th>
-                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('qty')}</th>
-                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('price')}</th>
-                                                    {selectedInvoice.type !== 'buy' && <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('discount')}</th>}
-                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-amber-200/70 font-bold uppercase tracking-wider">{t('total')}</th>
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-left text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">{t('itemDetails')}</th>
+                                                    {selectedInvoice.type === 'sales' && <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">{t('returnType')}</th>}
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">{t('weight')}</th>
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">{t('qty')}</th>
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">{t('price')}</th>
+                                                    {selectedInvoice.type !== 'buy' && <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">{t('discount')}</th>}
+                                                    <th className="py-2 sm:py-3 px-3 sm:px-4 text-right text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">{t('total')}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {selectedInvoice.items.map((item) => (
-                                                    <tr key={item.id} className="border-t border-amber-500/10">
+                                                    <tr key={item.id} className="border-t border-border">
                                                         <td className="py-2 sm:py-3 px-3 sm:px-4">
-                                                            <div className="text-amber-50 text-xs sm:text-sm font-medium">{item.name}</div>
-                                                            <div className="text-[10px] sm:text-xs text-amber-200/50 tracking-wide uppercase">{item.category}</div>
+                                                            <div className="text-foreground text-xs sm:text-sm font-bold">{item.name}</div>
+                                                            <div className="text-xs text-muted-foreground font-medium">{item.category}</div>
                                                         </td>
                                                         {selectedInvoice.type === 'sales' && (
-                                                            <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-[10px] sm:text-xs">
+                                                            <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-foreground text-[10px] sm:text-xs font-medium">
                                                                 {item.returnType === 'making-charges' ? t('makingCharges') : t('percentage')}
                                                             </td>
                                                         )}
-                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-xs sm:text-sm">{item.weight || '-'}</td>
-                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-amber-50 text-xs sm:text-sm">{item.quantity}</td>
-                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 text-xs sm:text-sm">{formatIntl.number(item.price)}</td>
-                                                        {selectedInvoice.type !== 'buy' && <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-red-400 text-xs sm:text-sm">-{formatIntl.number(item.discount || 0)}</td>}
-                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-amber-50 font-bold text-xs sm:text-sm">{formatIntl.number(item.total)}</td>
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-foreground text-xs sm:text-sm font-medium">{item.weight || '-'}</td>
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-center text-foreground text-xs sm:text-sm font-medium">{item.quantity}</td>
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-foreground text-xs sm:text-sm font-medium">{formatIntl.number(item.price)}</td>
+                                                        {selectedInvoice.type !== 'buy' && <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-rose-600 dark:text-rose-400 text-xs sm:text-sm font-bold">-{formatIntl.number(item.discount || 0)}</td>}
+                                                        <td className="py-2 sm:py-3 px-3 sm:px-4 text-right text-foreground font-black text-xs sm:text-sm">{formatIntl.number(item.total)}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
-                                            <tfoot className="bg-slate-900/30 border-t-2 border-amber-500/20">
+                                            <tfoot className="bg-muted/50 border-t-2 border-border">
                                                 <tr>
-                                                    <td colSpan={selectedInvoice.type === 'sales' ? 6 : (selectedInvoice.type === 'pawn' ? 5 : 4)} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">{t('subtotal')}:</td>
-                                                    <td className="py-2 px-3 sm:px-4 text-right text-amber-50 text-xs font-bold">
+                                                    <td colSpan={selectedInvoice.type === 'sales' ? 6 : (selectedInvoice.type === 'pawn' ? 5 : 4)} className="py-2 px-3 sm:px-4 text-right text-xs text-muted-foreground font-bold uppercase tracking-tighter">{t('subtotal')}:</td>
+                                                    <td className="py-2 px-3 sm:px-4 text-right text-foreground text-xs font-black">
                                                         {formatIntl.number(selectedInvoice.items.reduce((sum, item) => sum + (item.price * item.quantity), 0))}
                                                     </td>
                                                 </tr>
                                                 {selectedInvoice.type !== 'buy' && selectedInvoice.items.some(item => (item.discount || 0) > 0) && (
                                                     <tr>
-                                                        <td colSpan={selectedInvoice.type === 'sales' ? 6 : 5} className="py-2 px-3 sm:px-4 text-right text-xs text-amber-200/70 font-medium">{t('totalDiscount')}:</td>
-                                                        <td className="py-2 px-3 sm:px-4 text-right text-red-400 text-xs font-bold">-{formatIntl.number(selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0))}</td>
+                                                        <td colSpan={selectedInvoice.type === 'sales' ? 6 : 5} className="py-2 px-3 sm:px-4 text-right text-xs text-muted-foreground font-bold uppercase tracking-tighter">{t('totalDiscount')}:</td>
+                                                        <td className="py-2 px-3 sm:px-4 text-right text-rose-600 dark:text-rose-400 text-xs font-black">-{formatIntl.number(selectedInvoice.items.reduce((sum, item) => sum + (item.discount || 0), 0))}</td>
                                                     </tr>
                                                 )}
                                                 <tr>
-                                                    <td colSpan={selectedInvoice.type === 'sales' ? 6 : (selectedInvoice.type === 'pawn' ? 5 : 4)} className="py-3 px-3 sm:px-4 text-right text-sm sm:text-xl font-bold text-amber-50">{tCommon('total')}:</td>
-                                                    <td className="py-3 px-3 sm:px-4 text-right text-amber-400 text-lg sm:text-2xl font-black">{formatIntl.number(selectedInvoice.total)}</td>
+                                                    <td colSpan={selectedInvoice.type === 'sales' ? 6 : (selectedInvoice.type === 'pawn' ? 5 : 4)} className="py-3 px-3 sm:px-4 text-right text-sm sm:text-xl font-bold text-foreground">{tCommon('total')}:</td>
+                                                    <td className="py-3 px-3 sm:px-4 text-right text-primary text-lg sm:text-3xl font-bold">{formatIntl.number(selectedInvoice.total)}</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
                                     </div>
 
                                     {selectedInvoice.notes && (
-                                        <div className="bg-slate-900/50 rounded-xl p-6 border border-amber-500/10">
-                                            <div className="text-xs font-bold text-amber-500/60 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                        <div className="bg-muted/50 rounded-xl p-6 border border-border">
+                                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-2">
                                                 <Mail className="size-3" />
                                                 Notes & Reminders
                                             </div>
-                                            <p className="text-amber-200/70 text-sm leading-relaxed whitespace-pre-wrap">
+                                            <p className="text-foreground/80 text-sm leading-relaxed whitespace-pre-wrap font-medium">
                                                 {selectedInvoice.notes}
                                             </p>
                                         </div>
@@ -800,18 +800,18 @@ export default function InvoicePage() {
                                             onClick={() => selectedInvoice && handlePrint(selectedInvoice)}
                                             disabled={isGenerating}
                                             variant="outline"
-                                            className="flex-1 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 h-11"
+                                            className="flex-1 border-border bg-muted/20 text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary h-12 font-bold text-sm transition-all shadow-sm active:scale-[0.98]"
                                         >
-                                            <Printer className="size-4 mr-2" />
+                                            <Printer className="size-4 mr-2 text-primary" />
                                             {t('printInvoice')}
                                         </Button>
                                         <Button
                                             onClick={() => selectedInvoice && handleDownload(selectedInvoice)}
                                             disabled={isGenerating}
                                             variant="outline"
-                                            className="flex-1 border-amber-500/30 text-amber-50 hover:bg-amber-500/10 disabled:opacity-50 h-11"
+                                            className="flex-1 border-border bg-muted/20 text-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary disabled:opacity-50 h-12 font-bold text-sm transition-all shadow-sm active:scale-[0.98]"
                                         >
-                                            <Download className="size-4 mr-2" />
+                                            <Download className="size-4 mr-2 text-primary" />
                                             {t('downloadPdf')}
                                         </Button>
                                     </div>
@@ -819,10 +819,10 @@ export default function InvoicePage() {
                             </Card>
                         </div>
                     ) : (
-                        <Card className="bg-slate-800/30 backdrop-blur-sm border-amber-500/20 h-full flex items-center justify-center min-h-[600px]">
+                        <Card className="bg-card/50 backdrop-blur-sm border-border h-full flex items-center justify-center min-h-[600px]">
                             <CardContent className="text-center">
-                                <Receipt className="size-16 text-amber-400/40 mx-auto mb-4" />
-                                <p className="text-amber-200/60 text-lg">{t('selectInvoice')}</p>
+                                <Receipt className="size-16 text-primary/20 mx-auto mb-4" />
+                                <p className="text-muted-foreground text-lg font-medium">{t('selectInvoice')}</p>
                             </CardContent>
                         </Card>
                     )}
@@ -832,18 +832,18 @@ export default function InvoicePage() {
             {/* Invoice Type Selection Dialog */}
             {showInvoiceTypeDialog && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 sm:p-6">
-                    <Card className="bg-slate-800/95 backdrop-blur-md border-amber-500/20 w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
-                        <CardHeader className="border-b border-amber-500/10 text-center py-4 sm:py-6 shrink-0 relative">
+                    <Card className="bg-card/95 backdrop-blur-md border-border w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+                        <CardHeader className="border-b border-border text-center py-4 sm:py-6 shrink-0 relative">
                             <Button
                                 onClick={() => setShowInvoiceTypeDialog(false)}
                                 variant="ghost"
                                 size="icon"
-                                className="absolute right-2 top-2 text-amber-200/40 hover:text-amber-200 hover:bg-amber-500/10 sm:hidden"
+                                className="absolute right-2 top-2 text-muted-foreground hover:text-foreground hover:bg-muted sm:hidden"
                             >
                                 <X className="size-5" />
                             </Button>
-                            <div className="text-xl sm:text-2xl font-bold text-amber-50 mb-1 font-serif tracking-wide">{t('selectionTitle')}</div>
-                            <p className="text-amber-200/60 uppercase tracking-widest text-[10px] sm:text-xs font-bold">{t('selectionSubtitle')}</p>
+                            <div className="text-xl sm:text-2xl font-black text-foreground mb-1 tracking-tight">{t('selectionTitle')}</div>
+                            <p className="text-muted-foreground uppercase tracking-widest text-[10px] sm:text-xs font-bold">{t('selectionSubtitle')}</p>
                         </CardHeader>
                         <CardContent className="p-4 sm:p-8 overflow-y-auto custom-scrollbar">
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
@@ -855,18 +855,18 @@ export default function InvoicePage() {
                                     }}
                                     className="group cursor-pointer h-full"
                                 >
-                                    <Card className="bg-slate-900/50 border border-amber-500/20 hover:border-emerald-500/60 transition-all hover:bg-emerald-500/5 active:scale-95 sm:hover:scale-105 h-full">
+                                    <Card className="bg-muted/30 border border-border hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-all hover:bg-emerald-500/5 active:scale-95 sm:hover:scale-105 h-full">
                                         <CardContent className="p-4 sm:p-6 text-center flex flex-col items-center">
                                             <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
                                                     <div className="absolute inset-0 bg-emerald-500/10 rounded-2xl blur-md group-hover:bg-emerald-500/20 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-emerald-500/20 p-3 sm:p-4 rounded-2xl">
-                                                        <ShoppingCart className="size-6 sm:size-8 text-emerald-400" />
+                                                    <div className="relative bg-card border border-border p-3 sm:p-4 rounded-2xl group-hover:border-emerald-500/30 transition-colors">
+                                                        <ShoppingCart className="size-6 sm:size-8 text-emerald-500" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-lg sm:text-xl font-bold text-amber-50 mb-1">{t('sales')}</h3>
-                                            <p className="text-amber-200/50 text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none">
+                                            <h3 className="text-lg sm:text-xl font-bold text-foreground mb-1">{t('sales')}</h3>
+                                            <p className="text-muted-foreground text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none font-medium">
                                                 {t('salesDescription')}
                                             </p>
                                         </CardContent>
@@ -881,18 +881,18 @@ export default function InvoicePage() {
                                     }}
                                     className="group cursor-pointer h-full"
                                 >
-                                    <Card className="bg-slate-900/50 border border-amber-500/20 hover:border-amber-500/60 transition-all hover:bg-amber-500/5 active:scale-95 sm:hover:scale-105 h-full">
+                                    <Card className="bg-muted/30 border border-border hover:border-primary/60 dark:hover:border-primary/60 transition-all hover:bg-primary/5 active:scale-95 sm:hover:scale-105 h-full">
                                         <CardContent className="p-4 sm:p-6 text-center flex flex-col items-center">
                                             <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
-                                                    <div className="absolute inset-0 bg-amber-500/10 rounded-2xl blur-md group-hover:bg-amber-500/20 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-amber-500/20 p-3 sm:p-4 rounded-2xl">
-                                                        <HandCoins className="size-6 sm:size-8 text-amber-400" />
+                                                    <div className="absolute inset-0 bg-primary/10 rounded-2xl blur-md group-hover:bg-primary/20 transition-colors"></div>
+                                                    <div className="relative bg-card border border-border p-3 sm:p-4 rounded-2xl group-hover:border-primary/30 transition-colors">
+                                                        <HandCoins className="size-6 sm:size-8 text-primary" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-lg sm:text-xl font-bold text-amber-50 mb-1">{t('pawn')}</h3>
-                                            <p className="text-amber-200/50 text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none">
+                                            <h3 className="text-lg sm:text-xl font-bold text-foreground mb-1">{t('pawn')}</h3>
+                                            <p className="text-muted-foreground text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none font-medium">
                                                 {t('pawnDescription')}
                                             </p>
                                         </CardContent>
@@ -907,18 +907,18 @@ export default function InvoicePage() {
                                     }}
                                     className="group cursor-pointer h-full"
                                 >
-                                    <Card className="bg-slate-900/50 border border-amber-500/20 hover:border-blue-500/60 transition-all hover:bg-blue-500/5 active:scale-95 sm:hover:scale-105 h-full">
+                                    <Card className="bg-muted/30 border border-border hover:border-blue-500/60 dark:hover:border-blue-500/60 transition-all hover:bg-blue-500/5 active:scale-95 sm:hover:scale-105 h-full">
                                         <CardContent className="p-4 sm:p-6 text-center flex flex-col items-center">
                                             <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
                                                     <div className="absolute inset-0 bg-blue-500/10 rounded-2xl blur-md group-hover:bg-blue-500/20 transition-colors"></div>
-                                                    <div className="relative bg-slate-900 border border-blue-500/20 p-3 sm:p-4 rounded-2xl">
-                                                        <Diamond className="size-6 sm:size-8 text-blue-400" />
+                                                    <div className="relative bg-card border border-border p-3 sm:p-4 rounded-2xl group-hover:border-blue-500/30 transition-colors">
+                                                        <Diamond className="size-6 sm:size-8 text-blue-500" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-lg sm:text-xl font-bold text-amber-50 mb-1">{t('buy')}</h3>
-                                            <p className="text-amber-200/50 text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none">
+                                            <h3 className="text-lg sm:text-xl font-bold text-foreground mb-1">{t('buy')}</h3>
+                                            <p className="text-muted-foreground text-[11px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-none font-medium">
                                                 {t('buyDescription')}
                                             </p>
                                         </CardContent>
@@ -926,11 +926,11 @@ export default function InvoicePage() {
                                 </div>
                             </div>
                         </CardContent>
-                        <CardFooter className="flex justify-center border-t border-amber-500/10 pt-4 pb-6">
+                        <CardFooter className="flex justify-center border-t border-border pt-4 pb-6">
                             <Button
                                 onClick={() => setShowInvoiceTypeDialog(false)}
                                 variant="ghost"
-                                className="text-amber-200/40 hover:text-amber-200/70 hover:bg-amber-500/5 px-8 h-10 sm:h-11 rounded-xl"
+                                className="text-muted-foreground hover:text-foreground hover:bg-muted px-8 h-10 sm:h-11 rounded-xl font-bold"
                             >
                                 {tCommon('cancel')}
                             </Button>
@@ -941,20 +941,20 @@ export default function InvoicePage() {
 
             {/* Status Change Confirmation Dialog */}
             <AlertDialog open={isStatusConfirmOpen} onOpenChange={setIsStatusConfirmOpen}>
-                <AlertDialogContent className="bg-slate-900 border-amber-500/20">
+                <AlertDialogContent className="bg-card border-border">
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="text-amber-50">{t('confirmStatusChange')}</AlertDialogTitle>
-                        <AlertDialogDescription className="text-amber-200/60">
+                        <AlertDialogTitle className="text-foreground font-black">{t('confirmStatusChange')}</AlertDialogTitle>
+                        <AlertDialogDescription className="text-muted-foreground font-medium">
                             {t('confirmStatusDescription', { status: pendingStatus ? t(pendingStatus) : '' })}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="bg-slate-800 border-amber-500/20 text-amber-50 hover:bg-slate-700 hover:text-amber-50">
+                        <AlertDialogCancel className="bg-muted border-border text-foreground hover:bg-muted/80 font-bold">
                             {tCommon('cancel')}
                         </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={confirmStatusChange}
-                            className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold"
+                            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
                         >
                             {tCommon('apply')}
                         </AlertDialogAction>

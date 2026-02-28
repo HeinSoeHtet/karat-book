@@ -51,11 +51,11 @@ export function MultiSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-full justify-between bg-slate-900/50 border-amber-500/20 text-amber-50 h-11 hover:bg-slate-900/50 hover:text-amber-50 ${className}`}
+          className={`w-full justify-between bg-muted/50 border-border text-foreground h-11 hover:bg-muted/80 hover:text-foreground rounded-xl transition-all ${className}`}
         >
-          <div className="flex flex-wrap gap-1.5 flex-1">
+          <div className="flex flex-wrap gap-1.5 flex-1 items-center">
             {selected.length === 0 ? (
-              <span className="text-amber-200/60">{placeholder}</span>
+              <span className="text-foreground/40 font-medium  text-sm">{placeholder}</span>
             ) : (
               selected.map((value) => {
                 const option = options.find((opt) => opt.value === value);
@@ -63,7 +63,7 @@ export function MultiSelect({
                   <Badge
                     key={value}
                     variant="secondary"
-                    className="bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30"
+                    className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 font-bold text-[11px] px-2 py-0.5 rounded-md"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleRemove(value);
@@ -78,36 +78,35 @@ export function MultiSelect({
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0 bg-slate-900 border-amber-500/20" align="start">
-        <Command className="bg-slate-900">
-          <CommandInput 
-            placeholder="Search..." 
-            className="h-9 border-b border-amber-500/20 text-amber-50"
+      <PopoverContent className="w-[300px] p-0 bg-card border-border shadow-2xl rounded-2xl overflow-hidden" align="start">
+        <Command className="bg-transparent">
+          <CommandInput
+            placeholder="Search..."
+            className="h-10 border-b-0 text-foreground font-medium"
           />
-          <CommandEmpty className="text-amber-200/60 py-6 text-center">
+          <CommandEmpty className="text-foreground/40 py-8 text-center text-sm  font-medium">
             No results found.
           </CommandEmpty>
-          <CommandGroup className="max-h-64 overflow-auto">
+          <CommandGroup className="max-h-64 overflow-auto p-2">
             {options.map((option) => (
               <CommandItem
                 key={option.value}
                 value={option.value}
                 onSelect={() => handleSelect(option.value)}
-                className="text-amber-50 hover:bg-slate-800 aria-selected:bg-slate-800 cursor-pointer"
+                className="text-foreground hover:bg-muted aria-selected:bg-muted cursor-pointer rounded-lg p-2.5 transition-all mb-1 last:mb-0"
               >
-                <div className="flex items-center gap-2 w-full">
+                <div className="flex items-center gap-3 w-full">
                   <div
-                    className={`size-4 rounded border-2 flex items-center justify-center ${
-                      selected.includes(option.value)
-                        ? "bg-amber-500 border-amber-500"
-                        : "border-amber-500/30"
-                    }`}
+                    className={`size-4.5 rounded-md border-2 flex items-center justify-center transition-all ${selected.includes(option.value)
+                      ? "bg-primary border-primary shadow-sm"
+                      : "border-border bg-muted/30"
+                      }`}
                   >
                     {selected.includes(option.value) && (
-                      <div className="size-2 bg-white rounded-sm" />
+                      <div className="size-2 bg-primary-foreground rounded-[2px]" />
                     )}
                   </div>
-                  <span>{option.label}</span>
+                  <span className="font-bold text-sm tracking-tight">{option.label}</span>
                 </div>
               </CommandItem>
             ))}

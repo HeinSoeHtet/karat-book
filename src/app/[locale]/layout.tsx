@@ -27,6 +27,8 @@ export const metadata: Metadata = {
 
 import { LocaleSync } from "@/components/LocaleSync";
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 export default async function RootLayout({
 	children,
 	params,
@@ -52,10 +54,17 @@ export default async function RootLayout({
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				<NextIntlClientProvider messages={messages} locale={locale}>
-					<SettingsProvider>
-						<LocaleSync locale={locale} />
-						{children}
-					</SettingsProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="dark"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<SettingsProvider>
+							<LocaleSync locale={locale} />
+							{children}
+						</SettingsProvider>
+					</ThemeProvider>
 					<Toaster position="top-right" />
 				</NextIntlClientProvider>
 			</body>

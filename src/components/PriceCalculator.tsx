@@ -136,21 +136,21 @@ export function PriceCalculator() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="text-amber-100/80 hover:text-amber-100 hover:bg-slate-800/50 rounded-xl size-10 flex items-center justify-center transition-colors"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl size-10 flex items-center justify-center transition-colors"
                     title={t("title")}
                 >
                     <Calculator className="size-5" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] max-h-[92vh] flex flex-col p-0 bg-slate-900/95 backdrop-blur-xl border-amber-500/20 text-slate-100 shadow-2xl shadow-amber-500/5 overflow-hidden">
+            <DialogContent className="sm:max-w-[425px] max-h-[92vh] flex flex-col p-0 bg-card/95 dark:bg-slate-900/95 backdrop-blur-xl border-border text-foreground shadow-2xl overflow-hidden">
                 <DialogHeader className="p-6 pb-2 relative shrink-0">
-                    <div className="mx-auto bg-amber-500/10 p-2.5 rounded-2xl w-fit mb-2 border border-amber-500/20">
-                        <Calculator className="size-5 text-amber-500" />
+                    <div className="mx-auto bg-primary/10 p-2.5 rounded-2xl w-fit mb-2 border border-primary/20">
+                        <Calculator className="size-5 text-primary" />
                     </div>
-                    <DialogTitle className="text-xl font-bold bg-gradient-to-r from-amber-200 to-amber-500 bg-clip-text text-transparent text-center">
+                    <DialogTitle className="text-xl font-bold bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-200 dark:to-amber-500 bg-clip-text text-transparent text-center">
                         {t("title")}
                     </DialogTitle>
-                    <DialogDescription className="text-slate-400 text-center text-xs">
+                    <DialogDescription className="text-muted-foreground text-center text-xs">
                         {t("description")}
                     </DialogDescription>
                 </DialogHeader>
@@ -158,7 +158,7 @@ export function PriceCalculator() {
                 <div className="flex-1 overflow-y-auto px-6 py-2 custom-scrollbar">
                     <div className="grid gap-4 py-2">
                         <div className="grid gap-2.5">
-                            <Label htmlFor="weight" className="text-sm font-medium text-amber-100/70 ml-1">
+                            <Label htmlFor="weight" className="text-sm font-medium text-muted-foreground ml-1">
                                 {t("weight")}
                             </Label>
                             <div className="relative group">
@@ -168,14 +168,14 @@ export function PriceCalculator() {
                                     placeholder="0.00"
                                     value={weight}
                                     onChange={(e) => setWeight(e.target.value)}
-                                    className="bg-slate-950/40 border-amber-500/10 focus:border-amber-500/40 focus:ring-amber-500/20 h-12 rounded-xl transition-all pl-4 text-slate-100"
+                                    className="bg-muted/40 border-border focus:border-primary/40 focus:ring-primary/20 h-12 rounded-xl transition-all pl-4 text-foreground"
                                 />
-                                <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                                <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity" />
                             </div>
                         </div>
 
                         <div className="grid gap-2.5">
-                            <Label htmlFor="goldPrice" className="text-sm font-medium text-amber-100/70 ml-1">
+                            <Label htmlFor="goldPrice" className="text-sm font-medium text-muted-foreground ml-1">
                                 {t("goldPrice")}
                             </Label>
                             <div className="relative group">
@@ -185,46 +185,46 @@ export function PriceCalculator() {
                                     placeholder="0.00"
                                     value={formatWithCommas(goldPrice)}
                                     onChange={handleGoldPriceChange}
-                                    className="bg-slate-950/40 border-amber-500/10 focus:border-amber-500/40 focus:ring-amber-500/20 h-12 rounded-xl transition-all pl-4 text-slate-100"
+                                    className="bg-muted/40 border-border focus:border-primary/40 focus:ring-primary/20 h-12 rounded-xl transition-all pl-4 text-foreground"
                                 />
-                                <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                                <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity" />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2.5">
-                                <Label htmlFor="quality" className="text-sm font-medium text-amber-100/70 ml-1">
+                                <Label htmlFor="quality" className="text-sm font-medium text-muted-foreground ml-1">
                                     {t("materialQuality")}
                                 </Label>
                                 <Select value={quality} onValueChange={setQuality}>
-                                    <SelectTrigger className="bg-slate-950/40 border-amber-500/10 focus:ring-amber-500/20 h-12 rounded-xl transition-all text-slate-300">
+                                    <SelectTrigger className="bg-muted/40 border-border focus:ring-primary/20 h-12 rounded-xl transition-all text-foreground">
                                         <SelectValue placeholder={t("materialQuality")} />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-slate-900 border-amber-500/20 text-slate-100 rounded-xl max-h-[250px]">
-                                        <SelectItem value="p15" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">{t("qualityOptions.p15")}</SelectItem>
-                                        <SelectItem value="p14_2" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">{t("qualityOptions.p14_2")}</SelectItem>
-                                        <SelectItem value="p13" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">{t("qualityOptions.p13")}</SelectItem>
-                                        <SelectItem value="p12" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">{t("qualityOptions.p12")}</SelectItem>
-                                        <SelectItem value="p11" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">{t("qualityOptions.p11")}</SelectItem>
-                                        <SelectItem value="p10" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">{t("qualityOptions.p10")}</SelectItem>
-                                        <SelectItem value="p9" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">{t("qualityOptions.p9")}</SelectItem>
-                                        <SelectItem value="p8" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">{t("qualityOptions.p8")}</SelectItem>
+                                    <SelectContent className="bg-card border-border text-foreground rounded-xl max-h-[250px]">
+                                        <SelectItem value="p15" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">{t("qualityOptions.p15")}</SelectItem>
+                                        <SelectItem value="p14_2" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">{t("qualityOptions.p14_2")}</SelectItem>
+                                        <SelectItem value="p13" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">{t("qualityOptions.p13")}</SelectItem>
+                                        <SelectItem value="p12" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">{t("qualityOptions.p12")}</SelectItem>
+                                        <SelectItem value="p11" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">{t("qualityOptions.p11")}</SelectItem>
+                                        <SelectItem value="p10" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">{t("qualityOptions.p10")}</SelectItem>
+                                        <SelectItem value="p9" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">{t("qualityOptions.p9")}</SelectItem>
+                                        <SelectItem value="p8" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">{t("qualityOptions.p8")}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div className="grid gap-2.5">
-                                <Label htmlFor="type" className="text-sm font-medium text-amber-100/70 ml-1">
+                                <Label htmlFor="type" className="text-sm font-medium text-muted-foreground ml-1">
                                     {t("type")}
                                 </Label>
                                 <Select value={type} onValueChange={(val) => { setType(val); setResults(null); }}>
-                                    <SelectTrigger className="bg-slate-950/40 border-amber-500/10 focus:ring-amber-500/20 h-12 rounded-xl transition-all text-slate-300">
+                                    <SelectTrigger className="bg-muted/40 border-border focus:ring-primary/20 h-12 rounded-xl transition-all text-foreground">
                                         <SelectValue placeholder={t("type")} />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-slate-900 border-amber-500/20 text-slate-100 rounded-xl">
-                                        <SelectItem value="buy" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">
+                                    <SelectContent className="bg-card border-border text-foreground rounded-xl">
+                                        <SelectItem value="buy" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">
                                             {t("buy")}
                                         </SelectItem>
-                                        <SelectItem value="sell" className="focus:bg-amber-500 focus:text-slate-900 cursor-pointer rounded-lg m-1">
+                                        <SelectItem value="sell" className="focus:bg-primary focus:text-primary-foreground cursor-pointer rounded-lg m-1">
                                             {t("sell")}
                                         </SelectItem>
                                     </SelectContent>
@@ -233,8 +233,8 @@ export function PriceCalculator() {
                         </div>
 
                         {type === "buy" && (
-                            <div className="grid gap-3 p-4 bg-slate-950/20 rounded-2xl border border-amber-500/5 transition-all animate-in slide-in-from-top-1 duration-200">
-                                <Label className="text-sm font-medium text-amber-100/70 ml-1">
+                            <div className="grid gap-3 p-4 bg-muted/20 rounded-2xl border border-border transition-all animate-in slide-in-from-top-1 duration-200">
+                                <Label className="text-sm font-medium text-muted-foreground ml-1">
                                     {t("makingCharges")}
                                 </Label>
                                 <div className="grid grid-cols-2 gap-4">
@@ -247,9 +247,9 @@ export function PriceCalculator() {
                                             max={7}
                                             step="1"
                                             onChange={handleFieldChange(setYway, 7)}
-                                            className="bg-slate-950/40 border-amber-500/10 focus:border-amber-500/40 focus:ring-amber-500/20 h-11 rounded-xl transition-all pr-12"
+                                            className="bg-muted/40 border-border focus:border-primary/40 focus:ring-primary/20 h-11 rounded-xl transition-all pr-12 text-foreground"
                                         />
-                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-amber-200/40 pointer-events-none group-focus-within/yway:text-amber-500/60 transition-colors">
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground/40 pointer-events-none group-focus-within/yway:text-primary/60 transition-colors">
                                             {t("yway")}
                                         </div>
                                     </div>
@@ -262,9 +262,9 @@ export function PriceCalculator() {
                                             max={15}
                                             step="1"
                                             onChange={handleFieldChange(setPe, 15)}
-                                            className="bg-slate-950/40 border-amber-500/10 focus:border-amber-500/40 focus:ring-amber-500/20 h-11 rounded-xl transition-all pr-12"
+                                            className="bg-muted/40 border-border focus:border-primary/40 focus:ring-primary/20 h-11 rounded-xl transition-all pr-12 text-foreground"
                                         />
-                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-amber-200/40 pointer-events-none group-focus-within/pe:text-amber-500/60 transition-colors">
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground/40 pointer-events-none group-focus-within/pe:text-primary/60 transition-colors">
                                             {t("pe")}
                                         </div>
                                     </div>
@@ -274,54 +274,54 @@ export function PriceCalculator() {
 
                         {results && (
                             <div className="mt-2 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                                <div className="p-4 bg-slate-950/40 rounded-2xl border border-amber-500/10 backdrop-blur-sm">
+                                <div className="p-4 bg-muted/40 rounded-2xl border border-border backdrop-blur-sm">
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="text-amber-100/60 text-xs font-medium flex items-center gap-1.5 uppercase tracking-wider">
+                                        <span className="text-muted-foreground text-xs font-medium flex items-center gap-1.5 uppercase tracking-wider">
                                             <Info className="size-3" />
                                             {t("goldPricePerQuality")}
                                         </span>
                                     </div>
-                                    <div className="text-amber-200/90 font-semibold text-base">
+                                    <div className="text-foreground font-semibold text-base">
                                         {new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(results.goldPrice)} MMK
                                     </div>
                                 </div>
 
                                 {type === "buy" && results.totalWeightValue !== undefined && results.deductionValue !== undefined && (
                                     <>
-                                        <div className="p-4 bg-slate-950/40 rounded-2xl border border-amber-500/10 backdrop-blur-sm">
+                                        <div className="p-4 bg-muted/40 rounded-2xl border border-border backdrop-blur-sm">
                                             <div className="flex items-center justify-between mb-1">
-                                                <span className="text-amber-100/60 text-xs font-medium flex items-center gap-1.5 uppercase tracking-wider">
+                                                <span className="text-muted-foreground text-xs font-medium flex items-center gap-1.5 uppercase tracking-wider">
                                                     <Info className="size-3" />
                                                     {t("totalWeightValue")}
                                                 </span>
                                             </div>
-                                            <div className="text-amber-200/90 font-semibold text-base">
+                                            <div className="text-foreground font-semibold text-base">
                                                 {new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(results.totalWeightValue)} MMK
                                             </div>
                                         </div>
 
-                                        <div className="p-4 bg-red-500/5 rounded-2xl border border-red-500/10 backdrop-blur-sm">
+                                        <div className="p-4 bg-rose-500/5 rounded-2xl border border-rose-500/10 backdrop-blur-sm">
                                             <div className="flex items-center justify-between mb-1">
-                                                <span className="text-red-200/60 text-xs font-medium flex items-center gap-1.5 uppercase tracking-wider">
+                                                <span className="text-rose-600 dark:text-rose-200/60 text-xs font-medium flex items-center gap-1.5 uppercase tracking-wider">
                                                     <Info className="size-3" />
                                                     {t("deductionPrice")}
                                                 </span>
                                             </div>
-                                            <div className="text-red-300/90 font-semibold text-base">
+                                            <div className="text-rose-700 dark:text-rose-300/90 font-semibold text-base">
                                                 - {new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(results.deductionValue)} MMK
                                             </div>
                                         </div>
                                     </>
                                 )}
 
-                                <div className="p-4 bg-amber-500/10 rounded-2xl border border-amber-500/20 shadow-lg shadow-amber-500/5">
+                                <div className="p-4 bg-primary/10 rounded-2xl border border-primary/20 shadow-lg shadow-primary/5">
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="text-amber-100/70 text-xs font-bold flex items-center gap-1.5 uppercase tracking-wider">
+                                        <span className="text-primary/70 text-xs font-bold flex items-center gap-1.5 uppercase tracking-wider">
                                             <Calculator className="size-3" />
                                             {t("finalPrice")}
                                         </span>
                                     </div>
-                                    <div className="text-amber-400 font-bold text-xl">
+                                    <div className="text-amber-600 dark:text-amber-400 font-bold text-xl">
                                         {new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(results.finalPrice)} MMK
                                     </div>
                                 </div>
@@ -330,7 +330,7 @@ export function PriceCalculator() {
                     </div>
                 </div>
 
-                <DialogFooter className="p-6 pt-2 shrink-0 border-t border-amber-500/10 bg-slate-900/50 backdrop-blur-md">
+                <DialogFooter className="p-6 pt-2 shrink-0 border-t border-border bg-card backdrop-blur-md">
                     <Button
                         onClick={handleCalculate}
                         disabled={!weight || !goldPrice}
