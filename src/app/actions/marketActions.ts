@@ -9,7 +9,7 @@ export async function getDailyMarketRatesAction(): Promise<{ success: boolean; d
 
         // Use external API URL from environment variable or default placeholder
         const apiBaseUrl = env.MARKET_RATE_API_URL.replace(/\/$/, "");
-        const apiUrl = `${apiBaseUrl}/api/market-rate?t=${Date.now()}`;
+        const apiUrl = `${apiBaseUrl}/api/market-rate`;
 
         console.log(`[MarketAction] Fetching from external service: ${apiUrl}`);
 
