@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Receipt, TrendingUp, Diamond, Warehouse, Newspaper, Menu, X, Settings } from 'lucide-react';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ import { ThemeToggle } from './ThemeToggle';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
     const t = useTranslations('common');
+    const locale = useLocale();
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -38,11 +39,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                     <Diamond className="size-6 sm:size-7 text-slate-950" />
                                 </div>
                             </div>
-                            <div>
-                                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-200 dark:to-amber-400 bg-clip-text text-transparent">
+                            <div className="flex flex-col gap-0.5 sm:gap-1">
+                                <h1 className={`text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-500 to-amber-700 dark:from-amber-200 dark:to-amber-400 bg-clip-text text-transparent ${locale === 'my' ? 'leading-relaxed pb-2.5' : 'leading-tight pb-0'}`}>
                                     {t('title')}
                                 </h1>
-                                <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                                <p className={`text-xs text-muted-foreground flex items-center gap-1 relative z-10 ${locale === 'my' ? '-mt-1.5 sm:-mt-2' : 'mt-0'}`}>
                                     {t('tagline')}
                                 </p>
                             </div>
