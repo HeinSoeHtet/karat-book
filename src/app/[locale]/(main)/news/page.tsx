@@ -33,22 +33,10 @@ export default function NewsPage() {
                 const latestExchange = result.data.find(d => d.type === 'exchange_rate');
 
                 if (latestGold) {
-                    const todayStr = new Date().toLocaleDateString('en-US');
-                    const entryDate = new Date(latestGold.updatedAt);
-                    if (entryDate.toLocaleDateString('en-US') === todayStr) {
-                        setRealGoldData(latestGold.hourlyRate);
-                    } else {
-                        setRealGoldData([]);
-                    }
+                    setRealGoldData(latestGold.hourlyRate);
                 }
                 if (latestExchange) {
-                    const todayStr = new Date().toLocaleDateString('en-US');
-                    const entryDate = new Date(latestExchange.updatedAt);
-                    if (entryDate.toLocaleDateString('en-US') === todayStr) {
-                        setRealExchangeData(latestExchange.hourlyRate);
-                    } else {
-                        setRealExchangeData([]);
-                    }
+                    setRealExchangeData(latestExchange.hourlyRate);
                 }
 
                 const dates = [latestGold?.updatedAt, latestExchange?.updatedAt].filter(Boolean) as Date[];
