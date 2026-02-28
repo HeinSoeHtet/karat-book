@@ -5,9 +5,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
 	/* config options here */
-	turbopack: {
-		root: "/home/hein/personal/karat-book",
-	},
+
 };
 
 const wrappedConfig = withBundleAnalyzer({
