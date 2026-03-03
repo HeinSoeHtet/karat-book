@@ -25,13 +25,13 @@ export function ThemeToggle() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-card border-border text-foreground shadow-2xl rounded-xl p-1">
-                <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer font-bold text-xs rounded-lg px-3 py-2 hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary transition-all">
+                <DropdownMenuItem onClick={() => { setTheme("light"); localStorage.setItem('theme', 'light'); }} className="cursor-pointer font-bold text-xs rounded-lg px-3 py-2 hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary transition-all">
                     Light
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer font-bold text-xs rounded-lg px-3 py-2 hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary transition-all">
+                <DropdownMenuItem onClick={() => { setTheme("dark"); localStorage.setItem('theme', 'dark'); }} className="cursor-pointer font-bold text-xs rounded-lg px-3 py-2 hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary transition-all">
                     Dark
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer font-bold text-xs rounded-lg px-3 py-2 hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary transition-all">
+                <DropdownMenuItem onClick={() => { setTheme("system"); localStorage.removeItem('theme'); }} className="cursor-pointer font-bold text-xs rounded-lg px-3 py-2 hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary transition-all">
                     System
                 </DropdownMenuItem>
             </DropdownMenuContent>

@@ -27,7 +27,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+        <div className="min-h-screen bg-background text-foreground">
             {/* Header */}
             <header className="bg-card/50 backdrop-blur-xl border-b border-border sticky top-0 z-50">
                 <div className="px-4 sm:px-8 py-5">

@@ -52,21 +52,22 @@ export default async function RootLayout({
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
 			</head>
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<NextIntlClientProvider messages={messages} locale={locale}>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="dark"
-						enableSystem
-						disableTransitionOnChange
-					>
+			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+					storageKey="theme"
+				>
+					<NextIntlClientProvider messages={messages} locale={locale}>
 						<SettingsProvider>
 							<LocaleSync locale={locale} />
 							{children}
 						</SettingsProvider>
-					</ThemeProvider>
-					<Toaster position="top-right" />
-				</NextIntlClientProvider>
+						<Toaster position="top-right" />
+					</NextIntlClientProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
